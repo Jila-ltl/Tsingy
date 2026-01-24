@@ -4,8 +4,8 @@
     <div class="flex justify-end flex-row sm:px-24 sm:w-[80vw] ">
         <div class="  sm:w-[50%] pa-12 " >
             <div class=" mb-10">
-                <span class=" text-cyan-400 text-3xl font-bold">Login</span>
-            </div>
+          <span class=" text-cyan-400 text-3xl font-bold">Login</span>
+        </div>
             <v-text-field v-for="item,i in user_form" :key="i" :label="item.title" v-model="item.field" variant="outlined" :prepend-inner-icon="item.icon"></v-text-field>
 
             <div class="flex flex-col">
@@ -27,6 +27,8 @@
 </template>
 
 <script setup>
+
+
 import {
     ref,
 } from 'vue'
@@ -56,6 +58,8 @@ const loading = ref(false)
 const load = () => {
     loading.value = true
     setTimeout(() => (loading.value = false), 3000)
+    setTimeout(() => (
+    router.push('/users/Blog')), 3200)
 }
 const inscription_rout = () => {
   router.push('signup')
