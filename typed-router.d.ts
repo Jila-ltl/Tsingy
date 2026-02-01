@@ -19,10 +19,13 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
+    '/auth/accueil': RouteRecordInfo<'/auth/accueil', '/auth/accueil', Record<never, never>, Record<never, never>>,
     '/auth/signin': RouteRecordInfo<'/auth/signin', '/auth/signin', Record<never, never>, Record<never, never>>,
     '/auth/signup': RouteRecordInfo<'/auth/signup', '/auth/signup', Record<never, never>, Record<never, never>>,
-    '/users/Blog': RouteRecordInfo<'/users/Blog', '/users/Blog', Record<never, never>, Record<never, never>>,
-    '/users/Docs': RouteRecordInfo<'/users/Docs', '/users/Docs', Record<never, never>, Record<never, never>>,
+    '/users/contact': RouteRecordInfo<'/users/contact', '/users/contact', Record<never, never>, Record<never, never>>,
+    '/users/document': RouteRecordInfo<'/users/document', '/users/document', Record<never, never>, Record<never, never>>,
+    '/users/membre': RouteRecordInfo<'/users/membre', '/users/membre', Record<never, never>, Record<never, never>>,
+    '/users/modifier': RouteRecordInfo<'/users/modifier', '/users/modifier', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -40,6 +43,10 @@ declare module 'vue-router/auto-routes' {
       routes: '/'
       views: never
     }
+    'src/pages/auth/accueil.vue': {
+      routes: '/auth/accueil'
+      views: never
+    }
     'src/pages/auth/signin.vue': {
       routes: '/auth/signin'
       views: never
@@ -48,12 +55,20 @@ declare module 'vue-router/auto-routes' {
       routes: '/auth/signup'
       views: never
     }
-    'src/pages/users/Blog.vue': {
-      routes: '/users/Blog'
+    'src/pages/users/contact.vue': {
+      routes: '/users/contact'
       views: never
     }
-    'src/pages/users/Docs.vue': {
-      routes: '/users/Docs'
+    'src/pages/users/document.vue': {
+      routes: '/users/document'
+      views: never
+    }
+    'src/pages/users/membre.vue': {
+      routes: '/users/membre'
+      views: never
+    }
+    'src/pages/users/modifier.vue': {
+      routes: '/users/modifier'
       views: never
     }
   }
