@@ -10,7 +10,7 @@
 </aside>
 
 <div class="box mt-40 flex flex-col">
-    <div class="entete bg-white mt-5 px-6 py-6 text-4xl">Demande de documents</div>
+    <div class="entete mt-5 px-6 py-6 text-4xl">Demande de documents</div>
     <div class="forme mt-3 py-4 text-lg">
         <form @submit.prevent="envoyerFormulaire">
             <div class="field-group">
@@ -147,6 +147,10 @@ const demandes = [
     width: 96%;
     height: 15%;
     margin-left: 2%;
+    box-shadow: 0px 2px 10px 1px rgba(71,71 ,71, 0.52);
+    background-image: linear-gradient(rgba(255,255,255,0.1),rgba(255,255,255,0));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .forme{
