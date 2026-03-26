@@ -1,52 +1,69 @@
 <template>
-<div id="app">
-    <SIDEBAR />
-    <main>
-        <div class="search-wrapper">
-            <div class="search-group flex">
-                <span class="search-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                </span>
-
-                <input type="text" v-model="searchQuery" placeholder="Rechercher..." class="search-input" />
+<!-- <div id="app" class="w-full h-screen flex"> -->
+<div class="w-full flex h-[91vh] overflow-hidden" >
+    <SIDEBAR class=" z-30"/>
+    <div class=" w-[15%] h-full "></div>
+    <div class=" w-[85%] h-full  flex flex-col overflow-hidden">
+        <div class=" w-full items-center flex justify-center">
+            <div class=" mt-6 bg-stone-700 py-1 px-3 flex flex-row rounded-full w-[350px]">
+            <span class="mdi mdi-magnify"></span>
+            <input class=" ml-2 outline-none w-full" type="text" v-model="searchQuery" placeholder="Rechercher..."   @keyup="find_user(searchQuery)" />
             </div>
         </div>
         <!-- <div class="row pl-72"> -->
-        <div class=" grid grid-cols-5 gap-4 pl-72">
-            <div class="image cursor-pointer hover:scale-110" v-for="item,i in users_list" :key="i">
-                <div class="mask-container">
-                    <img src="/img/photo.jpeg" alt="User silhouette" />
-                </div>
-                <div class="profile-info">
-                    <div >
-                      <span>Nom:</span>
-                      <span v-text="item.nom"></span>
+        <div class=" overflow-y-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 ">
+                <div class="image cursor-pointer hover:scale-110" v-for="item,i in search_list" :key="i" @click="openPopup_(item)">
+                    <div class="mask-container">
+                        <img src="/img/photo.jpeg" alt="User silhouette" />
                     </div>
-                    <div >
-                      <span>Prénom:</span>
-                      <span v-text="item.prenom"></span>
-                    </div>
-                    <div >
-                      <span>Rôle:</span>
-                      <span                                     v-text="item.role"></span>
-                    </div>
+                    <div class="profile-info">
+                        <div>
+                            <span>Nom:</span>
+                            <span v-html="item.nom"></span>
+                        </div>
+                        <div>
+                            <span>Prénom:</span>
+                            <span v-text="item.prenom"></span>
+                        </div>
+                        <div>
+                            <span>Rôle:</span>
+                            <span v-text="item.role"></span>
+                        </div>
 
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- DIALOG  -->
+        <div v-if="isShown" class=" w-full h-full backdrop-blur-sm  fixed top-0 left-0 flex items-center justify-center">
+            <div class="  w-full h-full fixed top-0 left-0 z-10 cursor-pointer" @click="isShown=false"></div>
+            <div class=" bg-stone-700 text-white px-2 py-1  rounded-lg shadow-lg border border-white flex flex-col z-20">
+                <div @click="isShown=false" class="flex w-full justify-end cursor-pointer">
+                    <span class="mdi mdi-window-close"></span>
+                </div>
+                <div class="flex flex-col items-left w-[400px]">
+                    <h2 class="text-left font-bold mb-2 ">Information </h2>
+                    <span class=" border-b border-white"></span>
+                    <div>
+                        <span>Nom: </span>
+                        <span v-text="popupContent_.nom"></span>
+                    </div>
+                    <div>
+                        <span>Prénom: </span>
+                        <span v-text="popupContent_.prenom"></span>
+                    </div>
+                    <div>
+                        <span>Role: </span>
+                        <span v-text="popupContent_.role"></span>
+                    </div>
                 </div>
             </div>
 
         </div>
-
-        <div v-if="isOpen" class="overlay">
-            <div class="popup">
-                <h2>infoS</h2>
-                <button class="btn-close" @click="isOpen = false" aria-label="Fermer">&times;</button>
-
-            </div>
-        </div>
-    </main>
+    </div>
 </div>
 </template>
 
@@ -80,48 +97,240 @@ const openPopup = (message) => {
     popupContent.value = message // On définit le message
     isOpen.value = true // On ouvre le popup
 }
-const users_list = ref([
-    { nom: 'Benali', prenom: 'Youssef', role: 'Développeur' },
-    { nom: 'El Amrani', prenom: 'Salma', role: 'Designer UI/UX' },
-    { nom: 'Tazi', prenom: 'Omar', role: 'Chef de projet' },
-    { nom: 'Alaoui', prenom: 'Nadia', role: 'Responsable RH' },
-    { nom: 'Haddad', prenom: 'Karim', role: 'DevOps' },
-    { nom: 'Bennani', prenom: 'Lina', role: 'Data Analyst' },
-    { nom: 'Zerhouni', prenom: 'Mehdi', role: 'Ingénieur logiciel' },
-    { nom: 'Chraibi', prenom: 'Sara', role: 'Marketing digital' },
-    { nom: 'Idrissi', prenom: 'Amine', role: 'Testeur QA' },
-    { nom: 'Fassi', prenom: 'Hajar', role: 'Support client' },
-    { nom: 'Kabbaj', prenom: 'Rachid', role: 'Architecte IT' },
-    { nom: 'Lamrani', prenom: 'Imane', role: 'Product Owner' },
-    { nom: 'Boussaid', prenom: 'Adil', role: 'Administrateur système' },
-    { nom: 'Skalli', prenom: 'Meryem', role: 'Comptable' },
-    { nom: 'Naciri', prenom: 'Zakaria', role: 'Consultant IT' },
-    { nom: 'Ouazzani', prenom: 'Fatima', role: 'Assistante de direction' },
-    { nom: 'Tahiri', prenom: 'Ayoub', role: 'Développeur mobile' },
-    { nom: 'Sbihi', prenom: 'Othmane', role: 'Technicien réseau' },
-    { nom: 'Belkadi', prenom: 'Soukaina', role: 'UX Researcher' },
-    { nom: 'Majidi', prenom: 'Hamza', role: 'Scrum Master' },
-    { nom: 'Raji', prenom: 'Nour', role: 'Chargée de communication' },
-    { nom: 'Berrada', prenom: 'Yassine', role: 'Ingénieur sécurité' },
-    { nom: 'Kettani', prenom: 'Hind', role: 'Business Analyst' },
-    { nom: 'Ziani', prenom: 'Walid', role: 'Développeur backend' },
-    { nom: 'Amrani', prenom: 'Khadija', role: 'Développeuse frontend' },
-    { nom: 'Lahlou', prenom: 'Samir', role: 'Chef d’équipe' },
-    { nom: 'Tounsi', prenom: 'Rim', role: 'Graphiste' },
-    { nom: 'El Fassi', prenom: 'Bilal', role: 'Administrateur base de données' },
-    { nom: 'Mouline', prenom: 'Asmae', role: 'Responsable qualité' },
-    { nom: 'Cherkaoui', prenom: 'Driss', role: 'Auditeur IT' },
-    { nom: 'Bouzidi', prenom: 'Nabil', role: 'Développeur fullstack' },
-    { nom: 'Ait Said', prenom: 'Leila', role: 'Chargée RH' },
-    { nom: 'Mernissi', prenom: 'Oumaima', role: 'Content manager' },
-    { nom: 'Dakki', prenom: 'Anas', role: 'Technicien support' },
-    { nom: 'Bekkali', prenom: 'Reda', role: 'Ingénieur cloud' },
-    { nom: 'Hajji', prenom: 'Siham', role: 'Office manager' },
-    { nom: 'El Khatib', prenom: 'Tarik', role: 'Consultant fonctionnel' },
-    { nom: 'Bounou', prenom: 'Younes', role: 'Analyste financier' },
-    { nom: 'Karimi', prenom: 'Ilham', role: 'Responsable marketing' },
-    { nom: 'Saidi', prenom: 'Achraf', role: 'Développeur junior' }
+const users_list = ref([{
+        nom: 'Benali',
+        prenom: 'Youssef',
+        role: 'Développeur'
+    },
+    {
+        nom: 'El Amrani',
+        prenom: 'Salma',
+        role: 'Designer UI/UX'
+    },
+    {
+        nom: 'Tazi',
+        prenom: 'Omar',
+        role: 'Chef de projet'
+    },
+    {
+        nom: 'Alaoui',
+        prenom: 'Nadia',
+        role: 'Responsable RH'
+    },
+    {
+        nom: 'Haddad',
+        prenom: 'Karim',
+        role: 'DevOps'
+    },
+    {
+        nom: 'Bennani',
+        prenom: 'Lina',
+        role: 'Data Analyst'
+    },
+    {
+        nom: 'Zerhouni',
+        prenom: 'Mehdi',
+        role: 'Ingénieur logiciel'
+    },
+    {
+        nom: 'Chraibi',
+        prenom: 'Sara',
+        role: 'Marketing digital'
+    },
+    {
+        nom: 'Idrissi',
+        prenom: 'Amine',
+        role: 'Testeur QA'
+    },
+    {
+        nom: 'Fassi',
+        prenom: 'Hajar',
+        role: 'Support client'
+    },
+    {
+        nom: 'Kabbaj',
+        prenom: 'Rachid',
+        role: 'Architecte IT'
+    },
+    {
+        nom: 'Lamrani',
+        prenom: 'Imane',
+        role: 'Product Owner'
+    },
+    {
+        nom: 'Boussaid',
+        prenom: 'Adil',
+        role: 'Administrateur système'
+    },
+    {
+        nom: 'Skalli',
+        prenom: 'Meryem',
+        role: 'Comptable'
+    },
+    {
+        nom: 'Naciri',
+        prenom: 'Zakaria',
+        role: 'Consultant IT'
+    },
+    {
+        nom: 'Ouazzani',
+        prenom: 'Fatima',
+        role: 'Assistante de direction'
+    },
+    {
+        nom: 'Tahiri',
+        prenom: 'Ayoub',
+        role: 'Développeur mobile'
+    },
+    {
+        nom: 'Sbihi',
+        prenom: 'Othmane',
+        role: 'Technicien réseau'
+    },
+    {
+        nom: 'Belkadi',
+        prenom: 'Soukaina',
+        role: 'UX Researcher'
+    },
+    {
+        nom: 'Majidi',
+        prenom: 'Hamza',
+        role: 'Scrum Master'
+    },
+    {
+        nom: 'Raji',
+        prenom: 'Nour',
+        role: 'Chargée de communication'
+    },
+    {
+        nom: 'Berrada',
+        prenom: 'Yassine',
+        role: 'Ingénieur sécurité'
+    },
+    {
+        nom: 'Kettani',
+        prenom: 'Hind',
+        role: 'Business Analyst'
+    },
+    {
+        nom: 'Ziani',
+        prenom: 'Walid',
+        role: 'Développeur backend'
+    },
+    {
+        nom: 'Amrani',
+        prenom: 'Khadija',
+        role: 'Développeuse frontend'
+    },
+    {
+        nom: 'Lahlou',
+        prenom: 'Samir',
+        role: 'Chef d’équipe'
+    },
+    {
+        nom: 'Tounsi',
+        prenom: 'Rim',
+        role: 'Graphiste'
+    },
+    {
+        nom: 'El Fassi',
+        prenom: 'Bilal',
+        role: 'Administrateur base de données'
+    },
+    {
+        nom: 'Mouline',
+        prenom: 'Asmae',
+        role: 'Responsable qualité'
+    },
+    {
+        nom: 'Cherkaoui',
+        prenom: 'Driss',
+        role: 'Auditeur IT'
+    },
+    {
+        nom: 'Bouzidi',
+        prenom: 'Nabil',
+        role: 'Développeur fullstack'
+    },
+    {
+        nom: 'Ait Said',
+        prenom: 'Leila',
+        role: 'Chargée RH'
+    },
+    {
+        nom: 'Mernissi',
+        prenom: 'Oumaima',
+        role: 'Content manager'
+    },
+    {
+        nom: 'Dakki',
+        prenom: 'Anas',
+        role: 'Technicien support'
+    },
+    {
+        nom: 'Bekkali',
+        prenom: 'Reda',
+        role: 'Ingénieur cloud'
+    },
+    {
+        nom: 'Hajji',
+        prenom: 'Siham',
+        role: 'Office manager'
+    },
+    {
+        nom: 'El Khatib',
+        prenom: 'Tarik',
+        role: 'Consultant fonctionnel'
+    },
+    {
+        nom: 'Bounou',
+        prenom: 'Younes',
+        role: 'Analyste financier'
+    },
+    {
+        nom: 'Karimi',
+        prenom: 'Ilham',
+        role: 'Responsable marketing'
+    },
+    {
+        nom: 'Saidi',
+        prenom: 'Achraf',
+        role: 'Développeur junior'
+    }
 ])
+
+const isShown = ref(false)
+const search_list = ref([])
+const popupContent_ = ref({
+    nom: ' ',
+    prenom: ' ',
+    role: ''
+}) // Pour stocker le texte dynamique
+
+function find_user(nom) {
+    var temp_list = []
+    users_list.value.forEach(element => {
+        if (element.nom.toLowerCase().includes(nom.toLowerCase())) {
+            temp_list.push({
+                nom: element.nom.toLowerCase().replace(nom.toLowerCase(), `<span class="bg-yellow-800">${nom}</span>`),
+                prenom: element.prenom,
+                role: element.role
+            })
+        }
+    });
+    search_list.value = temp_list
+
+    // return users_list.value.find(user => user.nom === nom)
+}
+
+function openPopup_(message) {
+    popupContent_.value = message // On définit le message
+    isShown.value = true // On ouvre le popup
+}
+
+onMounted(() => {
+    search_list.value = users_list.value
+})
 </script>
 
 <style scoped>

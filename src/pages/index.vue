@@ -1,5 +1,7 @@
 <template>
-  <HelloWorld/>
+  <div class="h-full w-full flex items-center justify-center">
+    Chargement ...
+  </div>
 </template>
 
 <script setup>
