@@ -13,6 +13,6 @@ import {
 const router = useRouter()
   //
   onMounted(() => {
-    router.replace('/auth/accueil')
+    router.replace('/bureau/accueil')
   })
 </script>

@@ -22,6 +22,8 @@ declare module 'vue-router/auto-routes' {
     '/auth/accueil': RouteRecordInfo<'/auth/accueil', '/auth/accueil', Record<never, never>, Record<never, never>>,
     '/auth/signin': RouteRecordInfo<'/auth/signin', '/auth/signin', Record<never, never>, Record<never, never>>,
     '/auth/signup': RouteRecordInfo<'/auth/signup', '/auth/signup', Record<never, never>, Record<never, never>>,
+    '/bureau/accueil': RouteRecordInfo<'/bureau/accueil', '/bureau/accueil', Record<never, never>, Record<never, never>>,
+    '/bureau/liste_membre': RouteRecordInfo<'/bureau/liste_membre', '/bureau/liste_membre', Record<never, never>, Record<never, never>>,
     '/users/contact': RouteRecordInfo<'/users/contact', '/users/contact', Record<never, never>, Record<never, never>>,
     '/users/document': RouteRecordInfo<'/users/document', '/users/document', Record<never, never>, Record<never, never>>,
     '/users/membre': RouteRecordInfo<'/users/membre', '/users/membre', Record<never, never>, Record<never, never>>,
@@ -53,6 +55,14 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/auth/signup.vue': {
       routes: '/auth/signup'
+      views: never
+    }
+    'src/pages/bureau/accueil.vue': {
+      routes: '/bureau/accueil'
+      views: never
+    }
+    'src/pages/bureau/liste_membre.vue': {
+      routes: '/bureau/liste_membre'
       views: never
     }
     'src/pages/users/contact.vue': {

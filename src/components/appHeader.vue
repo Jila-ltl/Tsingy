@@ -1,5 +1,4 @@
 <template>
-
 <div v-if="!isSpecialPage" class=" flex border border-b px-6 py-4 justify-between ">
     <span class="mt-4">Tsingy Marrakech</span>
     <div class=" flex ">
