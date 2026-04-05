@@ -1,175 +1,282 @@
 <template>
- <aside class="sidebar items-center">
-    <ul class="menu-list items-center">
-      <li v-for="item in menuItems" :key="item.label" class="text-center">
-        <router-link :to="item.url" :class="{ 'exit-link': item.isExit }">
-          {{ item.label }}
-        </router-link>
-      </li>
-    </ul>
-</aside>
 
-<div class="profile-header">
-    <div class="cover-photo" :style="{ backgroundImage: `url('/img/cover.jpg')` }"></div>
+ <div class="bg-[#111827] grid grid-cols-2 p-8 lg:col-span-2 min-h-screen justify-center gap-10">
 
-    <div class="avatar-container">
-      <div class="profile-circle" :style="{ backgroundImage: `url('/img/profile.jpeg')` }"></div>
-      <div class="profile-info">
-        <h1>Juliana RAZAFINDRAMANANA</h1>
-        <p>Membre simple</p>
-        <p>
-            <router-link to="#">Modifier</router-link>
-            <span class="mdi mdi-pencil-box-outline"></span>
-        </p>
+  <div class="grid grid-cols-1 md:grid-cols-2 h-fit max-w-5xl w-full mt-[20%] border border-gray-800 rounded-2xl overflow-hidden">
+
+    <div class="p-8 border border-gray-800 hover:bg-gray-800/30 transition-colors group relative " @click="afficher('procuration')">
+      <div class="flex justify-between items-start">
+        <div class="p-3 bg-teal-500/10 rounded-lg text-teal-400">
+          <span class="mdi mdi-file-document-outline h-6 w-6"></span>
+        </div>
+        <span class="text-gray-600 group-hover:text-gray-400 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17 7l-10 10M17 7H7M17 7v10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
       </div>
+      <h3 class="text-white font-semibold mt-6 text-lg">Demande de procuration</h3>
+      <p class="text-gray-400 mt-2 text-sm leading-relaxed">Doloribus dolores nostrum quia qui natus officia quod et dolorem. Sit repellendus qui ut at blanditiis et quo et molestiae.</p>
+    </div>
+
+    <div class="p-8 border border-gray-800 hover:bg-gray-800/30 transition-colors group" @click="afficher('reclamation')">
+      <div class="flex justify-between items-start">
+        <div class="p-3 bg-purple-500/10 rounded-lg text-purple-400">
+          <span class="mdi mdi-alert-box h-6 w-6"></span>
+        </div>
+        <span class="text-gray-600 group-hover:text-gray-400 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17 7l-10 10M17 7H7M17 7v10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+      <h3 class="text-white font-semibold mt-6 text-lg">Reclamation bourse</h3>
+      <p class="text-gray-400 mt-2 text-sm leading-relaxed">Doloribus dolores nostrum quia qui natus officia quod et dolorem. Sit repellendus qui ut at blanditiis et quo et molestiae.</p>
+    </div>
+
+    <div class="p-8 border border-gray-800 hover:bg-gray-800/30 transition-colors group" @click="afficher('certificat')">
+      <div class="flex justify-between items-start">
+        <div class="p-3 bg-blue-500/10 rounded-lg text-blue-400">
+         <span class="mdi mdi-folder-arrow-up-outline h-6 w-6"></span>
+        </div>
+        <span class="text-gray-600 group-hover:text-gray-400 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17 7l-10 10M17 7H7M17 7v10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+      <h3 class="text-white font-semibold mt-6 text-lg">Save certificate</h3>
+      <p class="text-gray-400 mt-2 text-sm leading-relaxed">Doloribus dolores nostrum quia qui natus officia quod et dolorem. Sit repellendus qui ut at blanditiis et quo et molestiae.</p>
+    </div>
+
+    <div class="p-8 border border-gray-800 hover:bg-gray-800/30 transition-colors group" @click="afficher('modification')">
+      <div class="flex justify-between items-start">
+        <div class="p-3 bg-yellow-500/10 rounded-lg text-yellow-400">
+         <span class="mdi mdi-account-edit h-6 w-6"></span>
+        </div>
+        <span class="text-gray-600 group-hover:text-gray-400 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17 7l-10 10M17 7H7M17 7v10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+      <h3 class="text-white font-semibold mt-6 text-lg">Modifier mes infos</h3>
+      <p class="text-gray-400 mt-2 text-sm leading-relaxed">Doloribus dolores nostrum quia qui natus officia quod et dolorem. Sit repellendus qui ut at blanditiis et quo et molestiae.</p>
+    </div>
+  </div>
+
+
+  <div class="lg:col-span-1 w-full h-full p-10 mb-6 rounded-lg max-w-5xl items-center justify-center overflow-y-auto" >
+    <!-- reclamation -->
+    <div v-if="open === 'reclamation'">
+    <header class="flex justify-center items-center mb-8 border-b pb-4">
+    <h1 class="text-2xl font-light italic items-center">Reclamation bourse</h1>
+  </header>
+  <div class="min-h-screen p-8 text-white font-sans">
+    <div class="max-w-xl space-y-6">
+
+    <div>
+      <label for="username" class="block text-sm font-bold mb-2">
+        Username
+      </label>
+      <div class="flex rounded-md bg-[#1e293b] border border-gray-700 focus-within:border-indigo-500 transition shadow-sm">
+        <input
+          type="text"
+          name="username"
+          id="username"
+          placeholder="janesmith"
+          class="block w-full border-0 bg-transparent py-2 pl-1 pr-3 text-white placeholder-gray-500 focus:ring-0 sm:text-sm"
+        >
+    </div>
+  </div>
+
+    <div>
+      <label for="about" class="block text-sm font-bold mb-2">
+        Decrivez-votre reclamation
+      </label>
+      <textarea
+        id="about"
+        name="about"
+        rows="4"
+        class="block w-full rounded-md border border-gray-700 bg-[#1e293b] py-2 px-3 text-white shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+      ></textarea>
+      <p class="mt-2 text-sm text-gray-400">
+        Soyez claire et precis
+      </p>
+    </div>
+    <div class="flex items-center gap-4">
+      <button
+        type="submit"
+        class="inline-flex justify-center rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Envoyer
+      </button>
     </div>
 </div>
 
-<div class="flex ml-20 justify-center  text-xl font-bold border-lime-700" id="identite">
-      <div id="present" class="space-y-10 mt-10 border-collapse">
-        <p>Nom: RAZAFINDRAMANANA</p>
-        <p>Prenom: Juliana</p>
-        <p>Date de naissance: 04/10/2005</p>
-        <p>Profession: Etudiante</p>
-      </div>
-
-      <div id="present" class="space-y-10 mt-10">
-        <p>Passeport: A24X52268</p>
-        <p>Carte sejour: E034606W</p>
-        <p>Date d'arrivee au Maroc: 08/09/2024</p>
-        <p>Domicile: Jnane Aourad</p>
-      </div>
-      
+  <div class="max-w-6xl py-5 mx-auto overflow-hidden">
+    <table class="min-w-full table-fixed border-separate border-spacing-0">
+      <thead>
+        <tr class="text-left">
+          <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Name</th>
+          <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Description</th>
+          <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Date</th>
+          <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Etat</th>
+          <th class="pb-4 pt-2 px-4"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-800 border-t border-gray-800">
+        <tr class="hover:bg-white/5 transition-colors">
+          <td class="py-4 px-4 text-sm font-bold text-white">Lindsay Walton</td>
+          <td class="py-4 px-4 text-sm text-gray-400">Front-end Developer</td>
+          <td class="py-4 px-4 text-sm text-gray-400">lindsay.walton@example.com</td>
+          <td class="py-4 px-4 text-sm text-gray-400">Member</td>
+          <td class="py-4 px-4 text-right text-sm font-medium">
+            <a href="#" class="text-indigo-500 hover:text-indigo-400">Edit</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 </div>
 
-  
+
+<!-- modification -->
+<div v-if="open === 'modification'" >
+    <header class="flex justify-center items-center mb-8 border-b pb-4">
+    <h1 class="text-2xl font-light italic items-center">Modifier votre profile</h1>
+  </header>
+  <div class="h-fit bg-[#0f172a] p-8 text-white font-sans ">
+  <div class="max-w-4xl">
+    <div class="mb-8">
+      <h2 class="text-base font-semibold leading-7 text-white">Personal Information</h2>
+      <p class="mt-1 text-sm leading-6 text-gray-400">Use a permanent address where you can receive mail.</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+
+      <div class="sm:col-span-3">
+        <label for="first-name" class="block text-sm font-medium leading-6 text-white mb-2">First name</label>
+        <input type="text" name="first-name" id="first-name" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+      </div>
+
+      <div class="sm:col-span-3">
+        <label for="last-name" class="block text-sm font-medium leading-6 text-white mb-2">Last name</label>
+        <input type="text" name="last-name" id="last-name" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+      </div>
+
+      <div class="sm:col-span-4">
+        <label for="email" class="block text-sm font-medium leading-6 text-white mb-2">Email address</label>
+        <input type="email" name="email" id="email" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+      </div>
+
+      <div class="sm:col-span-3">
+        <label for="country" class="block text-sm font-medium leading-6 text-white mb-2">Country</label>
+        <select id="country" name="country" class="block w-full rounded-md border-0 bg-white/5 py-2 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+          <option>United States</option>
+          <option>Canada</option>
+          <option>France</option>
+        </select>
+      </div>
+
+      <div class="col-span-full">
+        <label for="street-address" class="block text-sm font-medium leading-6 text-white mb-2">Street address</label>
+        <input type="text" name="street-address" id="street-address" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+      </div>
+
+      <div class="sm:col-span-2">
+        <label for="city" class="block text-sm font-medium leading-6 text-white mb-2">City</label>
+        <input type="text" name="city" id="city" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+      </div>
+
+      <div class="sm:col-span-2">
+        <label for="region" class="block text-sm font-medium leading-6 text-white mb-2">State / Province</label>
+        <input type="text" name="region" id="region" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+      </div>
+
+      <div class="sm:col-span-2">
+        <label for="postal-code" class="block text-sm font-medium leading-6 text-white mb-2">ZIP / Postal code</label>
+        <input type="text" name="postal-code" id="postal-code" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+      </div>
+
+    </div>
+    <div class="flex items-center gap-4 mt-6">
+      <button
+        type="submit"
+        class="inline-flex justify-center rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Envoyer
+      </button>
+    </div>
+    <div class="mt-10 border-t border-white/10 pt-10"></div>
+  </div>
+</div>
+</div>
+
+<!-- certificate -->
+ <div v-if="open === 'certificat'" >
+<div class="bg-[#0f172a] p-10 text-white font-sans">
+  <div class="max-w-4xl">
+       <header class="flex justify-center items-center mb-8 border-b pb-4">
+    <h1 class="text-2xl font-light italic items-center">Save my certificate</h1>
+  </header>
+    <label class="block text-sm font-medium leading-6 text-white mb-2">
+      Attachments
+    </label>
+
+    <div class="mt-2 flex justify-center rounded-lg border-2 border-dashed border-white/10 px-6 py-10 bg-white/5 hover:border-indigo-500 hover:bg-white/10 transition-all group">
+      <div class="text-center">
+        <svg class="mx-auto h-12 w-12 text-gray-500 group-hover:text-indigo-400 transition-colors" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+        </svg>
+
+        <div class="mt-4 flex text-sm leading-6 text-gray-400 justify-center">
+          <label for="doc-upload" class="relative cursor-pointer rounded-md font-semibold text-indigo-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 focus-within:ring-offset-[#0f172a] hover:text-indigo-300">
+            <span>Upload a file</span>
+            <input id="doc-upload" name="doc-upload" type="file" class="sr-only" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt">
+          </label>
+          <p class="pl-1">or drag and drop</p>
+        </div>
+
+        <p class="text-xs leading-5 text-gray-500 mt-1">
+          PDF, DOCX or XLS up to 20MB
+        </p>
+      </div>
+    </div>
+
+    <div class="sm:col-span-3 mt-6">
+        <label for="annee-scolaire" class="block text-sm font-medium leading-6 text-white mb-2">Annee scolaire</label>
+        <input type="text" name="annee-scolaire" id="annee-scolaire" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+    </div>
+     <div class="flex items-center gap-4 mt-6">
+      <button
+        type="submit"
+        class="inline-flex justify-center rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Envoyer
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+
+
+</div>
+</div>
+
+
+
+
+
 
 </template>
 
 <script setup>
-const menuItems = ref([
-  { label: 'Mes infos', url: 'membre' },
-  { label: 'Modifier mon mot de passe', url: '#' },
-  { label: 'Demande de documents', url: 'document' },
-  { label: 'Se deconnecter', url: '/auth/accueil', isExit: true }
-])
+import {
+    ref
+} from 'vue'
+const open = ref('')
+function afficher(message) {
+    open.value = message
+}
 </script>
 
-<style scoped>
-    .sidebar {
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100vh;
-  width: 260px;
-  /* Effet de transparence et de flou */
-  background: rgba(255, 255, 255, 0.15); 
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px); /* Pour Safari */
-  
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Centre le menu verticalement */
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-  z-index: 100;
-}
-
-.menu-list {
-  list-style: none;
-  padding: 0;
-}
-
-.menu-list li {
-  margin: 25px 0;
-}
-
-.menu-list a {
-  text-decoration: none;
-  color: white;
-  font-size: 1.1rem;
-  font-weight: 300;
-  transition: all 0.3s ease;
-  display: block;
-}
-
-.menu-list a:hover {
-  transform: translateX(10px); /* Petit décalage au survol */
-  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-}
-
-.exit-link {
-  margin-top: 50px; /* Espace supplémentaire pour le bouton déconnexion */
-}
-
-
-/* body */
-.profile-header {
-  width: 100%;
-  background: #111; /* Fond sombre pour coller à ton design */
-  margin-left: 260px;
-}
-
-.cover-photo {
-  width: 100%;
-  height: 250px;
-  background-size: cover;
-  background-position: center;
-  background-color: #333;
-}
-
-.avatar-container {
-  padding: 0 50px; /* Aligne l'avatar avec ton contenu */
-  display: flex;
-  align-items: flex-end; /* Aligne le texte en bas de l'avatar */
-  gap: 20px;
-}
-
-.profile-circle {
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  border: 5px solid #111; /* Bordure épaisse de la couleur du fond (effet Facebook) */
-  background-size: cover;
-  background-position: center;
-  
-  /* L'effet magique : */
-  margin-top: -150px; /* La moitié de la hauteur pour chevaucher parfaitement */
-  position: relative;
-  z-index: 2;
-  background-color: #444;
-}
-
-.profile-info {
-  margin-bottom: 90px;
-  color: white;
-}
-
-.profile-info h1 {
-  margin: 0;
-  font-size: 1.8rem;
-}
-
-.profile-info a {
-    color: white;
-    margin: 0;
-    font-size: 1rem;
-}
-
-#present {
-    height: 300px;
-    width: 40%;
-}
-#identite{
-    width: 150vh;
-    margin-left: 270px;
-    background-color: #444;
-    border: #444;
-}
-
-p{
-    align-items: center;
-}
-
-
+<style>
 
 </style>

@@ -1,23 +1,20 @@
 <template>
 <div class=" h-[91vh] w-full overflow-y-auto">
-  <main class="landing-page">
-    <div class="container">
-        <div class="hero-text">
-            <p class="tagline">BIENVENU SG</p>
+  <div class="grid grid-cols-2 pt-10 pl-10 lg:grid-cols-4">
+        <div class="lg:col-span-2 shadow-sm min-h-[600px]">
+            <span class=" text-5xl text-[#00c2cb] font-bold">BIENVENU SG</span>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur iusto, natus laborum est modi neque blanditiis, ducimus magni error id voluptatum facilis. Deleniti voluptatum beatae perferendis? Expedita, aperiam! Dolores, consequuntur?</p>
-            <button class="btn">Modifier</button>
+            <button class="btn" @click="diriger()">Modifier</button>
         </div>
-
-        <div class="hero-image">
+        <div class="lg:col-span-1 flex flex-col gap-6">
             <BlobImage imageSrc="/img/photo.jpeg" />
         </div>
-
     </div>
 
-</main>
-<div class="cards-container">
-    <div class="card">
-        <div class="card-header bg-blue">
+
+<div class="grid grid-cols-2 pl-6 pr-6 lg:grid-cols-4 gap-6 group relative">
+  <div class="card border border-gray-800 rounded-2xl">
+        <div class="flex justify-center items-center h-[240px] bg-blue border border-gray-800 rounded-2xl">
             <div class="fan">
                 <img src="/img/megaphone.png" alt="Person" class="masked-img">
             </div>
@@ -28,10 +25,10 @@
                 <span><button @click="openPopup('annonce')">Annonce</button></span>
             </div>
         </div>
-    </div>
+</div>
 
-    <div class="card">
-        <div class="card-header bg-green">
+    <div class="border-gray-800 rounded-2xl">
+        <div class="flex justify-center items-center h-[240px] border border-gray-800 rounded-2xl bg-green">
             <div class="fan">
                 <img src="/img/check.png" alt="Person" class="masked-img">
             </div>
@@ -44,8 +41,8 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header bg-yellow">
+    <div class="border-gray-800 rounded-2xl">
+        <div class="flex justify-center items-center h-[240px] border border-gray-800 rounded-2xl bg-yellow">
             <div class="fan">
                 <img src="/img/calendar.png" alt="Person" class="masked-img">
             </div>
@@ -58,8 +55,8 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header bg-purple-700">
+    <div class="border-gray-800 rounded-2xl">
+        <div class="flex justify-center items-center h-[240px] border border-gray-800 rounded-2xl bg-purple-700">
             <div class="fan">
                 <img src="/img/member.png" alt="Person" class="masked-img">
             </div>
@@ -145,36 +142,46 @@
     <div class="titre text-center pt-8">
         <h3>Reclamations</h3>
     </div>
-    <div class="reclamation-container mb-8">
+    <div class="min-h-screen bg-[#0b0e14] p-8 flex items-center justify-center font-sans">
+  <div class="w-full max-w-5xl border border-gray-800 rounded-xl p-6 bg-[#0f172a]/20">
 
-        <ul class="reclamation-list">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-            <li class="reclamation-item">
-                <img src="/img/profile.jpeg" alt="Juliana" class="avatar">
-                <div class="notif-content">
-                    <p><strong>Juliana</strong> a aimé votre photo de profil.</p>
-                    <span class="notif-time">Il y a 2 minutes</span>
-                </div>
-                <div class="unread-dot"></div>
-            </li>
+      <div class="flex items-center space-x-4 p-5 rounded-lg border border-gray-800 bg-[#1e293b]/30">
+        <img class="h-12 w-12 rounded-full object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Leslie Alexander">
+        <div>
+          <h3 class="text-sm font-bold text-white">Leslie Alexander</h3>
+          <p class="text-sm text-gray-500">Co-Founder / CEO</p>
+        </div>
+      </div>
 
-            <li class="reclamation-item">
-                <img src="/img/photo.jpeg" alt="Bob" class="avatar">
-                <div class="notif-content">
-                    <p><strong>Bob</strong> vous a envoyé une invitation.</p>
-                    <span class="notif-time">Hier à 14:30</span>
-                </div>
-            </li>
+      <div class="flex items-center space-x-4 p-5 rounded-lg border border-gray-800 bg-[#1e293b]/30">
+        <img class="h-12 w-12 rounded-full object-cover" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Michael Foster">
+        <div>
+          <h3 class="text-sm font-bold text-white">Michael Foster</h3>
+          <p class="text-sm text-gray-500">Co-Founder / CTO</p>
+        </div>
+      </div>
 
-            <li class="reclamation-item">
-                <img src="/img/photo.jpeg" alt="Bob" class="avatar">
-                <div class="notif-content">
-                    <p><strong>Bob</strong> vous a envoyé une invitation.</p>
-                    <span class="notif-time">Hier à 14:30</span>
-                </div>
-            </li>
-        </ul>
+      <div class="flex items-center space-x-4 p-5 rounded-lg border border-gray-800 bg-[#1e293b]/30">
+        <img class="h-12 w-12 rounded-full object-cover" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Dries Vincent">
+        <div>
+          <h3 class="text-sm font-bold text-white">Dries Vincent</h3>
+          <p class="text-sm text-gray-500">Business Relations</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-4 p-5 rounded-lg border border-gray-800 bg-[#1e293b]/30">
+        <img class="h-12 w-12 rounded-full object-cover" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Lindsay Walton">
+        <div>
+          <h3 class="text-sm font-bold text-white">Lindsay Walton</h3>
+          <p class="text-sm text-gray-500">Front-end Developer</p>
+        </div>
+      </div>
+
     </div>
+  </div>
+</div>
 </div>
 
 <foot />
@@ -201,10 +208,22 @@ const consulter = () => {
     router.push('liste_membre')
 
 }
+const diriger
+  = () => {
+      router.push('../users/evenement')
+  }
 const monTexteLong = ref('')
 </script>
 
 <style scoped>
+
+.card-header {
+    height: 240px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .reclamation-container {
     width: 1000px;
     height: auto;
@@ -307,36 +326,11 @@ textarea {
     color: white;
 }
 
-.cards-container {
-    display: flex;
-    gap: 24px;
-    justify-content: center;
-    padding: 40px;
-    background-color: #000;
-    /* Fond noir global */
-    height: auto;
-}
 
-.card {
-    width: 100%;
-    max-width: 400px;
-    border-radius: 24px;
-    overflow: hidden;
-    /* Pour que les bords soient arrondis en haut */
-    background-color: #1a1a1a;
-    /* Fond gris sombre des cadres */
-    display: flex;
-    flex-direction: column;
 
-}
 
-.card-header {
-    height: 240px;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
+
 
 .bg-green {
     background: linear-gradient(135deg, #00c28e, #1a9e7a);
@@ -425,12 +419,7 @@ p {
     margin: 20px 0;
 }
 
-.tagline {
-    font-size: 3.5rem;
-    color: #00c2cb;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
+
 
 .btn {
     padding: 15px 30px;

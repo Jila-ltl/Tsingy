@@ -24,10 +24,8 @@ declare module 'vue-router/auto-routes' {
     '/auth/signup': RouteRecordInfo<'/auth/signup', '/auth/signup', Record<never, never>, Record<never, never>>,
     '/bureau/accueil': RouteRecordInfo<'/bureau/accueil', '/bureau/accueil', Record<never, never>, Record<never, never>>,
     '/bureau/liste_membre': RouteRecordInfo<'/bureau/liste_membre', '/bureau/liste_membre', Record<never, never>, Record<never, never>>,
-    '/users/contact': RouteRecordInfo<'/users/contact', '/users/contact', Record<never, never>, Record<never, never>>,
-    '/users/document': RouteRecordInfo<'/users/document', '/users/document', Record<never, never>, Record<never, never>>,
+    '/users/evenement': RouteRecordInfo<'/users/evenement', '/users/evenement', Record<never, never>, Record<never, never>>,
     '/users/membre': RouteRecordInfo<'/users/membre', '/users/membre', Record<never, never>, Record<never, never>>,
-    '/users/modifier': RouteRecordInfo<'/users/modifier', '/users/modifier', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -65,20 +63,12 @@ declare module 'vue-router/auto-routes' {
       routes: '/bureau/liste_membre'
       views: never
     }
-    'src/pages/users/contact.vue': {
-      routes: '/users/contact'
-      views: never
-    }
-    'src/pages/users/document.vue': {
-      routes: '/users/document'
+    'src/pages/users/evenement.vue': {
+      routes: '/users/evenement'
       views: never
     }
     'src/pages/users/membre.vue': {
       routes: '/users/membre'
-      views: never
-    }
-    'src/pages/users/modifier.vue': {
-      routes: '/users/modifier'
       views: never
     }
   }
