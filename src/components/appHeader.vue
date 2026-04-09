@@ -34,7 +34,6 @@ const route = useRoute();
 
 const pagesSansHeader = ['membre','document', 'modifier'];
 const isSpecialPage = computed(() => {
-  // On vérifie si l'URL actuelle contient l'un des mots de notre liste
   return pagesSansHeader.some(page => route.path.includes(page));
 });
 
