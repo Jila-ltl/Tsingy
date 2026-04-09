@@ -4,16 +4,16 @@
  * Bootstraps Vuetify and other plugins then mounts the App`
  */
 
+// Composables
+import { createApp } from 'vue'
 // Plugins
 import { registerPlugins } from '@/plugins'
-import '@/../public/style.css'
-import 'vuetify/styles'
-
 // Components
 import App from './App.vue'
 
-// Composables
-import { createApp } from 'vue'
+import '@/../public/style.css'
+
+import 'vuetify/styles'
 
 // Styles
 import 'unfonts.css'

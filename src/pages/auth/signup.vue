@@ -1,150 +1,394 @@
 <template>
-<div id="bg_img" class="  w-full flex flex-row justify-center items-center h-full">
-  <div class="flex flex-row sm:w-[80vw] justify-center" id="container">
-    <div class="form-container">
-      <div class="justify-center mb-10 ml-36 mt-10">
-          <span class="text-black text-3xl font-bold">Inscription</span>
-      </div>
-      <form @submit.prevent="envoyerFormulaire">
-        <div v-for="champ in configurationChamps" :key="champ.id" class="field-group">
-          <label :for="champ.id">{{ champ.label }}</label>
+  <div id="bg_img" class="flex h-full w-full items-center justify-center">
+    <div class="signup-shell sm:w-[80vw]">
+      <div class="form-container">
+        <div class="mb-8 text-center sm:text-left">
+          <span class="title-text">Inscription</span>
+        </div>
 
-        <select 
-          v-if="champ.type === 'select'"
-          :id="champ.id"
-          v-model="formValues[champ.id]"
-          class="custom-input custom-select"
-        >
-        <option value="" disabled selected>Choisir une option...</option>
-        <option v-for="opt,i in champ.options" :key="i" :value="opt">
-          {{ opt }}
-        </option>
-        </select>
+        <div class="step-header">
+          <div class="step-copy ">
+            <span class="step-badge bg-red-500">Etape {{ currentPage }} / {{ totalPages }}</span>
+            <p class="step-description">
+              Remplissez les informations demandees, page par page.
+            </p>
+          </div>
+          <div class="step-dots">
+            <button
+              v-for="page in totalPages"
+              :key="page"
+              class="step-dot"
+              :class="{ 'step-dot-active': page === currentPage }"
+              type="button"
+              @click="goToPage(page)"
+            />
+          </div>
+        </div>
 
-        <input 
-          v-else
-          :id="champ.id"
-          :type="champ.type"
-          :placeholder="champ.placeholder"
-          v-model="formValues[champ.id]" 
-          class="custom-input"
-        />
+        <div class="fields-grid">
+          <div v-for="champ in champsAffiches" :key="champ.id" class="field-group">
+            <label class="field-label" :for="champ.id">
+              {{ champ.label }}
+            </label>
 
-      </div>
+            <Select_
+              v-if="champ.type === 'select'"
+              :id="champ.id"
+              v-model="formValues[champ.id]"
+              :options="champ.options || []"
+              :placeholder="champ.placeholder"
+            />
 
-            <v-btn :loading="loading" class="flex-grow-1" height="48" variant="tonal" @click="inscription_rout()">
+            <Input_
+              v-else
+              :id="champ.id"
+              v-model="formValues[champ.id]"
+              :placeholder="champ.placeholder"
+              :type="champ.type"
+            />
+          </div>
+        </div>
+
+        <div class="actions-row">
+          <v-btn
+            class="action-btn"
+            :disabled="currentPage === 1"
+            height="48"
+            variant="outlined"
+            @click="goToPreviousPage"
+          >
+            Precedent
+          </v-btn>
+
+          <v-btn
+            v-if="currentPage < totalPages"
+            class="action-btn next-btn"
+            height="48"
+            variant="tonal"
+            @click="goToNextPage"
+          >
+            Suivant
+          </v-btn>
+
+          <v-btn
+            v-else
+            class="action-btn submit-btn"
+            height="48"
+            :loading="loading"
+            variant="tonal"
+            @click="inscription_rout"
+          >
             S'inscrire
-            </v-btn>
-        
-    </form>
-  </div>
-  <div class="flex flex-col justify-center sm:px-24 sm:w-[50%]" >
-        <div class="justify-end ml-32">
-            <v-icon size="100" class="ml-5">mdi-account-circle</v-icon>
+          </v-btn>
         </div>
-        <div class="justify-center">
-            <p class="text-center text-400 text-3xl font-bold ml-10 ">Nous sommes ravis de vous accueillir</p>
-        </div>
+      </div>
+
+      <div class="aside-panel">
+        <v-icon class="mb-6" size="100">
+          mdi-account-circle
+        </v-icon>
+        <p class="welcome-text">
+          Nous sommes ravis de vous accueillir
+        </p>
+      </div>
+    </div>
   </div>
-   </div>
-</div>
 </template>
 
 <script setup>
+  import {
+    computed,
+    ref,
+  } from 'vue'
+  import {
+    useRouter,
+  } from 'vue-router'
 
-import { ref, computed } from 'vue';
+  const router = useRouter()
+  const loading = ref(false)
+  const currentPage = ref(1)
+  const champsParPage = 6
 
-// 1. Les données saisies par l'utilisateur
-const formValues = ref({
-  Nom: '',
-  email: '',
-  message: ''
-});
+  const configurationChamps = [{
+                                 id: 'nom',
+                                 label: 'Nom',
+                                 type: 'text',
+                                 placeholder: 'Votre nom',
+                               },
+                               {
+                                 id: 'prenom',
+                                 label: 'Prenom',
+                                 type: 'text',
+                                 placeholder: 'Votre prenom',
+                               },
+                               {
+                                 id: 'mot_de_passe',
+                                 label: 'Mot de passe',
+                                 type: 'password',
+                                 placeholder: 'Mot de passe',
+                               },
+                               {
+                                 id: 'matricule',
+                                 label: 'Matricule AMCI',
+                                 type: 'text',
+                                 placeholder: 'Votre matricule AMCI',
+                               },
+                               {
+                                 id: 'date_naissance',
+                                 label: 'Date de naissance',
+                                 type: 'date',
+                                 placeholder: 'Votre date de naissance',
+                               },
+                               {
+                                 id: 'profession',
+                                 label: 'Profession',
+                                 type: 'select',
+                                 placeholder: 'Choisir votre profession',
+                                 options: ['Etudiant', 'Travailleur'],
+                               },
+                               {
+                                 id: 'passeport',
+                                 label: 'Passeport',
+                                 type: 'text',
+                                 placeholder: 'Numero de passeport',
+                               },
+                               {
+                                 id: 'carte_sejour',
+                                 label: 'Carte sejour',
+                                 type: 'text',
+                                 placeholder: 'Numero carte sejour',
+                               },
+                               {
+                                 id: 'arrivee_maroc',
+                                 label: 'Arrivee Maroc',
+                                 type: 'date',
+                                 placeholder: 'Date arrivee au Maroc',
+                               },
+                               {
+                                 id: 'domicile',
+                                 label: 'Domicile',
+                                 type: 'text',
+                                 placeholder: 'Votre adresse',
+                               },
+  ]
 
-// 2. Si tu veux générer les champs dynamiquement via une liste
-const configurationChamps = [
-  { id: 'nom', label: 'Nom', type: 'text', placeholder: 'Votre nom' },
-  { id: 'prenom', label: 'Prenom', type: 'text', placeholder: 'Votre prenom' },
-  { id: 'mdp', label: 'password', type: 'text', placeholder: 'Mot de passe' },
-  { id: 'matricule', label: 'Matricule AMCI', type: 'text', placeholder: 'Votre matricule AMCI' },
-  { id: 'naissance', label: 'Date de naissance', type: 'date', placeholder: 'Votre date de naissance' },
-  { id: 'profession', label: 'Profession', type: 'select', placeholder: ' Votre Profession', options: ['Etudiant', 'Travailleur'] },
-  { id: 'passeport', label: 'Passeport', type: 'text', placeholder: 'Numero de passeport' },
-  { id: 'carte sejour', label: 'Carte sejour', type: 'text', placeholder: 'Numero carte sejour' },
-  { id: 'arrive maroc', label: 'Arrive Maroc', type: 'date', placeholder: 'Date arrive au Maroc' },
-  { id: 'domicile', label: 'Domicile', type: 'text', placeholder: 'Votre adresse' },
-];
+  const formValues = ref(
+    Object.fromEntries(configurationChamps.map(champ => [champ.id, ''])),
+  )
 
+  const totalPages = computed(() => Math.ceil(configurationChamps.length / champsParPage))
+
+  const champsAffiches = computed(() => {
+    const startIndex = (currentPage.value - 1) * champsParPage
+    const endIndex = startIndex + champsParPage
+
+    return configurationChamps.slice(startIndex, endIndex)
+  })
+
+  function goToPage (page) {
+    currentPage.value = page
+  }
+
+  function goToPreviousPage () {
+    if (currentPage.value > 1) {
+      currentPage.value -= 1
+    }
+  }
+
+  function goToNextPage () {
+    if (currentPage.value < totalPages.value) {
+      currentPage.value += 1
+    }
+  }
+
+  async function inscription_rout () {
+    loading.value = true
+
+    try {
+      console.log('Donnees inscription', formValues.value)
+      await router.push('/auth/signin')
+    } finally {
+      loading.value = false
+    }
+  }
 </script>
 
 <style scoped>
 #bg_img {
-    background-image: url("../../../public/img/img1.png");
+    background-image: url('../../../public/img/img1.png');
     background-size: cover;
+    background-position: center;
 }
 
-#container {
-    box-shadow: 0px 2px 10px 1px rgba(71,71 ,71, 0.52);
-    background-image: linear-gradient(rgba(255,255,255,0.1),rgba(255,255,255,0));
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    height: auto;
-    width: 60%;
+.signup-shell {
+    width: min(1100px, 92vw);
+  height: min(720px, 82vh);
+    display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+    padding: 2.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 20px;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  overflow: hidden;
 }
 
-.field-group {
-  margin-bottom: 20px;
+.form-container {
+    flex: 1 1 60%;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
-label {
-  color: #000000; /* Ton doré */
-  margin-bottom: 5px;
-  font-weight: bold;
+.title-text {
+    color: white;
+    font-size: 1.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
-.custom-input {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
-  width: 350px;
-
-  outline: none;
+.step-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-.custom-input:focus {
-  border-color: #c5a059;
+.step-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.step-badge {
+    width: fit-content;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    background: rgba(242, 32, 32, 0.526);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.step-description {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.step-dots {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.step-dot {
+    width: 0.85rem;
+    height: 0.85rem;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.28);
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.step-dot-active {
+    background: #c5a059;
+    transform: scale(1.15);
+}
+
+.fields-grid {
+  flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.25rem;
+  align-content: start;
+  overflow-y: auto;
+  padding-right: 0.4rem;
+}
+
+.actions-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.75rem;
+}
+
+.action-btn {
+    flex: 1 1 0;
+}
+
+.next-btn {
+  background: white;
+  color: black;
 }
 
 .submit-btn {
-  background: #c5a059;
-  color: black;
-  padding: 12px 25px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.custom-select {
-  appearance: none; /* Supprime le style par défaut du navigateur */
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c5a059'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 1.5em;
-  padding-right: 2.5rem;
-  cursor: pointer;
-}
-
-/* Style des options (limité par le navigateur, mais aide à la lisibilité) */
-select option {
-  background-color: #1a1a1a;
+  background: #22c55e;
   color: white;
 }
 
-</style>
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
 
+.field-label {
+    color: white;
+    font-weight: 600;
+}
+
+.aside-panel {
+    flex: 1 1 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+  min-height: 0;
+}
+
+.welcome-text {
+    max-width: 18rem;
+    font-size: 1.8rem;
+    line-height: 1.3;
+}
+
+@media (max-width: 960px) {
+    .signup-shell {
+        flex-direction: column-reverse;
+        padding: 1.5rem;
+    height: min(780px, 88vh);
+    overflow-y: auto;
+    }
+
+    .step-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .fields-grid {
+      flex: initial;
+        grid-template-columns: 1fr;
+      overflow: visible;
+      padding-right: 0;
+    }
+
+    .actions-row {
+        flex-direction: column-reverse;
+    }
+
+    .welcome-text {
+        max-width: none;
+        font-size: 1.35rem;
+    }
+}
+</style>

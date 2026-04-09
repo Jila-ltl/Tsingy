@@ -17,9 +17,11 @@ declare module 'vue' {
     Carousel: typeof import('./src/components/Carousel.vue')['default']
     Foot: typeof import('./src/components/foot.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    Input_: typeof import('./src/components/UI/input_.vue')['default']
     MyModal: typeof import('./src/components/MyModal.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Select_: typeof import('./src/components/UI/select_.vue')['default']
     SIDEBAR: typeof import('./src/components/SIDEBAR.vue')['default']
   }
 }

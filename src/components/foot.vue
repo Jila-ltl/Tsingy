@@ -1,48 +1,44 @@
-
 <template>
   <footer class="site-footer">
     <template v-for="(item, index) in contactInfos" :key="index">
-      
+
       <div class="footer-item">
-        <svg-icon type="mdi" :path="item.iconPath" class="footer-icon"></svg-icon>
+        <svg-icon class="footer-icon" :path="item.iconPath" type="mdi" />
         <div class="text-content">
           <h4>{{ item.title }}</h4>
           <p>{{ item.value }}</p>
         </div>
       </div>
 
-      <div v-if="index < contactInfos.length - 1" class="separator"></div>
-      
+      <div v-if="index < contactInfos.length - 1" class="separator" />
+
     </template>
   </footer>
 </template>
-  
-
 
 <script setup>
-import { ref } from 'vue'
-import SvgIcon from '@jamescoyle/vue-icon'
-import { mdiEmail, mdiMapMarker, mdiPhone } from '@mdi/js' // Ajoute les autres ici
+  import SvgIcon from '@jamescoyle/vue-icon'
+  import { mdiEmail, mdiMapMarker, mdiPhone } from '@mdi/js' // Ajoute les autres ici
+  import { ref } from 'vue'
 
-// On crée notre tableau directement
-const contactInfos = ref([
-  {
-    title: 'ADRESSE',
-    value: "3139 route du Houga, 40800 Aire sur l'Adour",
-    iconPath: mdiMapMarker
-  },
-  {
-    title: 'TÉLÉPHONE',
-    value: '05 58 71 99 30',
-    iconPath: mdiPhone
-  },
-  {
-    title: 'E-MAIL',
-    value: 'contact@sarrade-construction.com',
-    iconPath: mdiEmail
-  }
-])
-
+  // On crée notre tableau directement
+  const contactInfos = ref([
+    {
+      title: 'ADRESSE',
+      value: '3139 route du Houga, 40800 Aire sur l\'Adour',
+      iconPath: mdiMapMarker,
+    },
+    {
+      title: 'TÉLÉPHONE',
+      value: '05 58 71 99 30',
+      iconPath: mdiPhone,
+    },
+    {
+      title: 'E-MAIL',
+      value: 'contact@sarrade-construction.com',
+      iconPath: mdiEmail,
+    },
+  ])
 
 </script>
 

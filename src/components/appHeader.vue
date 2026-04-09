@@ -1,90 +1,85 @@
 <template>
-<div v-if="!isSpecialPage" class=" flex border border-b py-4 justify-between ">
-    <span class="mt-4">Tsingy Marrakech</span>
-    <div class=" flex ">
-        <div v-for="item,i in menu_list" :key="i" :title="item.label" @click="redirectTo(item.url)" :class="item.isactive==true? 'text-yellow-400':''" class="mx-5 cursor-pointer flex  flex-col-reverse items-center">
-            <img v-if="item.ico.includes('/')" :to="item.url" :src="item.ico" alt="logo" class="logo-img"/>
-            <span v-else @click="router.push(item.url)" :class="item.ico " class=" text-3xl"></span>
-        </div>
-
+  <div class=" flex border border-b py-4 justify-between px-4">
+    <div class=" flex flex-row items-center justify-center">
+      <img alt="logo" class=" w-12" src="../../public/img/logo.png">
+      <span class=" ml-5">Tsingy Marrakech</span>
     </div>
-    <div class=" ml-6 mt-4 flex flex-row uppercase" >
-        <div @click="login()" class="cursor-pointer">se connecter</div>
-    </div>
-</div>
+    <div class=" flex items-center justify-center">
 
-<div v-else class="flex border border-b py-4 justify-center" id="membre">
+      <div
+        v-for="item,i in menu_list"
+        :key="i"
+        class=" mx-4 cursor-pointer flex  flex-col-reverse items-center"
+        :class="isRouteActive(item.url) ? 'text-green-500' : ''"
+        :title="item.label"
+        @click="redirectTo(item.url)"
+      >
+        <img
+          v-if="item.ico.includes('/')"
+          alt="logo"
+          class="logo-img"
+          :src="item.ico"
+          :to="item.url"
+        >
+        <span v-else class=" text-3xl" :class="item.ico " @click="router.push(item.url)" />
+      </div>
+      <div class="cursor-pointer ml-10 bg-green-500 rounded-full px-3 py-1" @click="login()">se connecter</div>
+    </div>
+  </div>
+
+<!-- <div   class="flex border border-b py-4 justify-center" id="membre">
     <div class=" flex ">
         <span class="text-3xl ">Tsingy</span>
         <img src="../../public/img/logo.png" alt="logo" class="logo-img"/>
         <span class="text-3xl">Marrakech</span>
     </div>
-</div>
+</div> -->
 </template>
 
 <script setup>
-import {
-    ref, onMounted
-} from 'vue';
-import { useRouter,useRoute  } from 'vue-router';
-import { computed } from 'vue';
+  import {
+    ref,
+  } from 'vue'
+  import { useRoute, useRouter } from 'vue-router'
 
-const router = useRouter()
-const route = useRoute();
+  const router = useRouter()
+  const route = useRoute()
 
-const pagesSansHeader = ['membre','document', 'modifier'];
-const isSpecialPage = computed(() => {
-  // On vérifie si l'URL actuelle contient l'un des mots de notre liste
-  return pagesSansHeader.some(page => route.path.includes(page));
-});
-
-const menu_list = ref([
+  const menu_list = ref([
     {
-        label:'Accueil',
-        url:'/auth/accueil',
-        ico:'mdi mdi-home-account',
-        isactive:false
+      label: 'Accueil',
+      url: '/',
+      ico: 'mdi mdi-home',
     },
     {
-        label:'Blog',
-        url:'#',
-        ico:'../../public/img/logo.png',
-        isactive:false
+      label: 'Blog',
+      url: '/bureau/accueil',
+      ico: 'mdi mdi-ticket-account',
     },
     {
-        label:'Contact',
-        url:'/users/membre',
-        ico:'mdi mdi-account-group',
-        isactive:false
-    }
-])
+      label: 'Contact',
+      url: '/users/membre',
+      ico: 'mdi mdi-account-group',
+    },
+  ])
 
-const redirectTo= (item)=>{
-    // alert(item)
+  function isRouteActive (url) {
+    return route.path === url
+  }
+
+  function redirectTo (item) {
     router.push(item)
+  }
 
-    menu_list.value.forEach(element => {
-        element.isactive=false
-    });
-    item.isactive=true
-
-
-}
-
-function logout() {
-   router.push('/auth/accueil')
-}
-
-function login() {
-   router.push('/auth/signin')
-}
-
+  function login () {
+    router.push('/auth/signin')
+  }
 
 </script>
 
-<style >
+<style>
 .router-link-active {
-  color: red;
+  color: #22c55e;
 }
 
 .router-link-exact-active {

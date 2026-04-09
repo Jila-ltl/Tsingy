@@ -1,23 +1,22 @@
 <template>
-    <div class="blob-wrapper">
-        <div class="blob-bg"></div>
-    
-        <div class="blob-main">
-            <img :src="imageSrc" alt="Illustration" />
-        </div>
+  <div class="blob-wrapper">
+    <div class="blob-bg" />
+
+    <div class="blob-main">
+      <img alt="Illustration" :src="imageSrc">
     </div>
+  </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-const imageSrc= ref('/img/photo.jpeg')
-defineProps({
-  src: {
-    type: String,
-    required: true
-  }
-})
-
+  import { ref } from 'vue'
+  const imageSrc = ref('/img/photo.jpeg')
+  defineProps({
+    src: {
+      type: String,
+      required: true,
+    },
+  })
 
 </script>
 
@@ -60,6 +59,5 @@ defineProps({
   mask-size: contain;
   opacity: 0.5;
 }
-
 
 </style>
