@@ -1,190 +1,236 @@
 <template>
-<div class=" h-[91vh] w-full overflow-y-auto">
-  <div class="grid grid-cols-2 pt-10 pl-10 lg:grid-cols-4">
-        <div class="lg:col-span-2 shadow-sm min-h-[600px]">
+<div class=" h-[91vh] w-full overflow-y-auto bg-white">
+  <div class="grid grid-cols-2 pt-10 pl-10 lg:grid-cols-4 mb-4 bg-[url('/img/maki.jpg')] backdrop-blur-md bg-cover bg-center">
+        <div class="absolute inset-0 z-0 bg-gradient-to-br from-black/90 via-black/70 to-black/30"></div>
+        <div class="lg:col-span-2 z-50 p-10 shadow-sm min-h-[500px] justify-center">
             <span class=" text-5xl text-[#00c2cb] font-bold">BIENVENU SG</span>
+            <div class=" py-4 text-2xl text-white">
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur iusto, natus laborum est modi neque blanditiis, ducimus magni error id voluptatum facilis. Deleniti voluptatum beatae perferendis? Expedita, aperiam! Dolores, consequuntur?</p>
-            <button class="btn" @click="diriger()">Modifier</button>
+
+            </div>
+            <div class=" flex flex-row gap-4 pt-10">
+              <button class=" bg-white p-3 border border-solid rounded-md cursor-pointer hover:scale-105" @click="diriger('modifier')">Modifier</button>
+              <button class=" bg-transparent text-white p-3 border border-collapse rounded-md cursor-pointer hover:scale-105" @click="diriger('liste')">Parcourir les listes des membres</button>
+            </div>
         </div>
-        <div class="lg:col-span-1 flex flex-col gap-6">
-            <BlobImage imageSrc="/img/photo.jpeg" />
+        <div class="relative w-80 h-96 overflow-hidden bg-gray-900 rounded-[55%_45%_30%_70%_/_70%_60%_40%_30%]">
+              <img src="/img/photo.jpeg" alt="Portrait" class="absolute inset-0 w-full h-full object-cover">
+              <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-40"></div>
         </div>
+
+  </div>
+
+
+<div class="grid grid-cols-2 pl-6 pr-6 lg:grid-cols-3 gap-20 group relative pb-9">
+ <div v-for="item, i in icons" :key="i">
+  <div class="relative h-60 overflow-hidden rounded-2xl group cursor-pointer">
+    <div class=" text-center p-5 absolute inset-0 bg-lime-900 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
+      <span class="text-9xl text-white" :class="item.image "></span>
     </div>
-
-
-<div class="grid grid-cols-2 pl-6 pr-6 lg:grid-cols-4 gap-6 group relative">
-  <div class="card border border-gray-800 rounded-2xl">
-        <div class="flex justify-center items-center h-[240px] bg-blue border border-gray-800 rounded-2xl">
-            <div class="fan">
-                <img src="/img/megaphone.png" alt="Person" class="masked-img">
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="brand1">
+           <div class="absolute left-40 bottom-0 text-white">
+              <div class=" flex flex-row gap-1 text-center text-sm p-10">
                 <img src="/img/logo.png" alt="easywp" class="logo-icon">
-                <span><button @click="openPopup('annonce')">Annonce</button></span>
-            </div>
-        </div>
+                <span class=" text-white text-2xl text-center"><button @click="openPopup(item.name.toLowerCase())">{{ item.name }}</button></span>
+              </div>
+           </div>
+    </div>
 </div>
 
-    <div class="border-gray-800 rounded-2xl">
-        <div class="flex justify-center items-center h-[240px] border border-gray-800 rounded-2xl bg-green">
-            <div class="fan">
-                <img src="/img/check.png" alt="Person" class="masked-img">
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="brand1">
-                <img src="/img/logo.png" alt="easywp" class="logo-icon">
-                <span><button @click="openPopup('approbation')">Approbation des membres</button></span>
-            </div>
-        </div>
-    </div>
-
-    <div class="border-gray-800 rounded-2xl">
-        <div class="flex justify-center items-center h-[240px] border border-gray-800 rounded-2xl bg-yellow">
-            <div class="fan">
-                <img src="/img/calendar.png" alt="Person" class="masked-img">
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="brand1">
-                <img src="/img/logo.png" alt="starlight" class="logo-icon">
-                <span><button @click="openPopup('gestion')">gestion</button></span>
-            </div>
-        </div>
-    </div>
-
-    <div class="border-gray-800 rounded-2xl">
-        <div class="flex justify-center items-center h-[240px] border border-gray-800 rounded-2xl bg-purple-700">
-            <div class="fan">
-                <img src="/img/member.png" alt="Person" class="masked-img">
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="brand1">
-                <img src="/img/logo.png" alt="starlight" class="logo-icon">
-                <span><button @click="consulter()">Consulter</button></span>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div v-if="isOpen=='annonce'" class="overlay flex-col">
-    <div class="popup">
-        <h2 class=" text-white">Ajouter une annonce</h2>
-        <div class="form-container">
-            <form>
-                <div class="groupe">
-                    <label>Titre:</label><br>
-                    <input type="text" class="champ-saisie" name="Titre" placeholder="TItle">
-                </div>
+    <div class=" relative bg-gray-900 border-zinc-500 p-8 w-[500px] box-shadow-lg">
+        <h2 class=" text-white text-2xl font-bold mb-4">Annonce</h2 >
+      <div class=" h-[60%] p-8 text-white font-sans">
+      <div class="grid grid-cols-1 max-w-xl space-y-6">
 
-                <div class="groupe">
-                    <label>Message :</label><br>
-                    <textarea class="champ-saisie" name="message" placeholder="Écrivez ici..." variant="outlined"></textarea>
-                </div>
-                <div class="groupe">
-                    <label>Expiration :</label><br>
-                    <input type="date" class="champ-saisie" name="Expiration">
-                </div>
-                <v-btn :loading="loading" class="bouton" height="48" variant="tonal" @click="isOpen = false">
-                    Envoyer
-                </v-btn>
-                <button class="btn-close" @click="isOpen = false" aria-label="Fermer">&times;</button>
-            </form>
-        </div>
 
-    </div>
+      <label for="username" class="block text-sm font-bold mb-2">
+        titre
+      </label>
+      <div class="flex rounded-md bg-[#1e293b] border border-gray-700 focus-within:border-indigo-500 transition shadow-sm">
+        <input
+          type="text"
+          name="username"
+          id="username"
+          placeholder="janesmith"
+          class="block w-full border-0 bg-transparent py-2 pl-1 pr-3 text-white placeholder-gray-500 focus:ring-0 sm:text-sm"
+        >
+      </div>
 
+
+      <label for="about" class="block text-sm font-bold mb-2">
+        Message
+      </label>
+      <textarea
+        id="about"
+        name="about"
+        rows="4"
+        class="block w-full rounded-md border border-gray-700 bg-[#1e293b] py-2 px-3 text-white shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+      ></textarea>
+
+
+
+      <label for="date" class="block text-sm font-bold mb-2">
+        Expiratiom
+      </label>
+      <div class="flex rounded-md bg-[#1e293b] border border-gray-700 focus-within:border-indigo-500 transition shadow-sm">
+        <input
+          type="date"
+          name="date"
+          id="date"
+          placeholder="janesmith"
+          class="block w-full border-0 bg-transparent py-2 pl-1 pr-3 text-white placeholder-gray-500 focus:ring-0 sm:text-sm"
+        >
+
+      <button
+        type="submit"
+        @click="isOpen=null"
+        class=" rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Envoyer
+      </button>
+      <button class="btn-close" @click="isOpen = false" aria-label="Fermer">&times;</button>
 </div>
-<div v-if="isOpen=='approbation'" class="overlay">
-    <div class="popup ">
-        <h2>Approbation</h2>
-        <div class="form-container">
-            <form @submit.prevent="envoyerFormulaire">
-                <textarea id="message" v-model="monTexteLong" placeholder="Ecrivez votre texte" rows="6" class="custom-textarea">
-                    </textarea>
-                <div>
-                    <v-btn :loading="loading" class="bouton" height="48" variant="tonal" @click="isOpen = false">S'inscrire</v-btn>
-                </div>
-
-                <button class="btn-close" @click="isOpen = false" aria-label="Fermer">&times;</button>
-            </form>
-        </div>
-    </div>
 </div>
-<div v-if="isOpen=='gestion'" class="overlay">
-    <div class="popup">
-        <h2 class=" text-white">Evenement</h2>
-        <div class="form-container">
-            <form>
-                <div class="groupe">
-                    <label>Photo:</label><br>
-                    <input type="file" class="champ-saisie" name="Titre" placeholder="TItle">
-                </div>
-
-                <div class="groupe">
-                    <label>Description :</label><br>
-                    <textarea class="champ-saisie" name="message" placeholder="Écrivez ici..." variant="outlined"></textarea>
-                </div>
-                <v-btn :loading="loading" class="bouton" height="48" variant="tonal" @click="isOpen = false">
-                    Upload
-                </v-btn>
-                <button class="btn-close" @click="isOpen = false" aria-label="Fermer">&times;</button>
-            </form>
-        </div>
-    </div>
-
+</div>
+</div>
 </div>
 
-<div class="reclam justify-self-center">
-    <div class="titre text-center pt-8">
-        <h3>Reclamations</h3>
-    </div>
-    <div class="min-h-screen bg-[#0b0e14] p-8 flex items-center justify-center font-sans">
-  <div class="w-full max-w-5xl border border-gray-800 rounded-xl p-6 bg-[#0f172a]/20">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-      <div class="flex items-center space-x-4 p-5 rounded-lg border border-gray-800 bg-[#1e293b]/30">
-        <img class="h-12 w-12 rounded-full object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Leslie Alexander">
-        <div>
-          <h3 class="text-sm font-bold text-white">Leslie Alexander</h3>
-          <p class="text-sm text-gray-500">Co-Founder / CEO</p>
-        </div>
-      </div>
-
-      <div class="flex items-center space-x-4 p-5 rounded-lg border border-gray-800 bg-[#1e293b]/30">
-        <img class="h-12 w-12 rounded-full object-cover" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Michael Foster">
-        <div>
-          <h3 class="text-sm font-bold text-white">Michael Foster</h3>
-          <p class="text-sm text-gray-500">Co-Founder / CTO</p>
-        </div>
-      </div>
-
-      <div class="flex items-center space-x-4 p-5 rounded-lg border border-gray-800 bg-[#1e293b]/30">
-        <img class="h-12 w-12 rounded-full object-cover" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Dries Vincent">
-        <div>
-          <h3 class="text-sm font-bold text-white">Dries Vincent</h3>
-          <p class="text-sm text-gray-500">Business Relations</p>
-        </div>
-      </div>
-
-      <div class="flex items-center space-x-4 p-5 rounded-lg border border-gray-800 bg-[#1e293b]/30">
-        <img class="h-12 w-12 rounded-full object-cover" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Lindsay Walton">
-        <div>
-          <h3 class="text-sm font-bold text-white">Lindsay Walton</h3>
-          <p class="text-sm text-gray-500">Front-end Developer</p>
-        </div>
-      </div>
-
-    </div>
+<div v-if="isOpen==='approbation'" class=" overlay ">
+        <div class="  w-full h-full fixed top-0 left-0  cursor-pointer " @click="isOpen=null"></div>
+            <div class=" grid grid-cols-1 bg-gray-900 text-white py-1 max-w-full w-fit rounded-lg shadow-lg border border-white z-[100]">
+                <div @click="isOpen=null" class="flex w-full justify-end cursor-pointer">
+                    <span class="mdi mdi-window-close"></span>
+                </div>
+                <h2 class=" font-bold m-2 text-center ">Nouveaux membres</h2>
+                  <span class=" border-b border-white"></span>
+                <div class="flex flex-col items-left w-[600px] h-[500px] overflow-y-auto">
+                  <div v-for="item, i in new_members" :key="i" class=" flex flex-row p-3 justify-between border border-gray-800">
+                        <div class=" flex flex-row">
+                            <img :src="item.photo" alt="Avatar" class="avatar">
+                            <div class=" grid grid-cols-1 p-2 gap-2">
+                                <span class=" text-white text-sm"><strong>{{ item.nom }}</strong> <strong>{{ item.prenom }}</strong></span>
+                              <span class=" text-gray-500">{{ item.ecole }} </span>
+                            <span class=" text-sm text-gray-500">{{ item.domicile }}</span>
+                            </div>
+                        </div>
+                        <div class=" flex flex-row gap-2 p-10">
+                          <div class="hover:scale-125">
+                               <span class="mdi mdi-checkbox-marked text-2xl text-lime-700"></span>
+                          </div>
+                          <div class="hover:scale-125">
+                                <span class="mdi mdi-close-box text-2xl text-red-700 "></span>
+                          </div>
+                        </div>
+                  </div>
+              </div>
+          </div>
   </div>
+
+
+
+
+<div v-if="isOpen==='gestion'" class=" w-full h-full backdrop-blur-sm  fixed top-0 left-0 flex items-center justify-center z-[100]">
+    <div class="  w-full h-full fixed top-0 left-0 z-10 cursor-pointer" @click="isOpen=null"></div>
+    <div class=" grid grid-cols-1 bg-stone-700 p-8 text-white py-1 max-w-full rounded-lg shadow-lg border border-white z-20">
+      <div @click="isOpen=null" class="flex w-full justify-end cursor-pointer">
+          <span class="mdi mdi-window-close"></span>
+      </div>
+      <h2 class=" font-bold m-2 text-center ">Gestion des evenements</h2>
+      <span class=" border-b border-white"></span>
+     <div class="flex flex-col items-left p-5 w-[600px] h-[500px] overflow-y-auto " >
+        <label for="username" class="block text-sm font-bold mb-2">
+          titre
+        </label>
+        <div class="flex rounded-md bg-[#1e293b] border border-gray-700 focus-within:border-indigo-500 transition shadow-sm">
+        <input
+          type="text"
+          name="description"
+          id="username"
+          placeholder="description"
+          class="block w-full border-0 bg-transparent py-2 pl-1 pr-3 text-white placeholder-gray-500 focus:ring-0 sm:text-sm"
+        >
+      </div>
+      </div>
+    </div>
+
+</div>
+
+
+<!-- Reclamation -->
+<v-divider opacity=".7" thickness="3" gradient ><h1>RECLAMATION</h1></v-divider>
+<div class="w-ful bg-[#0a190a] h-fit">
+<div class=" grid grid-cols-2 p-3 h-fit gap-4 mb-20 m-auto w-fit pb-10 " >
+<div v-for="item, i in reclamation " :key="i" class=" w-full rounded-lg cursor-pointer " :class="item.status==='envoye' ? ' bg-gray-800/30 border border-gray-800' : 'backdrop-blur-md'">
+    <div class="flex flex-row p-3">
+        <img :src="item.avatar" alt="Avatar" class="avatar">
+        <div class=" grid grid-cols-1 p-2 gap-2">
+             <span class=" text-white text-sm"><strong>{{ item.name }}</strong> </span>
+            <span class=" text-slate-400">{{ item.message }} </span>
+            <span class=" text-sm text-slate-400">{{ item.time }}</span>
+        </div>
+
+    </div>
+    <div class="flex flex-row px-10 pl-4 pb-4 gap-2">
+      <button
+        type="submit"
+        @click="check('receptionee', item)"
+        class="rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Receptioner
+      </button>
+      <button
+        type="submit"
+        @click="check('valide',item)"
+        class="rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Valider
+      </button>
+    </div>
+
 </div>
 </div>
 
-<foot />
+</div>
+
+
+<!-- Demande de procuration -->
+<v-divider opacity=".7" thickness="3" gradient><h1>DEMANDE DE PROCURATION</h1></v-divider>
+<div class=" p-3 ">
+  <v-table class=" w-[80%] m-auto border border-gray-800 rounded-2xl bg-lime-900 bg-gradient-to-br from-black/90 via-black/70 to-transparent">
+    <thead class="border border-gray-800 rounded-2xl bg-lime-900 bg-gradient-to-br from-black/90 via-black/70 to-transparent">
+      <tr>
+        <th class="text-left">Nom</th>
+        <th class="text-left">Prenom</th>
+        <th class="text-left">Annee scolaire</th>
+        <th class="text-left">Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="border border-gray-800 rounded-2xl bg-lime-900 bg-gradient-to-br from-black/90 via-black/70 to-transparent">
+      <tr :class="item.status === 'en attente'? 'bg-stone-600':''"
+        v-for="item in etudiants"
+        :key="item.nom"
+      >
+        <td >{{ item.nom }}</td>
+        <td >{{ item.prenom }}</td>
+        <td >{{ item.anneeScolaire }}</td>
+        <td >{{ item.status }}</td>
+        <td class="flex flex-row pt-3 gap-2 bg-transparent" style="background-color: transparent;">
+          <span @click="procuration('recu',item)" class="mdi mdi-reload text-2xl text-[#0ea5e9]  transform hover:scale-125" ></span>
+          <span @click="procuration('disponible',item)"  class="mdi mdi-check-underline text-2xl font-bold text-[#0ee969] transform hover:scale-125" ></span>
+        </td>
+      </tr>
+    </tbody>
+  </v-table>
+</div>
+
+
+
+
+<foot/>
 </div>
 </template>
 
@@ -196,6 +242,185 @@ import BlobImage from '@/components/BlobImage.vue'
 import {
     useRouter
 } from 'vue-router'
+
+const new_members = ref([
+  {
+    nom: "Dupont",
+    prenom: "Jean",
+    domicile: "Paris",
+    ecole: "Lycée Henri IV",
+    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop"
+
+  },
+  {
+    nom: "Martin",
+    prenom: "Alice",
+    domicile: "Lyon",
+    ecole: "INSA Lyon",
+    photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop"
+  },
+  {
+    nom: "Lefebvre",
+    prenom: "Thomas",
+    domicile: "Lille",
+    ecole: "EDHEC Business School",
+    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop"
+  },
+  {
+    nom: "Dubois",
+    prenom: "Sophie",
+    domicile: "Bordeaux",
+    ecole: "Sciences Po",
+    photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop"
+  },
+  {
+    nom: "Moreau",
+    prenom: "Lucas",
+    domicile: "Nantes",
+    ecole: "Centrale Nantes",
+    photo: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=150&h=150&fit=crop"
+  },
+  {
+    nom: "Lambert",
+    prenom: "Emma",
+    domicile: "Marseille",
+    ecole: "Kedge Business School",
+    photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?w=150&h=150&fit=crop"
+  },
+  {
+    nom: "Rousseau",
+    prenom: "Hugo",
+    domicile: "Toulouse",
+    ecole: "ENAC",
+    photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop"
+  },
+  {
+    nom: "Girard",
+    prenom: "Chloé",
+    domicile: "Strasbourg",
+    ecole: "Université de Strasbourg",
+    photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop"
+  },
+  {
+    nom: "Mercier",
+    prenom: "Antoine",
+    domicile: "Rennes",
+    ecole: "Rennes School of Business",
+    photo: "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=150&h=150&fit=crop"
+  },
+  {
+    nom: "Petit",
+    prenom: "Léa",
+    domicile: "Montpellier",
+    ecole: "Montpellier Business School",
+    photo: "https://images.unsplash.com/photo-1557053910-d9eadeed1c58?w=150&h=150&fit=crop"
+  }
+]);
+
+const etudiants = ref([
+  { nom: "Dupont", prenom: "Jean", anneeScolaire: "2025-2026", status: "en attente" },
+  { nom: "Martin", prenom: "Alice", anneeScolaire: "2024-2025", status: "en attente" },
+  { nom: "Lefebvre", prenom: "Thomas", anneeScolaire: "2025-2026", status: "en attente" },
+  { nom: "Dubois", prenom: "Sophie", anneeScolaire: "2023-2024", status: "en attente" },
+  { nom: "Moreau", prenom: "Lucas", anneeScolaire: "2025-2026", status: "en attente" },
+  { nom: "Lambert", prenom: "Emma", anneeScolaire: "2024-2025", status: "en attente" },
+  { nom: "Rousseau", prenom: "Hugo", anneeScolaire: "2025-2026", status: "en attente" },
+  { nom: "Girard", prenom: "Chloé", anneeScolaire: "2023-2024", status: "en attente" },
+  { nom: "Mercier", prenom: "Antoine", anneeScolaire: "2024-2025", status: "en attente" },
+  { nom: "Petit", prenom: "Léa", anneeScolaire: "2025-2026", status: "en attente" }
+]);
+ const procuration = (message, item) => {
+    etudiants.value.forEach(element => {
+      if(element === item) {
+        element.status = message;
+      }
+    });
+}
+
+const check = (message, item) => {
+    reclamation.value.forEach(element => {
+      if(element === item) {
+        element.status = message;
+      }
+    });
+}
+
+const reclamation = ref([
+    {
+        name: 'Thomas Lemaitre',
+        message: 'L’interface de paiement semble bloquée sur mobile après la validation.',
+        time: '5 minutes ago',
+        status: 'receptionnee',
+        avatar: 'https://i.pravatar.cc/150?u=thomas'
+    },
+    {
+        name: 'Julie Vallet',
+        message: 'Je souhaiterais modifier mon adresse de livraison pour la commande #994.',
+        time: '12 minutes ago',
+        status: 'envoye',
+        avatar: 'https://i.pravatar.cc/150?u=julie'
+    },
+    {
+        name: 'Marc-Antoine Petit',
+        message: 'Merci pour la réactivité de votre support, mon problème est résolu !',
+        time: '25 minutes ago',
+        status: 'regle',
+        avatar: 'https://i.pravatar.cc/150?u=marc'
+    },
+    {
+        name: 'Sophie Fontenelle',
+        message: 'Le code promotionnel "BIENVENUE10" ne semble pas s’appliquer à mon panier.',
+        time: '45 minutes ago',
+        status: 'envoye',
+        avatar: 'https://i.pravatar.cc/150?u=sophie'
+    },
+    {
+        name: 'Karim Mansour',
+        message: 'Est-il possible d’avoir un suivi plus précis sur l’expédition internationale ?',
+        time: '1 hour ago',
+        status: 'envoye',
+        avatar: 'https://i.pravatar.cc/150?u=karim'
+    },
+    {
+        name: 'Emma Watson',
+        message: 'Je n’ai toujours pas reçu mon email de confirmation après 24 heures.',
+        time: '2 hours ago',
+        status: 'envoye',
+        avatar: 'https://i.pravatar.cc/150?u=emma'
+    },
+    {
+        name: 'Lucas Dupont',
+        message: 'Une erreur 500 s’affiche lorsque j’essaie d’accéder à mes factures.',
+        time: '3 hours ago',
+        status: 'envoye',
+        avatar: 'https://i.pravatar.cc/150?u=lucas'
+    },
+    {
+        name: 'Sarah Jenkins',
+        message: 'Serait-il possible de renouveler mon abonnement par virement bancaire ?',
+        time: '5 hours ago',
+        status: 'envoye',
+        avatar: 'https://i.pravatar.cc/150?u=sarah'
+    }
+])
+
+const icons = ref([{
+    name: 'Annonce',
+    color: 'bg-blue',
+    image: 'mdi mdi-bullhorn'
+},
+{
+    name: 'Approbation',
+    color: 'bg-green',
+    image: 'mdi mdi-check-decagram'
+},
+{
+    name: 'Gestion',
+    color: 'bg-yellow',
+    image: 'mdi mdi-calendar-month'
+}
+])
+
 
 const isOpen = ref(null)
 const popupContent = ref(['approbation', 'annonce']) // Pour stocker le texte dynamique
@@ -209,49 +434,20 @@ const consulter = () => {
 
 }
 const diriger
-  = () => {
+  = (message) => {
+    if(message=='liste'){
+      router.push('liste_membre')
+    }
+    else{
       router.push('../users/evenement')
+    }
+
   }
-const monTexteLong = ref('')
+
 </script>
 
 <style scoped>
 
-.card-header {
-    height: 240px;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.reclamation-container {
-    width: 1000px;
-    height: auto;
-    background: rgb(100, 97, 97);
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-}
-
-.reclamation-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.reclamation-item {
-    display: flex;
-    /* Aligne la photo et le texte côte à côte */
-    align-items: center;
-    padding: 12px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.reclamation-item:hover {
-    background-color: #f2f2f2;
-}
 
 .avatar {
     width: 56px;
@@ -261,174 +457,14 @@ const monTexteLong = ref('')
     margin-right: 12px;
 }
 
-.notif-content {
-    flex: 1;
-    /* Prend tout l'espace restant */
-}
-
-.notif-content p {
-    margin: 0;
-    font-size: 14px;
-    color: #050505;
-}
-
-.notif-time {
-    font-size: 12px;
-    color: #050505;
-    font-weight: 600;
-}
-
-/* Le petit point bleu pour les non-lues */
-.unread-dot {
-    width: 12px;
-    height: 12px;
-    background-color: #0866ff;
-    border-radius: 50%;
-    margin-left: 8px;
-}
-
-/* Style spécifique pour les non-lues */
-.reclamation-item.unread {
-    background-color: #ebf5ff;
-}
-
-.form-container {
-    display: flex;
-    flex-direction: column;
-    /* Espace uniforme entre chaque section */
-    padding: 10px;
-}
-
-.groupe {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    /* Aligne tout à gauche */
-
-}
-
-input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 5px;
-    border: 1px solid #444;
-    background-color: #333;
-    color: white;
-}
-
-textarea {
-    width: 100%;
-    height: 150px;
-    padding: 12px;
-    border-radius: 5px;
-    border: 1px solid #444;
-    background-color: #333;
-    color: white;
-}
-
-
-
-
-
-
-
-.bg-green {
-    background: linear-gradient(135deg, #00c28e, #1a9e7a);
-}
-
-.bg-yellow {
-    background-color: #ffb31a;
-}
-
-.fan {
-    width: 200px;
-    height: 200px;
-}
-
-.membre-div {
-    width: 200px;
-    height: auto;
-}
-
-.masked-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.membre {
-    width: 200px;
-    height: 350px;
-    object-fit: cover;
-
-}
-
-/* Contenu textuel */
-.card-body {
-    padding: 32px;
-    color: white;
-}
-
-.brand1 {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #ccc;
-    line-height: 1.2;
-    margin-bottom: 16px;
-}
 
 .logo-icon {
-    width: 24px;
-    height: 24px;
-}
-
-h3 {
-    font-size: 28px;
-
-    line-height: 1.2;
-}
-
-p {
-    color: #999;
-    line-height: 1.6;
-    font-size: 16px;
-}
-
-.container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 80px 10%;
-    font-family: 'Arial', sans-serif;
-}
-
-.hero-text {
-    flex: 1;
-}
-
-.hero-image {
-    flex: 1;
-}
-
-p {
-    font-size: 1.5rem;
-    color: #746f6f;
-    margin: 20px 0;
+    width: 30px;
+    height: 30px;
 }
 
 
 
-.btn {
-    padding: 15px 30px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 50px;
-    cursor: pointer;
-    color: #000;
-}
 
 /* 1. L'arrière-plan (Overlay) */
 .overlay {
@@ -449,20 +485,7 @@ p {
 }
 
 /* 2. La boîte du Popup */
-.popup {
-    background: rgb(56, 54, 54);
-    padding: 30px;
-    border-radius: 16px;
-    /* Bords arrondis */
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    /* Ombre portée douce */
-    max-width: 600px;
-    width: 100%;
-    /* Responsive sur mobile */
-    position: relative;
-    text-align: center;
-    border: 1px solid #eee;
-}
+
 
 /* 3. Les textes */
 .popup h2 {

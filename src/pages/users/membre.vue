@@ -1,8 +1,8 @@
 <template>
 
- <div class="bg-[#111827] grid grid-cols-2 p-8 lg:col-span-2 min-h-screen justify-center gap-10">
+ <div class=" bg-[#0a190a]  grid grid-cols-2 p-8 lg:col-span-2 min-h-screen justify-center gap-10 ">
 
-  <div class="grid grid-cols-1 md:grid-cols-2 h-fit max-w-5xl w-full mt-[20%] border border-gray-800 rounded-2xl overflow-hidden">
+  <div class="grid md:grid-cols-2 max-h-[500px] max-w-5xl w-full mt-[20%] border border-gray-800 rounded-2xl overflow-y-auto">
 
     <div class="p-8 border border-gray-800 hover:bg-gray-800/30 transition-colors group relative " @click="afficher('procuration')">
       <div class="flex justify-between items-start">
@@ -58,20 +58,63 @@
   </div>
 
 
-  <div class="lg:col-span-1 w-full h-full p-10 mb-6 rounded-lg max-w-5xl items-center justify-center overflow-y-auto" >
+
+<div class="lg:col-span-1 w-full h-full p-10 mb-6 rounded-lg max-w-5xl items-center justify-center overflow-y-auto" >
+
+  <!-- demande de procuration -->
+  <div v-if="open === 'procuration'" class=" mt-[20%]">
+    <header class="flex justify-center items-center mb-8 border-b pb-4">
+    <h1 class="text-2xl font-light italic items-center">Demande de procuration</h1>
+  </header>
+  <div class="flex items-center gap-4 mt-6 mb-3 overflow-y-auto max-h-[600px]" >
+      <button
+        type="submit"
+        class="inline-flex justify-center rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Faire une demande
+      </button>
+    </div>
+    <span class="font-light italic text-2xl">Liste de mes demandes</span>
+    <hr>
+   <div class="max-w-6xl py-5 mx-auto overflow-hidden">
+    <table class="min-w-full table-fixed border-separate border-spacing-0">
+      <thead>
+        <tr class="text-left">
+          <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Name</th>
+          <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Description</th>
+          <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Date</th>
+          <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Etat</th>
+          <th class="pb-4 pt-2 px-4"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-800 border-t border-gray-800">
+        <tr class="hover:bg-white/5 transition-colors">
+          <td class="py-4 px-4 text-sm font-bold text-white">Lindsay Walton</td>
+          <td class="py-4 px-4 text-sm text-gray-400">Front-end Developer</td>
+          <td class="py-4 px-4 text-sm text-gray-400">lindsay.walton@example.com</td>
+          <td class="py-4 px-4 text-sm text-gray-400">Member</td>
+          <td class="py-4 px-4 text-right text-sm font-medium">
+            <a href="#" class="text-indigo-500 hover:text-indigo-400">Edit</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+
     <!-- reclamation -->
-    <div v-if="open === 'reclamation'">
+    <div v-if="open === 'reclamation'" class="">
     <header class="flex justify-center items-center mb-8 border-b pb-4">
     <h1 class="text-2xl font-light italic items-center">Reclamation bourse</h1>
   </header>
   <div class="min-h-screen p-8 text-white font-sans">
-    <div class="max-w-xl space-y-6">
+    <div class="max-w-xl space-y-6 ">
 
     <div>
       <label for="username" class="block text-sm font-bold mb-2">
         Username
       </label>
-      <div class="flex rounded-md bg-[#1e293b] border border-gray-700 focus-within:border-indigo-500 transition shadow-sm">
+      <div class="flex rounded-md  border border-gray-700 focus-within:border-indigo-500 transition shadow-sm">
         <input
           type="text"
           name="username"
@@ -90,7 +133,7 @@
         id="about"
         name="about"
         rows="4"
-        class="block w-full rounded-md border border-gray-700 bg-[#1e293b] py-2 px-3 text-white shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+        class="block w-full rounded-md border border-gray-700 py-2 px-3 text-white shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm"
       ></textarea>
       <p class="mt-2 text-sm text-gray-400">
         Soyez claire et precis
@@ -139,14 +182,14 @@
     <header class="flex justify-center items-center mb-8 border-b pb-4">
     <h1 class="text-2xl font-light italic items-center">Modifier votre profile</h1>
   </header>
-  <div class="h-fit bg-[#0f172a] p-8 text-white font-sans ">
+  <div class="h-fit  p-8 text-white font-sans ">
   <div class="max-w-4xl">
     <div class="mb-8">
       <h2 class="text-base font-semibold leading-7 text-white">Personal Information</h2>
       <p class="mt-1 text-sm leading-6 text-gray-400">Use a permanent address where you can receive mail.</p>
     </div>
 
-    <div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+    <div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6 overflow-y-auto max-h-[500px]">
 
       <div class="sm:col-span-3">
         <label for="first-name" class="block text-sm font-medium leading-6 text-white mb-2">First name</label>
@@ -159,40 +202,63 @@
       </div>
 
       <div class="sm:col-span-4">
-        <label for="email" class="block text-sm font-medium leading-6 text-white mb-2">Email address</label>
+        <label for="date-of-birth" class="block text-sm font-medium leading-6 text-white mb-2">Date de naissance</label>
+        <input type="date" name="date-of-birth" id="date-of-birth" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+      </div>
+
+      <div class="sm:col-span-3 ">
+        <div class="">
+          <label for="country" class="block text-sm font-medium leading-6 text-white mb-2">Profession</label>
+        <select id="country" name="profession" class="block w-full rounded-md border-0 bg-white/5 py-2 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+          <option value="etudiant">Etudiant(e)</option>
+          <option value="travailleur">Travailleur(euse)</option>
+        </select>
+        </div>
+      </div>
+
+      <div class="sm:col-span-3">
+            <label for="university" class="block text-sm font-medium leading-6 text-white mb-2">Universite</label>
+            <input type="text" name="university" id="university" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+            <label for="field" class="block text-sm font-medium leading-6 text-white mb-2">filiere</label>
+            <input type="text" name="field" id="field" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+            <label for="student-id" class="block text-sm font-medium leading-6 text-white mb-2">Matricule AMCI</label>
+            <input type="text" name="student-id" id="student-id" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+            <label for="occupation" class="block text-sm font-medium leading-6 text-white mb-2">Poste/Metier</label>
+            <input type="text" name="occupation" id="occupation" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+      </div>
+
+      <div class="sm:col-span-4">
+        <label for="passport-number" class="block text-sm font-medium leading-6 text-white mb-2">Numero Passeport</label>
+        <input type="text" name="passport-number" id="passport-number" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+      </div>
+
+      <div class="sm:col-span-4">
+        <label for="arrivee" class="block text-sm font-medium leading-6 text-white mb-2">Arrivee au Maroc</label>
+        <input type="date" name="arrivee" id="arrivee" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+      </div>
+
+      <div class="sm:col-span-3">
+        <label for="address" class="block text-sm font-medium leading-6 text-white mb-2">Domicile</label>
+        <input type="text" name="address" id="address" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+      </div>
+
+      <div class="sm:col-span-3">
+        <label for="email" class="block text-sm font-medium leading-6 text-white mb-2">Email</label>
         <input type="email" name="email" id="email" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
       </div>
 
       <div class="sm:col-span-3">
-        <label for="country" class="block text-sm font-medium leading-6 text-white mb-2">Country</label>
-        <select id="country" name="country" class="block w-full rounded-md border-0 bg-white/5 py-2 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
-          <option>United States</option>
-          <option>Canada</option>
-          <option>France</option>
-        </select>
+        <label for="contact" class="block text-sm font-medium leading-6 text-white mb-2">Contact</label>
+        <input type="text" name="contact" id="contact" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
       </div>
 
-      <div class="col-span-full">
-        <label for="street-address" class="block text-sm font-medium leading-6 text-white mb-2">Street address</label>
-        <input type="text" name="street-address" id="street-address" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
-      </div>
-
-      <div class="sm:col-span-2">
-        <label for="city" class="block text-sm font-medium leading-6 text-white mb-2">City</label>
-        <input type="text" name="city" id="city" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
-      </div>
-
-      <div class="sm:col-span-2">
-        <label for="region" class="block text-sm font-medium leading-6 text-white mb-2">State / Province</label>
-        <input type="text" name="region" id="region" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
-      </div>
-
-      <div class="sm:col-span-2">
-        <label for="postal-code" class="block text-sm font-medium leading-6 text-white mb-2">ZIP / Postal code</label>
-        <input type="text" name="postal-code" id="postal-code" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
+      <div class="sm:col-span-4">
+        <label for="reseaux" class="block text-sm font-medium leading-6 text-white mb-2">reseaux sociaux</label>
+        <input type="text" name="reseaux" id="reseaux" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">
       </div>
 
     </div>
+
     <div class="flex items-center gap-4 mt-6">
       <button
         type="submit"
@@ -208,7 +274,7 @@
 
 <!-- certificate -->
  <div v-if="open === 'certificat'" >
-<div class="bg-[#0f172a] p-10 text-white font-sans">
+<div class=" p-10 text-white font-sans">
   <div class="max-w-4xl">
        <header class="flex justify-center items-center mb-8 border-b pb-4">
     <h1 class="text-2xl font-light italic items-center">Save my certificate</h1>
