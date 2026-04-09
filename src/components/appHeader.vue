@@ -1,25 +1,26 @@
 <template>
-<div v-if="!isSpecialPage" class=" flex border border-b py-4 justify-between ">
-    <span class="mt-4">Tsingy Marrakech</span>
-    <div class=" flex ">
-        <div v-for="item,i in menu_list" :key="i" :title="item.label" @click="redirectTo(item.url)" :class="item.isactive==true? 'text-yellow-400':''" class="mx-5 cursor-pointer flex  flex-col-reverse items-center">
+<div  class=" flex border border-b py-4 justify-between px-4">
+  <div class=" flex flex-row items-center justify-center">
+    <img src="../../public/img/logo.png" alt="logo" class=" w-12">
+    <span class=" ml-5">Tsingy Marrakech</span>
+  </div>
+    <div class=" flex items-center justify-center" >
+
+        <div v-for="item,i in menu_list" :key="i" :title="item.label" @click="redirectTo(item.url)" :class="item.isactive==true? 'text-yellow-400':''" class=" mx-2 cursor-pointer flex  flex-col-reverse items-center">
             <img v-if="item.ico.includes('/')" :to="item.url" :src="item.ico" alt="logo" class="logo-img"/>
             <span v-else @click="router.push(item.url)" :class="item.ico " class=" text-3xl"></span>
         </div>
-
-    </div>
-    <div class=" ml-6 mt-4 flex flex-row uppercase" >
-        <div @click="login()" class="cursor-pointer">se connecter</div>
+        <div @click="login()" class="cursor-pointer ml-4 bg-green-500 rounded-full px-3 py-1">se connecter</div>
     </div>
 </div>
 
-<div v-else class="flex border border-b py-4 justify-center" id="membre">
+<!-- <div   class="flex border border-b py-4 justify-center" id="membre">
     <div class=" flex ">
         <span class="text-3xl ">Tsingy</span>
         <img src="../../public/img/logo.png" alt="logo" class="logo-img"/>
         <span class="text-3xl">Marrakech</span>
     </div>
-</div>
+</div> -->
 </template>
 
 <script setup>
@@ -47,7 +48,7 @@ const menu_list = ref([
     {
         label:'Blog',
         url:'#',
-        ico:'../../public/img/logo.png',
+        ico:'',
         isactive:false
     },
     {
