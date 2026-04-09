@@ -9,8 +9,8 @@
       <div
         v-for="item,i in menu_list"
         :key="i"
-        class=" mx-2 cursor-pointer flex  flex-col-reverse items-center"
-        :class="item.isactive==true? 'text-yellow-400':''"
+        class=" mx-4 cursor-pointer flex  flex-col-reverse items-center"
+        :class="isRouteActive(item.url) ? 'text-green-500' : ''"
         :title="item.label"
         @click="redirectTo(item.url)"
       >
@@ -23,7 +23,7 @@
         >
         <span v-else class=" text-3xl" :class="item.ico " @click="router.push(item.url)" />
       </div>
-      <div class="cursor-pointer ml-4 bg-green-500 rounded-full px-3 py-1" @click="login()">se connecter</div>
+      <div class="cursor-pointer ml-10 bg-green-500 rounded-full px-3 py-1" @click="login()">se connecter</div>
     </div>
   </div>
 
@@ -38,51 +38,37 @@
 
 <script setup>
   import {
-    computed, onMounted, ref,
+    ref,
   } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
 
   const router = useRouter()
   const route = useRoute()
 
-  const pagesSansHeader = ['membre', 'document', 'modifier']
-  const isSpecialPage = computed(() => {
-    return pagesSansHeader.some(page => route.path.includes(page))
-  })
-
   const menu_list = ref([
     {
       label: 'Accueil',
-      url: '/auth/accueil',
-      ico: 'mdi mdi-home-account',
-      isactive: false,
+      url: '/',
+      ico: 'mdi mdi-home',
     },
     {
       label: 'Blog',
-      url: '#',
-      ico: '',
-      isactive: false,
+      url: '/bureau/accueil',
+      ico: 'mdi mdi-ticket-account',
     },
     {
       label: 'Contact',
       url: '/users/membre',
       ico: 'mdi mdi-account-group',
-      isactive: false,
     },
   ])
 
-  function redirectTo (item) {
-    // alert(item)
-    router.push(item)
-
-    for (const element of menu_list.value) {
-      element.isactive = false
-    }
-    item.isactive = true
+  function isRouteActive (url) {
+    return route.path === url
   }
 
-  function logout () {
-    router.push('/auth/accueil')
+  function redirectTo (item) {
+    router.push(item)
   }
 
   function login () {
@@ -93,7 +79,7 @@
 
 <style>
 .router-link-active {
-  color: red;
+  color: #22c55e;
 }
 
 .router-link-exact-active {
