@@ -1,42 +1,42 @@
 <template>
-<div class="sidebar-wrapper">
+  <div class="sidebar-wrapper">
     <div class="haikei-wave">
-        <nav class="content">
-            <h2>Filtrage</h2>
+      <nav class="content">
+        <h2>Filtrage</h2>
 
-            <div class=" flex flex-column">
-                <select   class=" mt-5 w-64 border bg-slate-700 border-white rounded-lg py-1 px-3 active:border-red-500 outline-none"  >
-                    <option value="" disabled selected>Select Year</option>
-                    <option v-for="item in year" :key="item" :value="item">{{ item }}</option>
-                </select>
+        <div class=" flex flex-column">
+          <select class=" mt-5 w-64 border bg-slate-700 border-white rounded-lg py-1 px-3 active:border-red-500 outline-none">
+            <option disabled selected value="">Select Year</option>
+            <option v-for="item in year" :key="item" :value="item">{{ item }}</option>
+          </select>
 
-                <select   class=" mt-5 w-64 border bg-slate-700 border-white rounded-lg py-1 px-3 active:border-red-500 outline-none" >
-                    <option value="" disabled selected>Select Profession</option>
-                    <option v-for="item in profession" :key="item" :value="item">{{ item }}</option>
-                </select>
+          <select class=" mt-5 w-64 border bg-slate-700 border-white rounded-lg py-1 px-3 active:border-red-500 outline-none">
+            <option disabled selected value="">Select Profession</option>
+            <option v-for="item in profession" :key="item" :value="item">{{ item }}</option>
+          </select>
 
-                <input type="text" class=" mt-5 w-64 border bg-slate-700 border-white rounded-lg py-1 px-3 active:border-red-500 outline-none"  placeholder=" Etablissement" />
+          <input class=" mt-5 w-64 border bg-slate-700 border-white rounded-lg py-1 px-3 active:border-red-500 outline-none" placeholder=" Etablissement" type="text">
 
-                <button class=" mt-5 w-64 border bg-green-700 border-white rounded-lg py-1 px-3 active:border-red-500 outline-none" >
-                    <span class="mdi mdi-filter"></span>
-                    <span>Go</span>
-                </button>
+          <button class=" mt-5 w-64 border bg-green-700 border-white rounded-lg py-1 px-3 active:border-red-500 outline-none">
+            <span class="mdi mdi-filter" />
+            <span>Go</span>
+          </button>
 
-            </div>
+        </div>
 
-        </nav>
+      </nav>
     </div>
 
-</div>
+  </div>
 </template>
 
 <script setup>
-import {
-    ref
-} from 'vue';
+  import {
+    ref,
+  } from 'vue'
 
-const year = ref([2025, 2024, 2023, 2022]);
-const profession = ref(['Etudiant', 'Travailleur']);
+  const year = ref([2025, 2024, 2023, 2022])
+  const profession = ref(['Etudiant', 'Travailleur'])
 </script>
 
 <style scoped>

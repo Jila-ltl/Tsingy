@@ -1,11 +1,10 @@
 <template>
-  <v-main>
-
-  <appHeader/>
-    <router-view />
-  </v-main>
-
-  <!-- <AppFooter /> -->
+  <div class="min-h-screen d-flex flex-column">
+    <appHeader />
+    <v-main class=" overflow-y-auto max-h-[89vh]">
+      <router-view />
+    </v-main>
+  </div>
 </template>
 
 <script setup>

@@ -1,5 +1,5 @@
+const path = require('node:path')
 const { app, BrowserWindow } = require('electron')
-const path = require('path')
 
 const isDev = !app.isPackaged
 
@@ -8,8 +8,8 @@ function createWindow () {
     width: 1200,
     height: 800,
     webPreferences: {
-      contextIsolation: true
-    }
+      contextIsolation: true,
+    },
   })
 
   if (isDev) {
@@ -23,5 +23,7 @@ function createWindow () {
 app.whenReady().then(createWindow)
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
 })
