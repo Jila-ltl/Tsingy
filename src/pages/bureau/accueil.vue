@@ -1,72 +1,59 @@
 <template>
-  <div class=" h-[91vh] w-full overflow-y-auto bg-white">
-    <div class="grid grid-cols-2 pt-10 pl-10 lg:grid-cols-4 mb-4 bg-[url('/img/maki.jpg')] backdrop-blur-md bg-cover bg-center">
-      <div class="absolute inset-0 z-0 bg-gradient-to-br from-black/90 via-black/70 to-black/30" />
-      <div class="lg:col-span-2 z-50 p-10 shadow-sm min-h-[500px] justify-center">
-        <span class=" text-5xl text-[#00c2cb] font-bold">BIENVENU SG</span>
-        <div class=" py-4 text-2xl text-white">
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur iusto, natus laborum est modi neque blanditiis, ducimus magni error id voluptatum facilis. Deleniti voluptatum beatae perferendis? Expedita, aperiam! Dolores, consequuntur?</p>
+<div class="parallax-hero w-full bg-white">
+    <div class=" flex flex-row h-[90vh] items-center justify-center backdrop-blur-md bg-cover bg-center">
+        <div class="absolute inset-0 z-0 bg-gradient-to-br from-black/90 via-black/70 to-black/30" />
+        <div class="lg:col-span-2 z-50 p-10 shadow-sm  w-[750px] justify-center">
+            <span class=" text-5xl text-red-500 font-bold">BIENVENU SG</span>
+            <div class=" py-4 text-2xl text-white">
+                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur iusto, natus laborum est modi neque blanditiis, ducimus magni error id voluptatum facilis. Deleniti voluptatum beatae perferendis? Expedita, aperiam! Dolores, consequuntur?</span>
 
+            </div>
+            <div class=" flex flex-row gap-4 pt-10">
+                <button class=" bg-white p-3 border border-solid rounded-md cursor-pointer hover:scale-105" @click="diriger('modifier')">Modifier</button>
+                <button class=" bg-transparent text-white p-3 border border-collapse rounded-md cursor-pointer hover:scale-105" @click="diriger('liste')">Parcourir les listes des membres</button>
+            </div>
         </div>
-        <div class=" flex flex-row gap-4 pt-10">
-          <button class=" bg-white p-3 border border-solid rounded-md cursor-pointer hover:scale-105" @click="diriger('modifier')">Modifier</button>
-          <button class=" bg-transparent text-white p-3 border border-collapse rounded-md cursor-pointer hover:scale-105" @click="diriger('liste')">Parcourir les listes des membres</button>
+        <div class="relative w-80 h-96 overflow-hidden bg-gray-900 rounded-[55%_45%_30%_70%_/_70%_60%_40%_30%]">
+            <img alt="Portrait" class="absolute inset-0 w-full h-full object-cover" src="/img/photo.jpeg">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-40" />
         </div>
-      </div>
-      <div class="relative w-80 h-96 overflow-hidden bg-gray-900 rounded-[55%_45%_30%_70%_/_70%_60%_40%_30%]">
-        <img alt="Portrait" class="absolute inset-0 w-full h-full object-cover" src="/img/photo.jpeg">
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-40" />
-      </div>
 
     </div>
 
-    <div class="grid grid-cols-2 pl-6 pr-6 lg:grid-cols-3 gap-20 group relative pb-9">
-      <div v-for="item, i in icons" :key="i">
-        <div class="relative h-60 overflow-hidden rounded-2xl group cursor-pointer">
-          <div class=" text-center p-5 absolute inset-0 bg-lime-900 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
-            <span class="text-9xl text-white" :class="item.image " />
-          </div>
-          <div class="absolute left-40 bottom-0 text-white">
-            <div class=" flex flex-row gap-1 text-center text-sm p-10">
-              <img alt="easywp" class="logo-icon" src="/img/logo.png">
-              <span class=" text-white text-2xl text-center"><button @click="openPopup(item.name.toLowerCase())">{{ item.name }}</button></span>
+    <div class=" flex flex-row h-[90vh] items-center justify-center" >
+        <div v-for="item, i in icons" :key="i" @click="openPopup(item.name.toLowerCase())" class="icon-card mx-32 rounded-xl w-[350px] items-center justify-center flex flex-col " style=" border: 4px white solid; background: #FFFFFF55;">
+                <div class=" text-center">
+                    <span class="text-9xl text-white" :class="item.image " />
+                </div>
+                <div class=" left-40 bottom-0 text-white">
+                    <div class="  flex flex-row gap-1 text-center text-sm p-10">
+                        <span class="uppercase font-bold text-white text-2xl text-center" >
+                          {{ item.name }}
+                        </span>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-
     </div>
 
     <div v-if="isOpen=='annonce'" class="overlay flex-col">
-      <div class=" relative bg-gray-900 border-zinc-500 p-8 w-[500px] box-shadow-lg">
-        <h2 class=" text-white text-2xl font-bold mb-4">Annonce</h2>
-        <div class=" h-[60%] p-8 text-white font-sans">
-          <div class="grid grid-cols-1 max-w-xl space-y-6">
+        <div class=" relative bg-gray-900 border-zinc-500 p-8 w-[500px] box-shadow-lg">
+            <h2 class=" text-white text-2xl font-bold mb-4">Annonce</h2>
+            <div class=" h-[60%] p-8 text-white font-sans">
+                <div class="grid grid-cols-1 max-w-xl space-y-6">
 
-            <label class="block text-sm font-bold mb-2" for="username">
-              titre
-            </label>
-            <div class="flex rounded-md bg-[#1e293b] border border-gray-700 focus-within:border-indigo-500 transition shadow-sm">
-              <input
-                id="username"
-                class="block w-full border-0 bg-transparent py-2 pl-1 pr-3 text-white placeholder-gray-500 focus:ring-0 sm:text-sm"
-                name="username"
-                placeholder="janesmith"
-                type="text"
-              >
-            </div>
+                    <label class="block text-sm font-bold mb-2" for="username">
+                        titre
+                    </label>
+                    <div class="flex rounded-md bg-[#1e293b] border border-gray-700 focus-within:border-indigo-500 transition shadow-sm">
+                        <input id="username" class="block w-full border-0 bg-transparent py-2 pl-1 pr-3 text-white placeholder-gray-500 focus:ring-0 sm:text-sm" name="username" placeholder="janesmith" type="text">
+                    </div>
 
-            <label class="block text-sm font-bold mb-2" for="about">
-              Message
-            </label>
-            <textarea
-              id="about"
-              class="block w-full rounded-md border border-gray-700 bg-[#1e293b] py-2 px-3 text-white shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-              name="about"
-              rows="4"
-            />
+                    <label class="block text-sm font-bold mb-2" for="about">
+                        Message
+                    </label>
+                    <textarea id="about" class="block w-full rounded-md border border-gray-700 bg-[#1e293b] py-2 px-3 text-white shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm" name="about" rows="4" />
 
-            <label class="block text-sm font-bold mb-2" for="date">
+                    <label class="block text-sm font-bold mb-2" for="date">
               Expiratiom
             </label>
             <div class="flex rounded-md bg-[#1e293b] border border-gray-700 focus-within:border-indigo-500 transition shadow-sm">
@@ -149,42 +136,47 @@
 
     </div>
 
-    <!-- Reclamation -->
-    <v-divider gradient opacity=".7" thickness="3"><h1>RECLAMATION</h1></v-divider>
-    <div class="w-ful bg-[#0a190a] h-fit">
-      <div class=" grid grid-cols-2 p-3 h-fit gap-4 mb-20 m-auto w-fit pb-10 ">
-        <div v-for="item, i in reclamation " :key="i" class=" w-full rounded-lg cursor-pointer " :class="item.status==='envoye' ? ' bg-gray-800/30 border border-gray-800' : 'backdrop-blur-md'">
-          <div class="flex flex-row p-3">
-            <img alt="Avatar" class="avatar" :src="item.avatar">
-            <div class=" grid grid-cols-1 p-2 gap-2">
-              <span class=" text-white text-sm"><strong>{{ item.name }}</strong> </span>
-              <span class=" text-slate-400">{{ item.message }} </span>
-              <span class=" text-sm text-slate-400">{{ item.time }}</span>
+    <!-- Reclamation -->ù
+    <div class=" bg-[#0a190a] h-[90vh]">
+      <div class="flex justify-center items-center pt-10"  gradient opacity=".7" thickness="3">
+        <span class="h-[10px] w-[200px] mr-3 bg-gradient-to-l from-green-500 to-transparent"></span>
+        <h1 class="text-green-500">RECLAMATION</h1>
+        <span class="h-[10px] w-[200px] ml-3 bg-gradient-to-r  from-green-500 to-transparent "></span>
+      </div>
+      <div class="w-ful h-fit">
+        <div class=" grid grid-cols-2 p-3 h-fit gap-4 mb-20 m-auto w-fit pb-10 ">
+          <div v-for="item, i in reclamation " :key="i" class=" w-full rounded-lg cursor-pointer " :class="item.status==='envoye' ? ' bg-gray-800/30 border border-gray-800' : 'backdrop-blur-md'">
+            <div class="flex flex-row p-3">
+              <img alt="Avatar" class="avatar" :src="item.avatar">
+              <div class=" grid grid-cols-1 p-2 gap-2">
+                <span class=" text-white text-sm"><strong>{{ item.name }}</strong> </span>
+                <span class=" text-slate-400">{{ item.message }} </span>
+                <span class=" text-sm text-slate-400">{{ item.time }}</span>
+              </div>
+
+            </div>
+            <div class="flex flex-row px-10 pl-4 pb-4 gap-2">
+              <button
+                class="rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                type="submit"
+                @click="check('receptionee', item)"
+              >
+                Receptioner
+              </button>
+              <button
+                class="rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                type="submit"
+                @click="check('valide',item)"
+              >
+                Valider
+              </button>
             </div>
 
           </div>
-          <div class="flex flex-row px-10 pl-4 pb-4 gap-2">
-            <button
-              class="rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              type="submit"
-              @click="check('receptionee', item)"
-            >
-              Receptioner
-            </button>
-            <button
-              class="rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              type="submit"
-              @click="check('valide',item)"
-            >
-              Valider
-            </button>
-          </div>
-
         </div>
+
       </div>
-
     </div>
-
     <!-- Demande de procuration -->
     <v-divider gradient opacity=".7" thickness="3"><h1>DEMANDE DE PROCURATION</h1></v-divider>
     <div class=" p-3 ">
@@ -222,213 +214,265 @@
 </template>
 
 <script setup>
-  import {
+import {
     ref,
-  } from 'vue'
-  import {
+} from 'vue'
+import {
     useRouter,
-  } from 'vue-router'
-  import BlobImage from '@/components/BlobImage.vue'
+} from 'vue-router'
+import BlobImage from '@/components/BlobImage.vue'
 
-  const new_members = ref([
-    {
-      nom: 'Dupont',
-      prenom: 'Jean',
-      domicile: 'Paris',
-      ecole: 'Lycée Henri IV',
-      photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop',
+const new_members = ref([{
+        nom: 'Dupont',
+        prenom: 'Jean',
+        domicile: 'Paris',
+        ecole: 'Lycée Henri IV',
+        photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop',
 
     },
     {
-      nom: 'Martin',
-      prenom: 'Alice',
-      domicile: 'Lyon',
-      ecole: 'INSA Lyon',
-      photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
+        nom: 'Martin',
+        prenom: 'Alice',
+        domicile: 'Lyon',
+        ecole: 'INSA Lyon',
+        photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
     },
     {
-      nom: 'Lefebvre',
-      prenom: 'Thomas',
-      domicile: 'Lille',
-      ecole: 'EDHEC Business School',
-      photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+        nom: 'Lefebvre',
+        prenom: 'Thomas',
+        domicile: 'Lille',
+        ecole: 'EDHEC Business School',
+        photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
     },
     {
-      nom: 'Dubois',
-      prenom: 'Sophie',
-      domicile: 'Bordeaux',
-      ecole: 'Sciences Po',
-      photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
+        nom: 'Dubois',
+        prenom: 'Sophie',
+        domicile: 'Bordeaux',
+        ecole: 'Sciences Po',
+        photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
     },
     {
-      nom: 'Moreau',
-      prenom: 'Lucas',
-      domicile: 'Nantes',
-      ecole: 'Centrale Nantes',
-      photo: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=150&h=150&fit=crop',
+        nom: 'Moreau',
+        prenom: 'Lucas',
+        domicile: 'Nantes',
+        ecole: 'Centrale Nantes',
+        photo: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=150&h=150&fit=crop',
     },
     {
-      nom: 'Lambert',
-      prenom: 'Emma',
-      domicile: 'Marseille',
-      ecole: 'Kedge Business School',
-      photo: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?w=150&h=150&fit=crop',
+        nom: 'Lambert',
+        prenom: 'Emma',
+        domicile: 'Marseille',
+        ecole: 'Kedge Business School',
+        photo: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?w=150&h=150&fit=crop',
     },
     {
-      nom: 'Rousseau',
-      prenom: 'Hugo',
-      domicile: 'Toulouse',
-      ecole: 'ENAC',
-      photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop',
+        nom: 'Rousseau',
+        prenom: 'Hugo',
+        domicile: 'Toulouse',
+        ecole: 'ENAC',
+        photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop',
     },
     {
-      nom: 'Girard',
-      prenom: 'Chloé',
-      domicile: 'Strasbourg',
-      ecole: 'Université de Strasbourg',
-      photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop',
+        nom: 'Girard',
+        prenom: 'Chloé',
+        domicile: 'Strasbourg',
+        ecole: 'Université de Strasbourg',
+        photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop',
     },
     {
-      nom: 'Mercier',
-      prenom: 'Antoine',
-      domicile: 'Rennes',
-      ecole: 'Rennes School of Business',
-      photo: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=150&h=150&fit=crop',
+        nom: 'Mercier',
+        prenom: 'Antoine',
+        domicile: 'Rennes',
+        ecole: 'Rennes School of Business',
+        photo: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=150&h=150&fit=crop',
     },
     {
-      nom: 'Petit',
-      prenom: 'Léa',
-      domicile: 'Montpellier',
-      ecole: 'Montpellier Business School',
-      photo: 'https://images.unsplash.com/photo-1557053910-d9eadeed1c58?w=150&h=150&fit=crop',
+        nom: 'Petit',
+        prenom: 'Léa',
+        domicile: 'Montpellier',
+        ecole: 'Montpellier Business School',
+        photo: 'https://images.unsplash.com/photo-1557053910-d9eadeed1c58?w=150&h=150&fit=crop',
     },
-  ])
+])
 
-  const etudiants = ref([
-    { nom: 'Dupont', prenom: 'Jean', anneeScolaire: '2025-2026', status: 'en attente' },
-    { nom: 'Martin', prenom: 'Alice', anneeScolaire: '2024-2025', status: 'en attente' },
-    { nom: 'Lefebvre', prenom: 'Thomas', anneeScolaire: '2025-2026', status: 'en attente' },
-    { nom: 'Dubois', prenom: 'Sophie', anneeScolaire: '2023-2024', status: 'en attente' },
-    { nom: 'Moreau', prenom: 'Lucas', anneeScolaire: '2025-2026', status: 'en attente' },
-    { nom: 'Lambert', prenom: 'Emma', anneeScolaire: '2024-2025', status: 'en attente' },
-    { nom: 'Rousseau', prenom: 'Hugo', anneeScolaire: '2025-2026', status: 'en attente' },
-    { nom: 'Girard', prenom: 'Chloé', anneeScolaire: '2023-2024', status: 'en attente' },
-    { nom: 'Mercier', prenom: 'Antoine', anneeScolaire: '2024-2025', status: 'en attente' },
-    { nom: 'Petit', prenom: 'Léa', anneeScolaire: '2025-2026', status: 'en attente' },
-  ])
-  function procuration (message, item) {
+const etudiants = ref([{
+        nom: 'Dupont',
+        prenom: 'Jean',
+        anneeScolaire: '2025-2026',
+        status: 'en attente'
+    },
+    {
+        nom: 'Martin',
+        prenom: 'Alice',
+        anneeScolaire: '2024-2025',
+        status: 'en attente'
+    },
+    {
+        nom: 'Lefebvre',
+        prenom: 'Thomas',
+        anneeScolaire: '2025-2026',
+        status: 'en attente'
+    },
+    {
+        nom: 'Dubois',
+        prenom: 'Sophie',
+        anneeScolaire: '2023-2024',
+        status: 'en attente'
+    },
+    {
+        nom: 'Moreau',
+        prenom: 'Lucas',
+        anneeScolaire: '2025-2026',
+        status: 'en attente'
+    },
+    {
+        nom: 'Lambert',
+        prenom: 'Emma',
+        anneeScolaire: '2024-2025',
+        status: 'en attente'
+    },
+    {
+        nom: 'Rousseau',
+        prenom: 'Hugo',
+        anneeScolaire: '2025-2026',
+        status: 'en attente'
+    },
+    {
+        nom: 'Girard',
+        prenom: 'Chloé',
+        anneeScolaire: '2023-2024',
+        status: 'en attente'
+    },
+    {
+        nom: 'Mercier',
+        prenom: 'Antoine',
+        anneeScolaire: '2024-2025',
+        status: 'en attente'
+    },
+    {
+        nom: 'Petit',
+        prenom: 'Léa',
+        anneeScolaire: '2025-2026',
+        status: 'en attente'
+    },
+])
+
+function procuration(message, item) {
     for (const element of etudiants.value) {
-      if (element === item) {
-        element.status = message
-      }
+        if (element === item) {
+            element.status = message
+        }
     }
-  }
+}
 
-  function check (message, item) {
+function check(message, item) {
     for (const element of reclamation.value) {
-      if (element === item) {
-        element.status = message
-      }
+        if (element === item) {
+            element.status = message
+        }
     }
-  }
+}
 
-  const reclamation = ref([
+const reclamation = ref([
     {
-      name: 'Thomas Lemaitre',
-      message: 'L’interface de paiement semble bloquée sur mobile après la validation.',
-      time: '5 minutes ago',
-      status: 'receptionnee',
-      avatar: 'https://i.pravatar.cc/150?u=thomas',
+        name: 'Julie Vallet',
+        message: 'Je souhaiterais modifier mon adresse de livraison pour la commande #994.',
+        time: '12 minutes ago',
+        status: 'envoye',
+        avatar: 'https://i.pravatar.cc/150?u=julie',
     },
     {
-      name: 'Julie Vallet',
-      message: 'Je souhaiterais modifier mon adresse de livraison pour la commande #994.',
-      time: '12 minutes ago',
-      status: 'envoye',
-      avatar: 'https://i.pravatar.cc/150?u=julie',
+        name: 'Sophie Fontenelle',
+        message: 'Le code promotionnel "BIENVENUE10" ne semble pas s’appliquer à mon panier.',
+        time: '45 minutes ago',
+        status: 'envoye',
+        avatar: 'https://i.pravatar.cc/150?u=sophie',
     },
     {
-      name: 'Marc-Antoine Petit',
-      message: 'Merci pour la réactivité de votre support, mon problème est résolu !',
-      time: '25 minutes ago',
-      status: 'regle',
-      avatar: 'https://i.pravatar.cc/150?u=marc',
+        name: 'Karim Mansour',
+        message: 'Est-il possible d’avoir un suivi plus précis sur l’expédition internationale ?',
+        time: '1 hour ago',
+        status: 'envoye',
+        avatar: 'https://i.pravatar.cc/150?u=karim',
     },
     {
-      name: 'Sophie Fontenelle',
-      message: 'Le code promotionnel "BIENVENUE10" ne semble pas s’appliquer à mon panier.',
-      time: '45 minutes ago',
-      status: 'envoye',
-      avatar: 'https://i.pravatar.cc/150?u=sophie',
+        name: 'Emma Watson',
+        message: 'Je n’ai toujours pas reçu mon email de confirmation après 24 heures.',
+        time: '2 hours ago',
+        status: 'envoye',
+        avatar: 'https://i.pravatar.cc/150?u=emma',
     },
     {
-      name: 'Karim Mansour',
-      message: 'Est-il possible d’avoir un suivi plus précis sur l’expédition internationale ?',
-      time: '1 hour ago',
-      status: 'envoye',
-      avatar: 'https://i.pravatar.cc/150?u=karim',
+        name: 'Lucas Dupont',
+        message: 'Une erreur 500 s’affiche lorsque j’essaie d’accéder à mes factures.',
+        time: '3 hours ago',
+        status: 'envoye',
+        avatar: 'https://i.pravatar.cc/150?u=lucas',
     },
     {
-      name: 'Emma Watson',
-      message: 'Je n’ai toujours pas reçu mon email de confirmation après 24 heures.',
-      time: '2 hours ago',
-      status: 'envoye',
-      avatar: 'https://i.pravatar.cc/150?u=emma',
+        name: 'Sarah Jenkins',
+        message: 'Serait-il possible de renouveler mon abonnement par virement bancaire ?',
+        time: '5 hours ago',
+        status: 'envoye',
+        avatar: 'https://i.pravatar.cc/150?u=sarah',
     },
-    {
-      name: 'Lucas Dupont',
-      message: 'Une erreur 500 s’affiche lorsque j’essaie d’accéder à mes factures.',
-      time: '3 hours ago',
-      status: 'envoye',
-      avatar: 'https://i.pravatar.cc/150?u=lucas',
-    },
-    {
-      name: 'Sarah Jenkins',
-      message: 'Serait-il possible de renouveler mon abonnement par virement bancaire ?',
-      time: '5 hours ago',
-      status: 'envoye',
-      avatar: 'https://i.pravatar.cc/150?u=sarah',
-    },
-  ])
+])
 
-  const icons = ref([{
-                       name: 'Annonce',
-                       color: 'bg-blue',
-                       image: 'mdi mdi-bullhorn',
-                     },
-                     {
-                       name: 'Approbation',
-                       color: 'bg-green',
-                       image: 'mdi mdi-check-decagram',
-                     },
-                     {
-                       name: 'Gestion',
-                       color: 'bg-yellow',
-                       image: 'mdi mdi-calendar-month',
-                     },
-  ])
+const icons = ref([{
+        name: 'Annonce',
+        color: 'bg-blue',
+        image: 'mdi mdi-bullhorn',
+    },
+    {
+        name: 'Approbation',
+        color: 'bg-green',
+        image: 'mdi mdi-check-decagram',
+    },
+    {
+        name: 'Gestion',
+        color: 'bg-yellow',
+        image: 'mdi mdi-calendar-month',
+    },
+])
 
-  const isOpen = ref(null)
-  const popupContent = ref(['approbation', 'annonce']) // Pour stocker le texte dynamique
+const isOpen = ref(null)
+const popupContent = ref(['approbation', 'annonce']) // Pour stocker le texte dynamique
 
-  function openPopup (message) {
+function openPopup(message) {
     isOpen.value = message // On ouvre le popup
-  }
-  const router = useRouter()
-  function consulter () {
-    router.push('liste_membre')
-  }
-  function diriger (message) {
-    if (message == 'liste') {
-      router.push('liste_membre')
-    } else {
-      router.push('../users/evenement')
-    }
-  }
+}
+const router = useRouter()
 
+function consulter() {
+    router.push('liste_membre')
+}
+
+function diriger(message) {
+    if (message == 'liste') {
+        router.push('liste_membre')
+    } else {
+        router.push('../users/evenement')
+    }
+}
 </script>
 
 <style scoped>
+.parallax-hero {
+    background-image: url('/img/maki.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+  .icon-card {
+    transition: transform 0.5s ease-in;
+    transform-origin: center;
+  }
+
+  .icon-card:hover {
+    transform: rotateY(360deg);
+  }
 
 .avatar {
     width: 56px;
@@ -529,5 +573,11 @@
     transform: scale(1.05);
     /* Petit effet de zoom au survol */
     background-color: #ff6b81;
+}
+
+@media (max-width: 960px) {
+    .parallax-hero {
+        background-attachment: scroll;
+    }
 }
 </style>
