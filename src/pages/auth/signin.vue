@@ -1,18 +1,24 @@
 <template>
-  <div id="bg_img" class="  w-full flex flex-row justify-center items-center h-full">
+  <div id="bg_img" class="flex h-full w-full flex-row items-center justify-center">
     <div id="container" class="flex flex-row sm:w-[80vw]">
-      <div class="  sm:w-[50%] pa-12 border-x-2">
-        <div class=" mb-10 ml-48">
+      <div class="signin-form-panel sm:w-[50%] pa-12 border-x-2">
+        <div class="mb-10 ml-48">
           <span class="text-white text-3xl font-bold">Login</span>
         </div>
-        <v-text-field
-          v-for="item,i in user_form"
-          :key="i"
-          v-model="item.field"
-          :label="item.title"
-          :prepend-inner-icon="item.icon"
-          variant="outlined"
-        />
+
+        <div class="signin-fields">
+          <div v-for="(item, i) in user_form" :key="i" class="field-group">
+            <label class="field-label" :for="item.id">
+              {{ item.title }}
+            </label>
+            <Input_
+              :id="item.id"
+              v-model="item.field"
+              :placeholder="item.title"
+              :type="item.type"
+            />
+          </div>
+        </div>
 
         <div class="flex flex-col">
           <v-btn
@@ -65,6 +71,7 @@
   const router = useRouter()
   const user_form = ref(
     [{
+       id: 'signin-email',
        field: '',
        title: 'Email adress',
        type: 'email',
@@ -72,6 +79,7 @@
 
      },
      {
+       id: 'signin-password',
        field: '',
        title: 'Password',
        type: 'password',
@@ -107,6 +115,32 @@
     height: 60%;
     width: 60%;
     border-radius: 20px;
+}
+
+.signin-form-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.signin-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.field-label {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 </style>

@@ -39,19 +39,23 @@
 <style scoped>
 .custom-input {
   width: 100%;
+  min-height: 48px;
   padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
+  border-radius: 16px;
+  border: 1px solid #d1fae5;
+  background: rgba(255, 255, 255, 0.92);
+  color: #111827;
   outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .custom-input::placeholder {
-  color: rgba(255, 255, 255, 0.65);
+  color: #6b7280;
 }
 
 .custom-input:focus {
-  border-color: #c5a059;
+  border-color: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+  background: #ffffff;
 }
 </style>

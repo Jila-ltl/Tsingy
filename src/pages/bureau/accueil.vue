@@ -1,16 +1,16 @@
 <template>
 <div class="parallax-hero w-full bg-white">
     <div class=" flex flex-row h-[90vh] items-center justify-center backdrop-blur-md bg-cover bg-center">
-        <div class="absolute inset-0 z-0 bg-gradient-to-br from-black/90 via-black/70 to-black/30" />
+        <div class="absolute inset-0 z-0 bg-gradient-to-br from-white/90 via-white/70 to-white/30" />
         <div class="lg:col-span-2 z-50 p-10 shadow-sm  w-[750px] justify-center">
             <span class=" text-5xl text-red-500 font-bold">BIENVENU SG</span>
-            <div class=" py-4 text-2xl text-white">
+            <div class=" py-4 text-2xl text-black">
                 <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur iusto, natus laborum est modi neque blanditiis, ducimus magni error id voluptatum facilis. Deleniti voluptatum beatae perferendis? Expedita, aperiam! Dolores, consequuntur?</span>
 
             </div>
             <div class=" flex flex-row gap-4 pt-10">
-                <button class=" bg-white p-3 border border-solid rounded-md cursor-pointer hover:scale-105" @click="diriger('modifier')">Modifier</button>
-                <button class=" bg-transparent text-white p-3 border border-collapse rounded-md cursor-pointer hover:scale-105" @click="diriger('liste')">Parcourir les listes des membres</button>
+                <button class=" text-white font-bold bg-green-500 p-3 border border-solid rounded-md cursor-pointer hover:scale-105" @click="diriger('modifier')">Modifier</button>
+                <button class=" bg-transparent text-black p-3 border border-collapse rounded-md cursor-pointer hover:scale-105" @click="diriger('liste')">Parcourir les listes des membres</button>
             </div>
         </div>
         <div class="relative w-80 h-96 overflow-hidden bg-gray-900 rounded-[55%_45%_30%_70%_/_70%_60%_40%_30%]">
@@ -20,19 +20,19 @@
 
     </div>
 
-    <div class=" flex flex-row h-[90vh] items-center justify-center" >
+    <div class=" flex flex-row h-[90vh] items-center justify-center">
         <div v-for="item, i in icons" :key="i" @click="openPopup(item.name.toLowerCase())" class="icon-card mx-32 rounded-xl w-[350px] items-center justify-center flex flex-col " style=" border: 4px white solid; background: #FFFFFF55;">
-                <div class=" text-center">
-                    <span class="text-9xl text-white" :class="item.image " />
-                </div>
-                <div class=" left-40 bottom-0 text-white">
-                    <div class="  flex flex-row gap-1 text-center text-sm p-10">
-                        <span class="uppercase font-bold text-white text-2xl text-center" >
-                          {{ item.name }}
-                        </span>
-                    </div>
+            <div class=" text-center">
+                <span class="text-9xl text-white" :class="item.image " />
+            </div>
+            <div class=" left-40 bottom-0 text-white">
+                <div class="  flex flex-row gap-1 text-center text-sm p-10">
+                    <span class="uppercase font-bold text-white text-2xl text-center">
+                        {{ item.name }}
+                    </span>
                 </div>
             </div>
+        </div>
     </div>
 
     <div v-if="isOpen=='annonce'" class="overlay flex-col">
@@ -79,31 +79,56 @@
       </div>
     </div>
 
-    <div v-if="isOpen==='approbation'" class=" overlay ">
-      <div class="  w-full h-full fixed top-0 left-0  cursor-pointer " @click="isOpen=null" />
-      <div class=" grid grid-cols-1 bg-gray-900 text-white py-1 max-w-full w-fit rounded-lg shadow-lg border border-white z-[100]">
-        <div class="flex w-full justify-end cursor-pointer" @click="isOpen=null">
-          <span class="mdi mdi-window-close" />
+    <div v-if="isOpen==='approbation'" class="overlay approbation-overlay">
+      <div class="w-full h-full fixed top-0 left-0 cursor-pointer" @click="isOpen=null" />
+      <div class="approbation-modal z-[100]">
+        <div class="flex items-start justify-between gap-4 border-b border-green-100 px-6 py-5">
+          <div>
+            <p class="text-sm uppercase tracking-[0.3em] text-green-700">
+              Validation
+            </p>
+            <h2 class="mt-2 text-3xl font-bold text-black">
+              Nouveaux membres
+            </h2>
+            <p class="mt-2 text-sm text-gray-500">
+              Verifiez les informations de chaque profil avant approbation.
+            </p>
+          </div>
+
+          <button class="approbation-close" @click="isOpen=null">
+            <span class="mdi mdi-window-close" />
+          </button>
         </div>
-        <h2 class=" font-bold m-2 text-center ">Nouveaux membres</h2>
-        <span class=" border-b border-white" />
-        <div class="flex flex-col items-left w-[600px] h-[500px] overflow-y-auto">
-          <div v-for="item, i in new_members" :key="i" class=" flex flex-row p-3 justify-between border border-gray-800">
-            <div class=" flex flex-row">
-              <img alt="Avatar" class="avatar" :src="item.photo">
-              <div class=" grid grid-cols-1 p-2 gap-2">
-                <span class=" text-white text-sm"><strong>{{ item.nom }}</strong> <strong>{{ item.prenom }}</strong></span>
-                <span class=" text-gray-500">{{ item.ecole }} </span>
-                <span class=" text-sm text-gray-500">{{ item.domicile }}</span>
+
+        <div class="approbation-scroll px-6 py-5">
+          <div
+            v-for="item, i in new_members"
+            :key="i"
+            class="approbation-item"
+          >
+            <div class="flex items-center gap-4">
+              <img alt="Avatar" class="approbation-avatar" :src="item.photo">
+
+              <div class="grid gap-2">
+                <p class="text-lg font-bold text-black">
+                  {{ item.prenom }} {{ item.nom }}
+                </p>
+                <p class="text-sm uppercase tracking-[0.25em] text-green-700">
+                  {{ item.ecole }}
+                </p>
+                <p class="text-sm text-gray-500">
+                  {{ item.domicile }}
+                </p>
               </div>
             </div>
-            <div class=" flex flex-row gap-2 p-10">
-              <div class="hover:scale-125">
-                <span class="mdi mdi-checkbox-marked text-2xl text-lime-700" />
-              </div>
-              <div class="hover:scale-125">
-                <span class="mdi mdi-close-box text-2xl text-red-700 " />
-              </div>
+
+            <div class="flex items-center gap-3">
+              <button class="approbation-action approbation-action--approve">
+                <span class="mdi mdi-checkbox-marked text-2xl" />
+              </button>
+              <button class="approbation-action approbation-action--reject">
+                <span class="mdi mdi-close-box text-2xl" />
+              </button>
             </div>
           </div>
         </div>
@@ -137,7 +162,7 @@
     </div>
 
     <!-- Reclamation -->ù
-    <div class=" bg-[#0a190a] h-[90vh]">
+    <div class=" bg-[#0a190a7f] h-[90vh]">
       <div class="flex justify-center items-center pt-10"  gradient opacity=".7" thickness="3">
         <span class="h-[10px] w-[200px] mr-3 bg-gradient-to-l from-green-500 to-transparent"></span>
         <h1 class="text-green-500">RECLAMATION</h1>
@@ -178,36 +203,42 @@
       </div>
     </div>
     <!-- Demande de procuration -->
-    <v-divider gradient opacity=".7" thickness="3"><h1>DEMANDE DE PROCURATION</h1></v-divider>
-    <div class=" p-3 ">
-      <v-table class=" w-[80%] m-auto border border-gray-800 rounded-2xl bg-lime-900 bg-gradient-to-br from-black/90 via-black/70 to-transparent">
-        <thead class="border border-gray-800 rounded-2xl bg-lime-900 bg-gradient-to-br from-black/90 via-black/70 to-transparent">
-          <tr>
-            <th class="text-left">Nom</th>
-            <th class="text-left">Prenom</th>
-            <th class="text-left">Annee scolaire</th>
-            <th class="text-left">Status</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody class="border border-gray-800 rounded-2xl bg-lime-900 bg-gradient-to-br from-black/90 via-black/70 to-transparent">
-          <tr
-            v-for="item in etudiants"
-            :key="item.nom"
-            :class="item.status === 'en attente'? 'bg-stone-600':''"
-          >
-            <td>{{ item.nom }}</td>
-            <td>{{ item.prenom }}</td>
-            <td>{{ item.anneeScolaire }}</td>
-            <td>{{ item.status }}</td>
-            <td class="flex flex-row pt-3 gap-2 bg-transparent" style="background-color: transparent;">
-              <span class="mdi mdi-reload text-2xl text-[#0ea5e9]  transform hover:scale-125" @click="procuration('recu',item)" />
-              <span class="mdi mdi-check-underline text-2xl font-bold text-[#0ee969] transform hover:scale-125" @click="procuration('disponible',item)" />
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
+
+    <div class=" ">
+         <v-card
+    class="member-table-card"
+    title=" "
+    flat
+  >
+    <template v-slot:text>
+      <v-text-field
+        v-model="search"
+        base-color="green"
+        class="member-search-field"
+        color="green"
+        label="Search"
+        prepend-inner-icon="mdi-magnify"
+        single-line
+        variant="outlined"
+        hide-details
+      ></v-text-field>
+    </template>
+
+    <v-data-table
+      :headers="headers"
+      :items="new_members"
+      :row-props="getMemberRowProps"
+      :search="search"
+      class="member-data-table"
+      @click:row="openMemberModal"
+    ></v-data-table>
+  </v-card>
     </div>
+
+    <MyModal
+      v-model="isMemberModalOpen"
+      :member="selectedMember"
+    />
 
     <foot />
   </div>
@@ -220,7 +251,34 @@ import {
 import {
     useRouter,
 } from 'vue-router'
-import BlobImage from '@/components/BlobImage.vue'
+
+const search = ref('')
+const headers = [{
+        align: 'start',
+        key: 'name',
+        sortable: false,
+
+    },
+    {
+        key: 'nom',
+        title: 'Nom'
+    },
+    {
+        key: 'prenom',
+        title: 'Prenom'
+    },
+    {
+        key: 'domicile',
+        title: 'Domicile'
+    },
+    {
+        key: 'ecole',
+        title: 'Ecole'
+    },
+]
+
+  const isMemberModalOpen = ref(false)
+  const selectedMember = ref(null)
 
 const new_members = ref([{
         nom: 'Dupont',
@@ -373,8 +431,7 @@ function check(message, item) {
     }
 }
 
-const reclamation = ref([
-    {
+const reclamation = ref([{
         name: 'Julie Vallet',
         message: 'Je souhaiterais modifier mon adresse de livraison pour la commande #994.',
         time: '12 minutes ago',
@@ -454,6 +511,17 @@ function diriger(message) {
         router.push('../users/evenement')
     }
 }
+
+function getMemberRowProps() {
+  return {
+    class: 'cursor-pointer',
+  }
+}
+
+function openMemberModal(_, context) {
+  selectedMember.value = context?.item?.raw ?? context?.item ?? null
+  isMemberModalOpen.value = !!selectedMember.value
+}
 </script>
 
 <style scoped>
@@ -465,14 +533,14 @@ function diriger(message) {
     background-attachment: fixed;
 }
 
-  .icon-card {
+.icon-card {
     transition: transform 0.5s ease-in;
     transform-origin: center;
-  }
+}
 
-  .icon-card:hover {
+.icon-card:hover {
     transform: rotateY(360deg);
-  }
+}
 
 .avatar {
     width: 56px;
@@ -504,6 +572,89 @@ function diriger(message) {
     z-index: 9999;
     /* Toujours au-dessus de tout */
 }
+
+  .approbation-overlay {
+    background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(10px);
+  }
+
+  .approbation-modal {
+    width: min(860px, calc(100vw - 2rem));
+    max-height: min(720px, calc(100vh - 2rem));
+    overflow: hidden;
+    border: 1px solid #dcfce7;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 24px 80px rgba(15, 23, 42, 0.22);
+  }
+
+  .approbation-scroll {
+    max-height: calc(720px - 120px);
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+  }
+
+  .approbation-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid #dcfce7;
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(240, 253, 244, 0.8));
+  }
+
+  .approbation-item + .approbation-item {
+    margin-top: 1rem;
+  }
+
+  .approbation-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 24px;
+    object-fit: cover;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  }
+
+  .approbation-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  .approbation-action:hover {
+    transform: translateY(-1px);
+  }
+
+  .approbation-action--approve {
+    background: rgba(34, 197, 94, 0.12);
+    color: #15803d;
+    box-shadow: 0 10px 24px rgba(34, 197, 94, 0.12);
+  }
+
+  .approbation-action--reject {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    box-shadow: 0 10px 24px rgba(239, 68, 68, 0.1);
+  }
+
+  .approbation-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: #111827;
+    font-size: 1.25rem;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+  }
 
 /* 2. La boîte du Popup */
 
@@ -579,5 +730,84 @@ function diriger(message) {
     .parallax-hero {
         background-attachment: scroll;
     }
+}
+
+:deep(.member-table-card) {
+  background: #ffffff;
+  border: 1px solid #dcfce7;
+  border-radius: 20px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+}
+
+:deep(.member-table-card .v-card-text) {
+  padding: 24px 24px 8px;
+}
+
+:deep(.member-search-field .v-field) {
+  background: #ffffff;
+  color: #111827;
+}
+
+:deep(.member-search-field .v-label) {
+  color: #6b7280;
+}
+
+:deep(.member-search-field input) {
+  color: #111827;
+}
+
+:deep(.member-search-field .v-icon) {
+  color: #15803d;
+}
+
+:deep(.member-data-table) {
+  background: rgba(255, 255, 255, 0.72) !important;
+  color: #111827;
+}
+
+:deep(.member-data-table .v-table),
+:deep(.member-data-table .v-table__wrapper),
+:deep(.member-data-table .v-table__wrapper > table),
+:deep(.member-data-table thead),
+:deep(.member-data-table tbody),
+:deep(.member-data-table tr),
+:deep(.member-data-table th),
+:deep(.member-data-table td) {
+  background: transparent !important;
+}
+
+:deep(.member-data-table .v-table) {
+  background-color: rgba(255, 255, 255, 0.72) !important;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+:deep(.member-data-table .v-table__wrapper) {
+  scrollbar-gutter: stable;
+}
+
+:deep(.member-data-table .v-data-table-header__content) {
+  color: #02d14e;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+:deep(.member-data-table tbody tr) {
+  transition: background-color 0.2s ease;
+}
+
+:deep(.member-data-table tbody tr:hover) {
+  background: rgba(22, 163, 74, 0.08);
+}
+
+:deep(.member-data-table tbody td) {
+  color: #374151;
+}
+
+:deep(.member-data-table tbody td:first-child),
+:deep(.member-data-table tbody td:nth-child(2)) {
+  color: #111827;
+  font-weight: 600;
 }
 </style>

@@ -12,8 +12,12 @@ import { defineConfig } from 'vite'
 import Layouts from 'vite-plugin-vue-layouts-next'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
+const devPort = 3000
+const devHost = 'localhost'
+const devOrigin = `http://${devHost}:${devPort}`
+
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     VueRouter(),
     Layouts(),
@@ -75,7 +79,16 @@ export default defineConfig({
     ],
   },
   server: {
-    port: 3000,
+    host: devHost,
+    port: devPort,
+    strictPort: true,
+    origin: devOrigin,
+    hmr: {
+      host: devHost,
+      port: devPort,
+      clientPort: devPort,
+      protocol: 'ws',
+    },
   },
-  base: './',
-})
+  base: command === 'serve' ? '/' : './',
+}))

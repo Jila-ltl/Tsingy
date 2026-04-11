@@ -1,373 +1,620 @@
 <template>
+  <div class="member-service-page min-h-screen overflow-hidden bg-white">
+    <div class="member-service-page__backdrop" />
 
-  <div class=" bg-[#0a190a]  grid grid-cols-2 p-8 lg:col-span-2 min-h-screen justify-center gap-10 ">
+    <div class="relative z-10 p-4 md:p-8">
+      <section class="overflow-hidden rounded-[32px] border border-green-100 bg-white/78 shadow-[0_24px_80px_rgba(15,23,42,0.10)] backdrop-blur-xl">
+        <div class="grid gap-8 p-8 lg:grid-cols-[1.2fr_0.8fr] lg:p-10">
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
+              Services membre
+            </p>
+            <h1 class="mt-4 text-4xl font-black text-black md:text-5xl">
+              Espace membre Tsingy Marrakech
+            </h1>
+            <p class="mt-4 max-w-3xl text-base leading-8 text-gray-600 md:text-lg">
+              Accedez rapidement a vos demandes de procuration, reclamations, depot de certificats et modifications de profil dans un espace harmonise avec la page d accueil.
+            </p>
 
-    <div class="grid md:grid-cols-2 max-h-[500px] max-w-5xl w-full mt-[20%] border border-gray-800 rounded-2xl overflow-y-auto">
-
-      <div class="p-8 border border-gray-800 hover:bg-gray-800/30 transition-colors group relative " @click="afficher('procuration')">
-        <div class="flex justify-between items-start">
-          <div class="p-3 bg-teal-500/10 rounded-lg text-teal-400">
-            <span class="mdi mdi-file-document-outline h-6 w-6" />
-          </div>
-          <span class="text-gray-600 group-hover:text-gray-400 transition-colors">
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            ><path d="M17 7l-10 10M17 7H7M17 7v10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
-          </span>
-        </div>
-        <h3 class="text-white font-semibold mt-6 text-lg">Demande de procuration</h3>
-        <p class="text-gray-400 mt-2 text-sm leading-relaxed">Doloribus dolores nostrum quia qui natus officia quod et dolorem. Sit repellendus qui ut at blanditiis et quo et molestiae.</p>
-      </div>
-
-      <div class="p-8 border border-gray-800 hover:bg-gray-800/30 transition-colors group" @click="afficher('reclamation')">
-        <div class="flex justify-between items-start">
-          <div class="p-3 bg-purple-500/10 rounded-lg text-purple-400">
-            <span class="mdi mdi-alert-box h-6 w-6" />
-          </div>
-          <span class="text-gray-600 group-hover:text-gray-400 transition-colors">
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            ><path d="M17 7l-10 10M17 7H7M17 7v10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
-          </span>
-        </div>
-        <h3 class="text-white font-semibold mt-6 text-lg">Reclamation bourse</h3>
-        <p class="text-gray-400 mt-2 text-sm leading-relaxed">Doloribus dolores nostrum quia qui natus officia quod et dolorem. Sit repellendus qui ut at blanditiis et quo et molestiae.</p>
-      </div>
-
-      <div class="p-8 border border-gray-800 hover:bg-gray-800/30 transition-colors group" @click="afficher('certificat')">
-        <div class="flex justify-between items-start">
-          <div class="p-3 bg-blue-500/10 rounded-lg text-blue-400">
-            <span class="mdi mdi-folder-arrow-up-outline h-6 w-6" />
-          </div>
-          <span class="text-gray-600 group-hover:text-gray-400 transition-colors">
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            ><path d="M17 7l-10 10M17 7H7M17 7v10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
-          </span>
-        </div>
-        <h3 class="text-white font-semibold mt-6 text-lg">Save certificate</h3>
-        <p class="text-gray-400 mt-2 text-sm leading-relaxed">Doloribus dolores nostrum quia qui natus officia quod et dolorem. Sit repellendus qui ut at blanditiis et quo et molestiae.</p>
-      </div>
-
-      <div class="p-8 border border-gray-800 hover:bg-gray-800/30 transition-colors group" @click="afficher('modification')">
-        <div class="flex justify-between items-start">
-          <div class="p-3 bg-yellow-500/10 rounded-lg text-yellow-400">
-            <span class="mdi mdi-account-edit h-6 w-6" />
-          </div>
-          <span class="text-gray-600 group-hover:text-gray-400 transition-colors">
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            ><path d="M17 7l-10 10M17 7H7M17 7v10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
-          </span>
-        </div>
-        <h3 class="text-white font-semibold mt-6 text-lg">Modifier mes infos</h3>
-        <p class="text-gray-400 mt-2 text-sm leading-relaxed">Doloribus dolores nostrum quia qui natus officia quod et dolorem. Sit repellendus qui ut at blanditiis et quo et molestiae.</p>
-      </div>
-    </div>
-
-    <div class="lg:col-span-1 w-full h-full p-10 mb-6 rounded-lg max-w-5xl items-center justify-center overflow-y-auto">
-
-      <!-- demande de procuration -->
-      <div v-if="open === 'procuration'" class=" mt-[20%]">
-        <header class="flex justify-center items-center mb-8 border-b pb-4">
-          <h1 class="text-2xl font-light italic items-center">Demande de procuration</h1>
-        </header>
-        <div class="flex items-center gap-4 mt-6 mb-3 overflow-y-auto max-h-[600px]">
-          <button
-            class="inline-flex justify-center rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            type="submit"
-          >
-            Faire une demande
-          </button>
-        </div>
-        <span class="font-light italic text-2xl">Liste de mes demandes</span>
-        <hr>
-        <div class="max-w-6xl py-5 mx-auto overflow-hidden">
-          <table class="min-w-full table-fixed border-separate border-spacing-0">
-            <thead>
-              <tr class="text-left">
-                <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Name</th>
-                <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Description</th>
-                <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Date</th>
-                <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Etat</th>
-                <th class="pb-4 pt-2 px-4" />
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-800 border-t border-gray-800">
-              <tr class="hover:bg-white/5 transition-colors">
-                <td class="py-4 px-4 text-sm font-bold text-white">Lindsay Walton</td>
-                <td class="py-4 px-4 text-sm text-gray-400">Front-end Developer</td>
-                <td class="py-4 px-4 text-sm text-gray-400">lindsay.walton@example.com</td>
-                <td class="py-4 px-4 text-sm text-gray-400">Member</td>
-                <td class="py-4 px-4 text-right text-sm font-medium">
-                  <a class="text-indigo-500 hover:text-indigo-400" href="#">Edit</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- reclamation -->
-      <div v-if="open === 'reclamation'" class="">
-        <header class="flex justify-center items-center mb-8 border-b pb-4">
-          <h1 class="text-2xl font-light italic items-center">Reclamation bourse</h1>
-        </header>
-        <div class="min-h-screen p-8 text-white font-sans">
-          <div class="max-w-xl space-y-6 ">
-
-            <div>
-              <label class="block text-sm font-bold mb-2" for="username">
-                Username
-              </label>
-              <div class="flex rounded-md  border border-gray-700 focus-within:border-indigo-500 transition shadow-sm">
-                <input
-                  id="username"
-                  class="block w-full border-0 bg-transparent py-2 pl-1 pr-3 text-white placeholder-gray-500 focus:ring-0 sm:text-sm"
-                  name="username"
-                  placeholder="janesmith"
-                  type="text"
-                >
+            <div class="mt-8 flex flex-wrap gap-4">
+              <div class="rounded-2xl border border-green-100 bg-green-50 px-5 py-4">
+                <p class="text-xs uppercase tracking-[0.25em] text-green-700">Actions</p>
+                <p class="mt-2 text-lg font-bold text-black">{{ services.length }} modules</p>
+              </div>
+              <div class="rounded-2xl border border-red-100 bg-red-50 px-5 py-4">
+                <p class="text-xs uppercase tracking-[0.25em] text-red-600">Formulaires</p>
+                <p class="mt-2 text-lg font-bold text-black">En fenetre modale</p>
+              </div>
+              <div class="rounded-2xl border border-gray-200 bg-white px-5 py-4">
+                <p class="text-xs uppercase tracking-[0.25em] text-gray-500">Etat</p>
+                <p class="mt-2 text-lg font-bold text-black">Pret a utiliser</p>
               </div>
             </div>
-
-            <div>
-              <label class="block text-sm font-bold mb-2" for="about">
-                Decrivez-votre reclamation
-              </label>
-              <textarea
-                id="about"
-                class="block w-full rounded-md border border-gray-700 py-2 px-3 text-white shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-                name="about"
-                rows="4"
-              />
-              <p class="mt-2 text-sm text-gray-400">
-                Soyez claire et precis
-              </p>
-            </div>
-            <div class="flex items-center gap-4">
-              <button
-                class="inline-flex justify-center rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                type="submit"
-              >
-                Envoyer
-              </button>
-            </div>
           </div>
 
-          <div class="max-w-6xl py-5 mx-auto overflow-hidden">
-            <table class="min-w-full table-fixed border-separate border-spacing-0">
+          <div class="relative overflow-hidden rounded-[28px] border border-green-100 bg-gradient-to-br from-white via-green-50 to-red-50 p-5">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(34,197,94,0.18),_transparent_45%),radial-gradient(circle_at_bottom_left,_rgba(239,68,68,0.16),_transparent_40%)]" />
+            <div class="relative flex h-full flex-col justify-between gap-6">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.3em] text-gray-500">
+                  Fonctionnement
+                </p>
+                <p class="mt-3 text-sm leading-7 text-gray-600">
+                  Choisissez une action, ouvrez le formulaire dans une fenetre modale puis consultez vos demandes deja enregistrees dans les tableaux de suivi.
+                </p>
+              </div>
+
+              <div class="rounded-2xl border border-white bg-white/90 p-4 shadow-sm">
+                <p class="text-sm font-bold text-black">Module actif</p>
+                <p class="mt-2 text-sm text-gray-600">
+                  {{ activeService ? activeService.title : 'Selectionnez une action' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <button
+          v-for="service in services"
+          :key="service.key"
+          class="service-card group overflow-hidden rounded-[24px] border border-white bg-white/85 text-left shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition duration-200 hover:-translate-y-1 hover:border-green-200 hover:shadow-[0_20px_50px_rgba(22,163,74,0.15)]"
+          @click="setActiveService(service.key)"
+        >
+          <div class="service-card__icon" :class="service.iconClass">
+            <span :class="service.icon" class="text-3xl" />
+          </div>
+          <div class="px-6 pb-6">
+            <p class="text-xl font-black text-black">{{ service.title }}</p>
+            <p class="mt-3 text-sm leading-6 text-gray-600">
+              {{ service.description }}
+            </p>
+            <div class="mt-5 flex items-center justify-between">
+              <span class="rounded-full bg-green-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-green-700">
+                Ouvrir
+              </span>
+              <span class="text-2xl text-red-500">+</span>
+            </div>
+          </div>
+        </button>
+      </section>
+
+      <section class="mt-8 grid gap-8 xl:grid-cols-2">
+        <div class="rounded-[32px] border border-green-100 bg-white/72 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur-xl md:p-8">
+          <div class="mb-6 flex items-end justify-between gap-4">
+            <div>
+              <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
+                Procurations
+              </p>
+              <h2 class="mt-2 text-2xl font-black text-black md:text-3xl">
+                Mes demandes recentes
+              </h2>
+            </div>
+            <button class="member-primary-button" @click="openModal('procuration')">
+              Nouvelle demande
+            </button>
+          </div>
+
+          <div class="member-table-wrap">
+            <table class="member-table">
               <thead>
-                <tr class="text-left">
-                  <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Name</th>
-                  <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Description</th>
-                  <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Date</th>
-                  <th class="pb-4 pt-2 px-4 text-sm font-semibold text-white">Etat</th>
-                  <th class="pb-4 pt-2 px-4" />
+                <tr>
+                  <th>Objet</th>
+                  <th>Description</th>
+                  <th>Date</th>
+                  <th>Etat</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-gray-800 border-t border-gray-800">
-                <tr class="hover:bg-white/5 transition-colors">
-                  <td class="py-4 px-4 text-sm font-bold text-white">Lindsay Walton</td>
-                  <td class="py-4 px-4 text-sm text-gray-400">Front-end Developer</td>
-                  <td class="py-4 px-4 text-sm text-gray-400">lindsay.walton@example.com</td>
-                  <td class="py-4 px-4 text-sm text-gray-400">Member</td>
-                  <td class="py-4 px-4 text-right text-sm font-medium">
-                    <a class="text-indigo-500 hover:text-indigo-400" href="#">Edit</a>
+              <tbody>
+                <tr v-for="item in procurationHistory" :key="item.id">
+                  <td>{{ item.title }}</td>
+                  <td>{{ item.description }}</td>
+                  <td>{{ item.date }}</td>
+                  <td>
+                    <span class="status-chip" :class="item.status === 'Validee' ? 'status-chip--success' : 'status-chip--pending'">
+                      {{ item.status }}
+                    </span>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-      </div>
 
-      <!-- modification -->
-      <div v-if="open === 'modification'">
-        <header class="flex justify-center items-center mb-8 border-b pb-4">
-          <h1 class="text-2xl font-light italic items-center">Modifier votre profile</h1>
-        </header>
-        <div class="h-fit  p-8 text-white font-sans ">
-          <div class="max-w-4xl">
-            <div class="mb-8">
-              <h2 class="text-base font-semibold leading-7 text-white">Personal Information</h2>
-              <p class="mt-1 text-sm leading-6 text-gray-400">Use a permanent address where you can receive mail.</p>
+        <div class="rounded-[32px] border border-green-100 bg-white/72 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur-xl md:p-8">
+          <div class="mb-6 flex items-end justify-between gap-4">
+            <div>
+              <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
+                Reclamations
+              </p>
+              <h2 class="mt-2 text-2xl font-black text-black md:text-3xl">
+                Suivi des messages
+              </h2>
             </div>
+            <button class="member-primary-button" @click="openModal('reclamation')">
+              Nouvelle reclamation
+            </button>
+          </div>
 
-            <div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6 overflow-y-auto max-h-[500px]">
+          <div class="member-table-wrap">
+            <table class="member-table">
+              <thead>
+                <tr>
+                  <th>Sujet</th>
+                  <th>Message</th>
+                  <th>Date</th>
+                  <th>Etat</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in reclamationHistory" :key="item.id">
+                  <td>{{ item.title }}</td>
+                  <td>{{ item.description }}</td>
+                  <td>{{ item.date }}</td>
+                  <td>
+                    <span class="status-chip" :class="item.status === 'Traitee' ? 'status-chip--success' : 'status-chip--pending'">
+                      {{ item.status }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
 
-              <div class="sm:col-span-3">
-                <label class="block text-sm font-medium leading-6 text-white mb-2" for="first-name">First name</label>
-                <input id="first-name" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="first-name" type="text">
-              </div>
+    <div v-if="modalType" class="member-form-overlay">
+      <div class="absolute inset-0 cursor-pointer" @click="closeModal" />
 
-              <div class="sm:col-span-3">
-                <label class="block text-sm font-medium leading-6 text-white mb-2" for="last-name">Last name</label>
-                <input id="last-name" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="last-name" type="text">
-              </div>
+      <div class="member-form-panel">
+        <div class="member-form-card">
+          <button class="member-form-close" @click="closeModal">✕</button>
 
-              <div class="sm:col-span-4">
-                <label class="block text-sm font-medium leading-6 text-white mb-2" for="date-of-birth">Date de naissance</label>
-                <input id="date-of-birth" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="date-of-birth" type="date">
-              </div>
+          <div class="mb-8">
+            <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
+              Formulaire
+            </p>
+            <h3 class="mt-3 text-4xl font-black text-black">
+              {{ activeService.title }}
+            </h3>
+            <p class="mt-3 text-base leading-7 text-gray-600">
+              {{ activeService.description }}
+            </p>
+          </div>
 
-              <div class="sm:col-span-3 ">
-                <div class="">
-                  <label class="block text-sm font-medium leading-6 text-white mb-2" for="country">Profession</label>
-                  <select id="country" class="block w-full rounded-md border-0 bg-white/5 py-2 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="profession">
-                    <option value="etudiant">Etudiant(e)</option>
-                    <option value="travailleur">Travailleur(euse)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="sm:col-span-3">
-                <label class="block text-sm font-medium leading-6 text-white mb-2" for="university">Universite</label>
-                <input id="university" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="university" type="text">
-                <label class="block text-sm font-medium leading-6 text-white mb-2" for="field">filiere</label>
-                <input id="field" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="field" type="text">
-                <label class="block text-sm font-medium leading-6 text-white mb-2" for="student-id">Matricule AMCI</label>
-                <input id="student-id" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="student-id" type="text">
-                <label class="block text-sm font-medium leading-6 text-white mb-2" for="occupation">Poste/Metier</label>
-                <input id="occupation" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="occupation" type="text">
-              </div>
-
-              <div class="sm:col-span-4">
-                <label class="block text-sm font-medium leading-6 text-white mb-2" for="passport-number">Numero Passeport</label>
-                <input id="passport-number" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="passport-number" type="text">
-              </div>
-
-              <div class="sm:col-span-4">
-                <label class="block text-sm font-medium leading-6 text-white mb-2" for="arrivee">Arrivee au Maroc</label>
-                <input id="arrivee" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="arrivee" type="date">
-              </div>
-
-              <div class="sm:col-span-3">
-                <label class="block text-sm font-medium leading-6 text-white mb-2" for="address">Domicile</label>
-                <input id="address" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="address" type="text">
-              </div>
-
-              <div class="sm:col-span-3">
-                <label class="block text-sm font-medium leading-6 text-white mb-2" for="email">Email</label>
-                <input id="email" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="email" type="email">
-              </div>
-
-              <div class="sm:col-span-3">
-                <label class="block text-sm font-medium leading-6 text-white mb-2" for="contact">Contact</label>
-                <input id="contact" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="contact" type="text">
-              </div>
-
-              <div class="sm:col-span-4">
-                <label class="block text-sm font-medium leading-6 text-white mb-2" for="reseaux">reseaux sociaux</label>
-                <input id="reseaux" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="reseaux" type="text">
-              </div>
-
+          <div v-if="modalType === 'procuration'" class="grid gap-5">
+            <div>
+              <label class="member-label">Nom complet</label>
+              <Input_ id="procuration-full-name" v-model="forms.procuration.fullName" class="member-input" placeholder="Votre nom complet" type="text" />
             </div>
-
-            <div class="flex items-center gap-4 mt-6">
-              <button
-                class="inline-flex justify-center rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                type="submit"
-              >
-                Envoyer
-              </button>
+            <div>
+              <label class="member-label">Personne mandataire</label>
+              <Input_ id="procuration-delegate" v-model="forms.procuration.delegate" class="member-input" placeholder="Nom du mandataire" type="text" />
             </div>
-            <div class="mt-10 border-t border-white/10 pt-10" />
+            <div>
+              <label class="member-label">Date concernee</label>
+              <Input_ id="procuration-date" v-model="forms.procuration.date" class="member-input" type="date" />
+            </div>
+            <div>
+              <label class="member-label">Motif</label>
+              <textarea v-model="forms.procuration.reason" class="member-input min-h-[140px]" placeholder="Expliquez votre demande" />
+            </div>
+          </div>
+
+          <div v-else-if="modalType === 'reclamation'" class="grid gap-5">
+            <div>
+              <label class="member-label">Sujet</label>
+              <Input_ id="reclamation-subject" v-model="forms.reclamation.subject" class="member-input" placeholder="Sujet de la reclamation" type="text" />
+            </div>
+            <div>
+              <label class="member-label">Description</label>
+              <textarea v-model="forms.reclamation.message" class="member-input min-h-[160px]" placeholder="Decrivez le probleme avec precision" />
+            </div>
+          </div>
+
+          <div v-else-if="modalType === 'certificat'" class="grid gap-5">
+            <div>
+              <label class="member-label">Annee scolaire</label>
+              <Input_ id="certificat-school-year" v-model="forms.certificat.schoolYear" class="member-input" placeholder="2025 - 2026" type="text" />
+            </div>
+            <div>
+              <label class="member-label">Nom du document</label>
+              <Input_ id="certificat-file-name" v-model="forms.certificat.fileName" class="member-input" placeholder="Certificat de scolarite" type="text" />
+            </div>
+            <div>
+              <label class="member-label">Reference</label>
+              <Input_ id="certificat-reference" v-model="forms.certificat.reference" class="member-input" placeholder="Reference ou commentaire" type="text" />
+            </div>
+          </div>
+
+          <div v-else-if="modalType === 'modification'" class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label class="member-label">Prenom</label>
+              <Input_ id="modification-first-name" v-model="forms.modification.firstName" class="member-input" type="text" />
+            </div>
+            <div>
+              <label class="member-label">Nom</label>
+              <Input_ id="modification-last-name" v-model="forms.modification.lastName" class="member-input" type="text" />
+            </div>
+            <div>
+              <label class="member-label">Date de naissance</label>
+              <Input_ id="modification-birth-date" v-model="forms.modification.birthDate" class="member-input" type="date" />
+            </div>
+            <div>
+              <label class="member-label">Profession</label>
+              <Select_
+                id="modification-profession"
+                v-model="forms.modification.profession"
+                class="member-input"
+                :options="professionOptions"
+                placeholder="Choisir une profession"
+              />
+            </div>
+            <div>
+              <label class="member-label">Universite</label>
+              <Input_ id="modification-university" v-model="forms.modification.university" class="member-input" type="text" />
+            </div>
+            <div>
+              <label class="member-label">Filiere / Metier</label>
+              <Input_ id="modification-track" v-model="forms.modification.track" class="member-input" type="text" />
+            </div>
+            <div>
+              <label class="member-label">Numero passeport</label>
+              <Input_ id="modification-passport" v-model="forms.modification.passport" class="member-input" type="text" />
+            </div>
+            <div>
+              <label class="member-label">Arrivee au Maroc</label>
+              <Input_ id="modification-arrival-date" v-model="forms.modification.arrivalDate" class="member-input" type="date" />
+            </div>
+            <div>
+              <label class="member-label">Domicile</label>
+              <Input_ id="modification-address" v-model="forms.modification.address" class="member-input" type="text" />
+            </div>
+            <div>
+              <label class="member-label">Email</label>
+              <Input_ id="modification-email" v-model="forms.modification.email" class="member-input" type="email" />
+            </div>
+            <div>
+              <label class="member-label">Contact</label>
+              <Input_ id="modification-contact" v-model="forms.modification.contact" class="member-input" type="text" />
+            </div>
+            <div>
+              <label class="member-label">Reseaux sociaux</label>
+              <Input_ id="modification-social" v-model="forms.modification.social" class="member-input" type="text" />
+            </div>
+          </div>
+
+          <div class="mt-8 flex justify-end gap-3">
+            <button class="member-secondary-button" @click="closeModal">
+              Annuler
+            </button>
+            <button class="member-primary-button" @click="closeModal">
+              Envoyer
+            </button>
           </div>
         </div>
       </div>
-
-      <!-- certificate -->
-      <div v-if="open === 'certificat'">
-        <div class=" p-10 text-white font-sans">
-          <div class="max-w-4xl">
-            <header class="flex justify-center items-center mb-8 border-b pb-4">
-              <h1 class="text-2xl font-light italic items-center">Save my certificate</h1>
-            </header>
-            <label class="block text-sm font-medium leading-6 text-white mb-2">
-              Attachments
-            </label>
-
-            <div class="mt-2 flex justify-center rounded-lg border-2 border-dashed border-white/10 px-6 py-10 bg-white/5 hover:border-indigo-500 hover:bg-white/10 transition-all group">
-              <div class="text-center">
-                <svg
-                  class="mx-auto h-12 w-12 text-gray-500 group-hover:text-indigo-400 transition-colors"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-
-                <div class="mt-4 flex text-sm leading-6 text-gray-400 justify-center">
-                  <label class="relative cursor-pointer rounded-md font-semibold text-indigo-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 focus-within:ring-offset-[#0f172a] hover:text-indigo-300" for="doc-upload">
-                    <span>Upload a file</span>
-                    <input
-                      id="doc-upload"
-                      accept=".pdf,.doc,.docx,.xls,.xlsx,.txt"
-                      class="sr-only"
-                      name="doc-upload"
-                      type="file"
-                    >
-                  </label>
-                  <p class="pl-1">or drag and drop</p>
-                </div>
-
-                <p class="text-xs leading-5 text-gray-500 mt-1">
-                  PDF, DOCX or XLS up to 20MB
-                </p>
-              </div>
-            </div>
-
-            <div class="sm:col-span-3 mt-6">
-              <label class="block text-sm font-medium leading-6 text-white mb-2" for="annee-scolaire">Annee scolaire</label>
-              <input id="annee-scolaire" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" name="annee-scolaire" type="text">
-            </div>
-            <div class="flex items-center gap-4 mt-6">
-              <button
-                class="inline-flex justify-center rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                type="submit"
-              >
-                Envoyer
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
-
 </template>
 
 <script setup>
-  import {
-    ref,
-  } from 'vue'
-  const open = ref('')
-  function afficher (message) {
-    open.value = message
-  }
+import { computed, reactive, ref } from 'vue'
+
+const services = [
+  {
+    key: 'procuration',
+    title: 'Demande de procuration',
+    description: 'Creez une nouvelle procuration et consultez l historique de vos demandes deja soumises.',
+    icon: 'mdi mdi-file-document-outline',
+    iconClass: 'service-card__icon--green',
+  },
+  {
+    key: 'reclamation',
+    title: 'Reclamation bourse',
+    description: 'Envoyez un message detaille a propos de votre bourse et suivez son traitement.',
+    icon: 'mdi mdi-alert-box-outline',
+    iconClass: 'service-card__icon--red',
+  },
+  {
+    key: 'certificat',
+    title: 'Depot de certificat',
+    description: 'Preparez le depot de votre certificat avec l annee scolaire et la reference du document.',
+    icon: 'mdi mdi-folder-arrow-up-outline',
+    iconClass: 'service-card__icon--blue',
+  },
+  {
+    key: 'modification',
+    title: 'Modifier mes infos',
+    description: 'Mettez a jour vos informations personnelles et administratives dans un formulaire unique.',
+    icon: 'mdi mdi-account-edit-outline',
+    iconClass: 'service-card__icon--yellow',
+  },
+]
+
+const activeKey = ref('procuration')
+const modalType = ref('')
+const professionOptions = [
+  { label: 'Etudiant(e)', value: 'etudiant' },
+  { label: 'Travailleur(euse)', value: 'travailleur' },
+]
+
+const procurationHistory = ref([
+  { id: 1, title: 'Procuration AG 2026', description: 'Representation pour l assemblee generale.', date: '11/04/2026', status: 'En attente' },
+  { id: 2, title: 'Retrait dossier', description: 'Autorisation de retrait administratif.', date: '02/04/2026', status: 'Validee' },
+])
+
+const reclamationHistory = ref([
+  { id: 1, title: 'Bourse AMCI', description: 'Retard de versement du mois de mars.', date: '08/04/2026', status: 'En attente' },
+  { id: 2, title: 'Regularisation', description: 'Correction d un dossier deja depose.', date: '29/03/2026', status: 'Traitee' },
+])
+
+const forms = reactive({
+  procuration: {
+    fullName: '',
+    delegate: '',
+    date: '',
+    reason: '',
+  },
+  reclamation: {
+    subject: '',
+    message: '',
+  },
+  certificat: {
+    schoolYear: '',
+    fileName: '',
+    reference: '',
+  },
+  modification: {
+    firstName: '',
+    lastName: '',
+    birthDate: '',
+    profession: 'etudiant',
+    university: '',
+    track: '',
+    passport: '',
+    arrivalDate: '',
+    address: '',
+    email: '',
+    contact: '',
+    social: '',
+  },
+})
+
+const activeService = computed(() => services.find(service => service.key === activeKey.value) ?? services[0])
+
+function setActiveService(key) {
+  activeKey.value = key
+  openModal(key)
+}
+
+function openModal(type) {
+  modalType.value = type
+  activeKey.value = type
+}
+
+function closeModal() {
+  modalType.value = ''
+}
 </script>
 
-<style>
+<style scoped>
+.member-service-page {
+  position: relative;
+  background:
+    radial-gradient(circle at top left, rgba(34, 197, 94, 0.18), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(239, 68, 68, 0.14), transparent 22%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(240, 253, 244, 0.92));
+}
 
+.member-service-page__backdrop {
+  position: absolute;
+  inset: 0;
+  background-image: url('/img/maki.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+}
+
+.service-card {
+  backdrop-filter: blur(12px);
+}
+
+.service-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin: 1.5rem 1.5rem 1rem;
+  border-radius: 20px;
+}
+
+.service-card__icon--green {
+  background: rgba(34, 197, 94, 0.12);
+  color: #15803d;
+}
+
+.service-card__icon--red {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+.service-card__icon--blue {
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+}
+
+.service-card__icon--yellow {
+  background: rgba(234, 179, 8, 0.12);
+  color: #ca8a04;
+}
+
+.member-table-wrap {
+  overflow-x: auto;
+  scrollbar-gutter: stable;
+}
+
+.member-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.75rem;
+}
+
+.member-table th {
+  padding: 0 1rem 0.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #15803d;
+}
+
+.member-table td {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.92);
+  color: #374151;
+  font-size: 0.92rem;
+}
+
+.member-table tbody tr td:first-child {
+  border-top-left-radius: 18px;
+  border-bottom-left-radius: 18px;
+  color: #111827;
+  font-weight: 700;
+}
+
+.member-table tbody tr td:last-child {
+  border-top-right-radius: 18px;
+  border-bottom-right-radius: 18px;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.status-chip--success {
+  background: rgba(34, 197, 94, 0.12);
+  color: #15803d;
+}
+
+.status-chip--pending {
+  background: rgba(234, 179, 8, 0.12);
+  color: #b45309;
+}
+
+.member-form-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.member-form-panel {
+  position: relative;
+  width: min(980px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+.member-form-card {
+  position: relative;
+  border: 1px solid rgba(220, 252, 231, 0.85);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.96);
+  padding: 2rem;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.22);
+}
+
+.member-form-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #111827;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.member-label {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: #15803d;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.member-input {
+  width: 100%;
+  border: 1px solid #d1fae5;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #111827;
+  padding: 0.95rem 1rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.member-input:focus {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+}
+
+.member-primary-button,
+.member-secondary-button {
+  border-radius: 16px;
+  font-weight: 700;
+  padding: 0.9rem 1.1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.member-primary-button {
+  background: linear-gradient(135deg, #22c55e, #166534);
+  color: white;
+  box-shadow: 0 12px 28px rgba(22, 163, 74, 0.22);
+}
+
+.member-secondary-button {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #e5e7eb;
+  color: #111827;
+}
+
+@media (max-width: 1024px) {
+  .member-form-panel {
+    width: calc(100vw - 1rem);
+    max-height: calc(100vh - 1rem);
+  }
+
+  .member-form-card {
+    padding: 1.25rem;
+  }
+}
 </style>
