@@ -1,68 +1,120 @@
 <script setup>
-  import { Autoplay, Navigation, Pagination } from 'swiper/modules'
-  import { Swiper, SwiperSlide } from 'swiper/vue'
+import { ref } from 'vue'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import 'swiper/css'
 
-  // Importation obligatoire des styles CSS
-  import 'swiper/css'
-  import 'swiper/css/navigation'
-  import 'swiper/css/pagination'
+import { membres } from '@/data/membres'
 
-  const modules = [Navigation, Pagination, Autoplay]
+// 🔥 instance swiper
+const swiperInstance = ref(null)
+let interval = null
 
-  const liste_membre = ref(
-    [{
-       image: '../../public/img/img.jpg',
-       mot: 'Bonjour',
+// récupérer swiper
+const onSwiper = (swiper) => {
+  swiperInstance.value = swiper
+}
 
-     },
-     {
-       image: '/img/img1.png',
-       mot: 'Bonjour',
+// ▶ NEXT (hover)
+const startNext = () => {
+  if (!swiperInstance.value) return
 
-     },
-     {
-       image: '/img/img.jpg',
-       mot: 'Bonjour',
+  swiperInstance.value.slideNext()
 
-     },
-    ],
-  )
+  stopSlide()
+
+  interval = setInterval(() => {
+    swiperInstance.value.slideNext()
+  }, 800)
+}
+
+// ◀ PREV (hover)
+const startPrev = () => {
+  if (!swiperInstance.value) return
+
+  swiperInstance.value.slidePrev()
+
+  stopSlide()
+
+  interval = setInterval(() => {
+    swiperInstance.value.slidePrev()
+  }, 800)
+}
+
+// stop auto scroll
+const stopSlide = () => {
+  if (interval) {
+    clearInterval(interval)
+    interval = null
+  }
+}
 </script>
 
 <template>
-  <div class="carousel-wrapper">
-    <swiper
-      :autoplay="{ delay: 3000 }"
-      class="my-swiper"
-      :modules="modules"
-      :navigation="true"
-      :pagination="{ clickable: true }"
-      :slides-per-view="1"
-      :space-between="10"
-    >
-      <swiper-slide v-for="item,i in liste_membre" :key="i" class="slide " :style="{ backgroundImage: `url(${item.image})` }">
-        {{ item.mot }}
+  <div class="relative max-w-5xl mx-auto">
 
-      </swiper-slide>
+    <!-- FLÈCHE GAUCHE -->
+    <button
+      @mouseenter="startPrev"
+      @mouseleave="stopSlide"
+      class="absolute -left-6 top-1/2 -translate-y-1/2 z-10 text-gray-500 text-3xl hover:text-red-600 transition"
+    >
+      ‹
+    </button>
+
+    <!-- CAROUSEL -->
+    <swiper
+      @swiper="onSwiper"
+      :slides-per-view="3"
+      :space-between="30"
+      class="px-4"
+    >
+
+      <swiper-slide v-for="item in membres" :key="item.nom">
+
+  <div class="group bg-white rounded-2xl shadow-md max-w-sm mx-auto p-4 transition duration-300 hover:scale-105">
+
+    <!-- IMAGE -->
+    <img
+      :src="item.image"
+      class="w-full h-56 object-cover rounded-lg"
+    />
+
+    <!-- TEXTE -->
+    <div class="text-center mt-4">
+
+      <h3 class="font-semibold text-lg">
+        {{ item.poste }}
+      </h3>
+
+      <p class="text-gray-500 mt-1">
+        {{ item.nom }}
+      </p>
+
+    </div>
+
+    <!-- INFOS (VERSION SIMPLE QUI MARCHE) -->
+    <div class="hidden group-hover:block text-xs text-gray-600 mt-3 text-center">
+
+      <p>Etudie à {{ item.details.ecole }} en {{ item.details.filiere }} </p>
+      <p>Année : {{ item.details.niveau }}</p>
+      <p>Rôle: {{ item.details.role }}</p>
+
+    </div>
+
+  </div>
+
+</swiper-slide>
+
     </swiper>
+
+    <!-- FLÈCHE DROITE -->
+    <button
+      @mouseenter="startNext"
+      @mouseleave="stopSlide"
+      class="absolute -right-6 top-1/2 -translate-y-1/2 z-10 text-gray-500 text-3xl hover:text-red-600 transition"
+    >
+      ›
+    </button>
+
   </div>
 </template>
-
-<style scoped>
-.carousel-wrapper { width: 100%; margin: auto; }
-.slide {
-   width: 100%;
-  height: 400px; /* Ou la hauteur de ton choix */
-  background-size: cover;
-  background-position: center;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  font-size: 2rem;
-}
-/* Style pour voir les flèches de navigation */
-:deep(.swiper-button-next), :deep(.swiper-button-prev) { color: #35495e; }
-
-</style>

@@ -61,6 +61,7 @@
       url: '/users/membre',
       ico: 'mdi mdi-account-group',
     },
+
   ])
 
   function isRouteActive (url) {
