@@ -1,24 +1,4 @@
 <template>
-
-  <!-- <div class=" flex flex-col ">
-    <div id="container" class=" justify-center h-[95vh] flex flex-col w-full">
-      <div class="pt-52">
-        <p class="text-5xl font-serif text-center">Bienvenu dans notre communaute</p>
-        <p class="font-serif text-xl text-center">Tsingy Marrakech vous souhaite une bonne visite!</p>
-      </div>
-    </div>
-    <div id="app">
-      <h1 class="font-sans mt-10 mb-10 text-center">Qui sommes-nous?</h1>
-      <MyCarousel />
-    </div>
-    <h1 class="text-center font-sans mt-10 mb-10">Membre du bureau</h1>
-    <div v-for="item,i in liste_membre" :key="i" class="justify-self-center flex" :class="i%2==1 ? 'flex-row-reverse': 'flex-row'">
-      <div id="present" :style="{ backgroundImage: `url(${item.image})`, backgroundSize: 'cover' }" />
-      <div id="present" class="items-center">
-        <p class="place-items-center mt-20">Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi cumque culpa, harum quod quae ratione! Adipisci nulla dolorem laborum ducimus illum dignissimos, nam quod vitae soluta iste tempora laudantium modi.</p>
-      </div>
-    </div>
-  </div> -->
 <div class="flex items-center bg-gray-200 h-12 overflow-hidden">
 
   <!-- Bloc NEWS -->
@@ -88,7 +68,7 @@
       <div class="bg-white p-10 rounded-2xl shadow-lg">
 
         <h2 class="text-2xl font-semibold text-gray-900 mb-2">
-          Qui sommes-nous ?
+          Qui sommes-nous ? des winners
         </h2>
 
         <p class="text-gray-600 leading-relaxed">
@@ -181,6 +161,7 @@
 
       <button
         class="bg-green-700 text-white px-8 py-3 rounded-xl hover:bg-green-900 transition mx-auto"
+        @click="inscription_rout()"
       >
         Inscription
       </button>
@@ -196,6 +177,7 @@
 
       <button
         class="bg-red-700 text-white px-8 py-3 rounded-xl hover:bg-red-800 transition mx-auto"
+        @click="login()"
       >
         Se connecter
       </button>
@@ -274,8 +256,18 @@
   import { annoncesValides } from '@/data/annonces'
   import 'swiper/css'
 import 'swiper/css/navigation'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
+const router = useRouter()
+  const route = useRoute()
+
+ function login () {
+    router.push('/auth/signin')
+ }
+
+  function inscription_rout () {
+    router.push('/auth/signup')
+  }
   const liste_membre = ref(
     [{
        image: '../../../public/img/img.jpg',
@@ -321,8 +313,6 @@ const prev = () => {
   translateX.value += 20
 }
 
-
-const router = useRouter()
 
 const goToAnnonce = (id) => {
   router.push(`/users/annonces#${id}`)

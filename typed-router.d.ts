@@ -19,11 +19,12 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
+    '/auth/presentation': RouteRecordInfo<'/auth/presentation', '/auth/presentation', Record<never, never>, Record<never, never>>,
     '/auth/signin': RouteRecordInfo<'/auth/signin', '/auth/signin', Record<never, never>, Record<never, never>>,
     '/auth/signup': RouteRecordInfo<'/auth/signup', '/auth/signup', Record<never, never>, Record<never, never>>,
     '/bureau/accueil': RouteRecordInfo<'/bureau/accueil', '/bureau/accueil', Record<never, never>, Record<never, never>>,
     '/bureau/liste_membre': RouteRecordInfo<'/bureau/liste_membre', '/bureau/liste_membre', Record<never, never>, Record<never, never>>,
-    '/users/accueil': RouteRecordInfo<'/users/accueil', '/users/accueil', Record<never, never>, Record<never, never>>,
+    '/bureau/Login': RouteRecordInfo<'/bureau/Login', '/bureau/Login', Record<never, never>, Record<never, never>>,
     '/users/annonces': RouteRecordInfo<'/users/annonces', '/users/annonces', Record<never, never>, Record<never, never>>,
     '/users/evenement': RouteRecordInfo<'/users/evenement', '/users/evenement', Record<never, never>, Record<never, never>>,
     '/users/membre': RouteRecordInfo<'/users/membre', '/users/membre', Record<never, never>, Record<never, never>>,
@@ -44,6 +45,10 @@ declare module 'vue-router/auto-routes' {
       routes: '/'
       views: never
     }
+    'src/pages/auth/presentation.vue': {
+      routes: '/auth/presentation'
+      views: never
+    }
     'src/pages/auth/signin.vue': {
       routes: '/auth/signin'
       views: never
@@ -60,8 +65,8 @@ declare module 'vue-router/auto-routes' {
       routes: '/bureau/liste_membre'
       views: never
     }
-    'src/pages/users/accueil.vue': {
-      routes: '/users/accueil'
+    'src/pages/bureau/Login.vue': {
+      routes: '/bureau/Login'
       views: never
     }
     'src/pages/users/annonces.vue': {

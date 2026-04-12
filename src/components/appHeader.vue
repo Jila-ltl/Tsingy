@@ -23,17 +23,10 @@
         >
         <span v-else class=" text-3xl" :class="item.ico " @click="router.push(item.url)" />
       </div>
-      <div class="cursor-pointer ml-10 bg-green-500 rounded-full px-3 py-1" @click="login()">se connecter</div>
     </div>
+    <div class="cursor-pointer ml-10 bg-green-500 rounded-full p-3" @click="login()">Section bureau</div>
   </div>
 
-<!-- <div   class="flex border border-b py-4 justify-center" id="membre">
-    <div class=" flex ">
-        <span class="text-3xl ">Tsingy</span>
-        <img src="../../public/img/logo.png" alt="logo" class="logo-img"/>
-        <span class="text-3xl">Marrakech</span>
-    </div>
-</div> -->
 </template>
 
 <script setup>
@@ -53,12 +46,12 @@
     },
     {
       label: 'Blog',
-      url: '/bureau/accueil',
+       url: '/users/evenement',
       ico: 'mdi mdi-ticket-account',
     },
     {
       label: 'Contact',
-      url: '/users/membre',
+      url: '/auth/presentation',
       ico: 'mdi mdi-account-group',
     },
 
@@ -73,7 +66,7 @@
   }
 
   function login () {
-    router.push('/auth/signin')
+    router.push('/bureau/Login')
   }
 
 </script>

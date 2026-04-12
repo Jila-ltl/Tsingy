@@ -1,0 +1,36 @@
+{
+  "admin": [
+    {
+      "title": "Secrétaire Général",
+      "password": "password1"
+    },
+    {
+      "title": "Secrétaire Général Adjoint",
+      "password": "password2"
+    },
+    {
+      "title": "Trésorier",
+      "password": "password3"
+    },
+    {
+      "title": "Chargé Communication",
+      "password": "password4"
+    },
+    {
+      "title": "Chargé Culturel",
+      "password": "password5"
+    },
+    {
+      "title": "Chargé Sportif",
+      "password": "password6"
+    },
+    {
+      "title": "Responsable Logistique",
+      "password": "password7"
+    },
+    {
+      "title": "Affaires Académiques et Sociales",
+      "password": "password8"
+    }
+  ]
+}

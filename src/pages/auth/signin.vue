@@ -1,9 +1,10 @@
 <template>
   <div id="bg_img" class="flex h-full w-full flex-row items-center justify-center">
-    <div id="container" class="flex flex-row sm:w-[80vw]">
-      <div class="signin-form-panel sm:w-[50%] pa-12 border-x-2">
-        <div class="mb-10 ml-48">
-          <span class="text-white text-3xl font-bold">Login</span>
+    <div class=" signing-shell items-center justify-center p-10 gap-10">
+        <div class="mb-10 flex flex-col gap-3 items-center justify-center p-5">
+          <div class="logo-tsingy"></div>
+          <span class="text-white text-3xl font-bold font-sans">Connexion membre</span>
+          <p>Tsingy Marrakech</p>
         </div>
 
         <div class="signin-fields">
@@ -20,7 +21,7 @@
           </div>
         </div>
 
-        <div class="flex flex-col">
+        <div class="flex flex-col mt-5">
           <v-btn
             class="flex-grow-1"
             height="48"
@@ -32,8 +33,9 @@
           </v-btn>
 
         </div>
-      </div>
-      <div class="flex flex-col justify-center sm:px-24 sm:w-[50%]">
+    </div>
+
+      <!-- <div class="flex flex-col justify-center sm:px-24 sm:w-[50%]">
         <div class="justify-end ml-32">
           <v-icon size="100">mdi-account-circle</v-icon>
         </div>
@@ -54,8 +56,8 @@
             S'inscrire
           </v-btn>
         </div>
-      </div>
-    </div>
+      </div> -->
+
 
   </div>
 </template>
@@ -102,6 +104,27 @@
 </script>
 
 <style scoped>
+.signing-shell {
+    width: min(700px, 92vw);
+  height: min(700px, 82vh);
+    gap: 2rem;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  overflow: hidden;
+}
+.logo-tsingy {
+    width: 80px;
+    height: 80px;
+    margin: auto;
+    background-image: url("/img/logo.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 #bg_img {
     background-image: url("../../../public/img/img1.png");
     background-size: cover;

@@ -9,8 +9,7 @@
 
             </div>
             <div class=" flex flex-row gap-4 pt-10">
-                <button class=" text-white font-bold bg-green-500 p-3 border border-solid rounded-md cursor-pointer hover:scale-105" @click="diriger('modifier')">Modifier</button>
-                <button class=" bg-transparent text-black p-3 border border-collapse rounded-md cursor-pointer hover:scale-105" @click="diriger('liste')">Parcourir les listes des membres</button>
+                <button class=" text-white font-bold bg-green-500 p-3 border border-solid rounded-md cursor-pointer hover:scale-105" @click="diriger()">Parcourir les listes des membresr</button>
             </div>
         </div>
         <div class="relative w-80 h-96 overflow-hidden bg-gray-900 rounded-[55%_45%_30%_70%_/_70%_60%_40%_30%]">
@@ -35,46 +34,58 @@
         </div>
     </div>
 
-    <div v-if="isOpen=='annonce'" class="overlay flex-col">
-        <div class=" relative bg-gray-900 border-zinc-500 p-8 w-[500px] box-shadow-lg">
-            <h2 class=" text-white text-2xl font-bold mb-4">Annonce</h2>
-            <div class=" h-[60%] p-8 text-white font-sans">
-                <div class="grid grid-cols-1 max-w-xl space-y-6">
+    <div v-if="isOpen=='annonce'" class="overlay approbation-overlay">
+     <div class="w-full h-full fixed top-0 left-0 cursor-pointer" @click="isOpen=null" />
+      <div class="approbation-modal z-[100]">
+        <div class="flex items-start justify-between gap-4 border-b border-green-100 px-6 py-5">
+          <div>
+            <p class="text-sm uppercase tracking-[0.3em] text-green-700">
+              ANNONCE
+            </p>
+            <h2 class="mt-2 text-3xl font-bold text-black">
+              Ajouter une nouvelle annonce
+            </h2>
+            <p class="mt-2 text-sm text-gray-500">
+              Verifiez les informations de chaque profil avant approbation.
+            </p>
+          </div>
 
-                    <label class="block text-sm font-bold mb-2" for="username">
-                        titre
-                    </label>
-                    <div class="flex rounded-md bg-[#1e293b] border border-gray-700 focus-within:border-indigo-500 transition shadow-sm">
-                        <input id="username" class="block w-full border-0 bg-transparent py-2 pl-1 pr-3 text-white placeholder-gray-500 focus:ring-0 sm:text-sm" name="username" placeholder="janesmith" type="text">
-                    </div>
+          <button class="approbation-close" @click="isOpen=null">
+            <span class="mdi mdi-window-close" />
+          </button>
+        </div>
+        <div class="grid grid-cols-1 gap-4 max-w-xl p-8">
+            <div >
+               <label class="member-label" for="username">
+                  titre
+                </label>
+                <Input_ id="username"  name="username" placeholder="janesmith" type="text"/>
+            </div>
+              <div>
+                <label class="member-label" for="about">
+                  Message
+                </label>
+                <textarea id="about" class="member-input min-h-[160px]" name="about" rows="4" />
+              </div>
 
-                    <label class="block text-sm font-bold mb-2" for="about">
-                        Message
-                    </label>
-                    <textarea id="about" class="block w-full rounded-md border border-gray-700 bg-[#1e293b] py-2 px-3 text-white shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm" name="about" rows="4" />
-
-                    <label class="block text-sm font-bold mb-2" for="date">
-              Expiratiom
-            </label>
-            <div class="flex rounded-md bg-[#1e293b] border border-gray-700 focus-within:border-indigo-500 transition shadow-sm">
-              <input
+            <div >
+               <label class="member-label" for="date">
+                Expiratiom
+              </label>
+              <Input_
                 id="date"
-                class="block w-full border-0 bg-transparent py-2 pl-1 pr-3 text-white placeholder-gray-500 focus:ring-0 sm:text-sm"
                 name="date"
                 placeholder="janesmith"
                 type="date"
-              >
-
-              <button
+              />
+            </div>
+            <button
                 class=" rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 type="submit"
                 @click="isOpen=null"
               >
                 Envoyer
               </button>
-              <button aria-label="Fermer" class="btn-close" @click="isOpen = false">&times;</button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -251,6 +262,8 @@ import {
 import {
     useRouter,
 } from 'vue-router'
+
+import { computed, reactive } from 'vue'
 
 const search = ref('')
 const headers = [{
@@ -504,12 +517,8 @@ function consulter() {
     router.push('liste_membre')
 }
 
-function diriger(message) {
-    if (message == 'liste') {
-        router.push('liste_membre')
-    } else {
-        router.push('../users/evenement')
-    }
+function diriger() {
+  router.push('liste_membre')
 }
 
 function getMemberRowProps() {
@@ -525,6 +534,31 @@ function openMemberModal(_, context) {
 </script>
 
 <style scoped>
+.member-input {
+  width: 100%;
+  border: 1px solid #d1fae5;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #111827;
+  padding: 0.95rem 1rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.member-input:focus {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+}
+
+.member-label {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: #15803d;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
 .parallax-hero {
     background-image: url('/img/maki.jpg');
     background-position: center;

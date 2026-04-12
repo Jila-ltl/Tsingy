@@ -1,0 +1,33 @@
+Page d'accueil: (public)
+    -presentation association: qui sommes nous, mission
+    -annonce 
+    -news lettre
+    -faire un don
+
+Page presentation membre de bureau:
+    -mot de la presidente
+    -liste membre de bureau
+
+Page contact
+
+formulaire demande de procuration:
+(@page ny bureau asina champ amenona anarana complet ny procureur sy CIN naz)
+(ny ambiny efa vofeno automatique)
+Nom :
+Prénom : 
+Tél :
+Adresse : 
+N° matricule : [matricule AMCI]
+
+À l’AMCI
+Motif : Procuration
+
+Je soussigné (NOM PRENOM) titulaire de CIN numérotée (E034606W) autorise (PROCUREUR) 
+titulaire de CIN numérotée (A20X01417) à se procurer à mon nom mon attestation de bourse auprès de vous.
+
+Je vous prie d’agréer mes salutations.
+
+Marrakech, le [date].
+
+[Signature]
+
