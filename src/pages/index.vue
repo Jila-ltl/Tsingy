@@ -129,14 +129,14 @@
     </div>
 
   </section>
-  <section id="pres_bureau" class="bg-gray-100 pb-16">
+  <section id="pres_bureau" class="bg-gray-100 pb-16 h-screen">
     <div class="w-full bg-green-900 py-6 text-center mb-12">
       <h1 class="text-white text-3xl font-semibold">
         Les membres du bureau
       </h1>
     </div>
 
-    <MyCarousel />
+
 
   </section>
   <section id="espace_membre" class="py-20 text-center bg-gray-50">
@@ -251,7 +251,6 @@
 </template>
 
 <script setup>
-  import MyCarousel from '../components/Carousel.vue'
   import { ref, onMounted, onUnmounted } from 'vue'
   import { annoncesValides } from '@/data/annonces'
   import 'swiper/css'
