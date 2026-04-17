@@ -136,6 +136,7 @@
       </h1>
     </div>
 
+    <carousel/>
 
 
   </section>
@@ -251,11 +252,13 @@
 </template>
 
 <script setup>
+import '@/components/carousel.vue'
   import { ref, onMounted, onUnmounted } from 'vue'
   import { annoncesValides } from '@/data/annonces'
   import 'swiper/css'
 import 'swiper/css/navigation'
 import { useRoute, useRouter } from 'vue-router'
+import { components } from 'vuetify/dist/vuetify.js'
 
 const router = useRouter()
   const route = useRoute()
