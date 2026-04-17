@@ -1,69 +1,11 @@
 <template>
 
-  <!-- <div class=" flex flex-col ">
-    <div id="container" class=" justify-center h-[95vh] flex flex-col w-full">
-      <div class="pt-52">
-        <p class="text-5xl font-serif text-center">Bienvenu dans notre communaute</p>
-        <p class="font-serif text-xl text-center">Tsingy Marrakech vous souhaite une bonne visite!</p>
-      </div>
-    </div>
-    <div id="app">
-      <h1 class="font-sans mt-10 mb-10 text-center">Qui sommes-nous?</h1>
-      <MyCarousel />
-    </div>
-    <h1 class="text-center font-sans mt-10 mb-10">Membre du bureau</h1>
-    <div v-for="item,i in liste_membre" :key="i" class="justify-self-center flex" :class="i%2==1 ? 'flex-row-reverse': 'flex-row'">
-      <div id="present" :style="{ backgroundImage: `url(${item.image})`, backgroundSize: 'cover' }" />
-      <div id="present" class="items-center">
-        <p class="place-items-center mt-20">Lorem ipsum dolor sit amet consectetur adipisicing elit. Excepturi cumque culpa, harum quod quae ratione! Adipisci nulla dolorem laborum ducimus illum dignissimos, nam quod vitae soluta iste tempora laudantium modi.</p>
-      </div>
-    </div>
-  </div> -->
-<div class="flex items-center bg-gray-200 h-12 overflow-hidden">
 
-  <!-- Bloc NEWS -->
-  <div class="bg-red-600 text-white px-6 h-full flex items-center font-bold">
-    NEWS
+<div id="container">
+  <div class="h-[91vh] flex items-center justify-center">
+    <span class=" text-5xl font-bold">Tongasoa à Marrakech !</span>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPAPv9ZILm3ncS-zg5hqNiXUUC7e0_h4gKDg&s" alt="">
   </div>
-
-  <!-- Texte défilant -->
-  <div class="flex-1 overflow-hidden">
-
-    <div class="whitespace-nowrap animate-marquee flex items-center h-full text-black">
-
-      <span
-        v-for="item in annoncesValides"
-        :key="item.id"
-        @click="goToAnnonce(item.id)"
-        class="mx-10 cursor-pointer flex items-center gap-4"
-      >
-
-        <!-- point rouge -->
-        <span class="text-red-500 text-lg">●</span>
-
-        <!-- type -->
-        <span class="bg-gray-700 text-white px-2 py-1 rounded text-sm">
-          {{ item.type }}
-        </span>
-
-        <!-- date -->
-        <span class="text-gray-700">
-          {{ item.date }}
-        </span>
-
-        <!-- titre -->
-        <span>
-          {{ item.titre }}
-        </span>
-
-      </span>
-
-    </div>
-
-  </div>
-
-</div>
-
   <section class="py-20 bg-gray-50">
 
   <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
@@ -205,9 +147,9 @@
   </div>
 
 </div>
-</section>
+</section >
 
-  <section id="contact" class="mt-20 bg-gray text-white py-16 px-10 text-align-center">
+  <div id="contact" class=" bg-black text-white py-16 px-10 text-align-center">
 
     <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
 
@@ -263,8 +205,9 @@
     © 2026 Tsingy Marrakech — Tous droits réservés
   </div>
 
-</section>
+</div>
 
+</div>
 
 </template>
 
@@ -339,11 +282,12 @@ body {
   text-align: center;
 }
 #container {
-    background-image: url("../../../public/img/quisn2.png");
-    background-size: center;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    height: 30%;
+  background-image: url("/img/img_group.jpeg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  min-height: 100vh;
     width: 100%;
 
 }
