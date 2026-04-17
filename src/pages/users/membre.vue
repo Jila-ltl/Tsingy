@@ -1,5 +1,5 @@
 <template>
-  <div class="member-service-page min-h-screen overflow-hidden bg-white">
+  <div class="member-service-page h-[89vh] overflow-y-auto bg-white">
     <div class="member-service-page__backdrop" />
 
     <div class="relative z-10 p-4 md:p-8">
@@ -184,22 +184,95 @@
             </p>
           </div>
 
-          <div v-if="modalType === 'procuration'" class="grid gap-5">
+          <div v-if="modalType === 'procuration'" class="grid gap-5 sm:grid-cols-2">
             <div>
-              <label class="member-label">Nom complet</label>
-              <Input_ id="procuration-full-name" v-model="forms.procuration.fullName" class="member-input" placeholder="Votre nom complet" type="text" />
+              <label class="member-label">Nom</label>
+              <Input_
+                id="procuration-last-name"
+                v-model="forms.procuration.lastName"
+                class="member-input"
+                placeholder="Votre nom"
+                type="text"
+              />
             </div>
             <div>
-              <label class="member-label">Personne mandataire</label>
-              <Input_ id="procuration-delegate" v-model="forms.procuration.delegate" class="member-input" placeholder="Nom du mandataire" type="text" />
+              <label class="member-label">Prenom</label>
+              <Input_
+                id="procuration-first-name"
+                v-model="forms.procuration.firstName"
+                class="member-input"
+                placeholder="Votre prenom"
+                type="text"
+              />
             </div>
             <div>
-              <label class="member-label">Date concernee</label>
-              <Input_ id="procuration-date" v-model="forms.procuration.date" class="member-input" type="date" />
+              <label class="member-label">Tel</label>
+              <Input_
+                id="procuration-phone"
+                v-model="forms.procuration.phone"
+                class="member-input"
+                placeholder="Votre numero de telephone"
+                type="text"
+              />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="member-label">Adresse</label>
+              <Input_
+                id="procuration-address"
+                v-model="forms.procuration.address"
+                class="member-input"
+                placeholder="Votre adresse"
+                type="text"
+              />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="member-label">N° matricule</label>
+              <Input_
+                id="procuration-matricule"
+                v-model="forms.procuration.matricule"
+                class="member-input"
+                placeholder="Matricule AMCI"
+                type="text"
+              />
             </div>
             <div>
-              <label class="member-label">Motif</label>
-              <textarea v-model="forms.procuration.reason" class="member-input min-h-[140px]" placeholder="Expliquez votre demande" />
+              <label class="member-label">N° CIN</label>
+              <Input_
+                id="procuration-cin"
+                v-model="forms.procuration.cinNumber"
+                class="member-input"
+                placeholder="Ex: E034606W"
+                type="text"
+              />
+            </div>
+            <div>
+              <label class="member-label">Nom du procureur</label>
+              <Input_
+                id="procuration-procurator-name"
+                v-model="forms.procuration.procuratorName"
+                class="member-input"
+                placeholder="Nom et prenom du procureur"
+                type="text"
+              />
+            </div>
+            <div>
+              <label class="member-label">CIN du procureur</label>
+              <Input_
+                id="procuration-procurator-cin"
+                v-model="forms.procuration.procuratorCin"
+                class="member-input"
+                placeholder="Ex: A20X01417"
+                type="text"
+              />
+            </div>
+            <div>
+              <label class="member-label">Date</label>
+              <Input_
+                id="procuration-date"
+                v-model="forms.procuration.date"
+                class="member-input"
+                type="date"
+              />
             </div>
           </div>
 
@@ -290,8 +363,66 @@
             <button class="member-secondary-button" @click="closeModal">
               Annuler
             </button>
-            <button class="member-primary-button" @click="closeModal">
+            <button class="member-primary-button" @click="submitActiveForm">
               Envoyer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="previewType === 'procuration'" class="member-form-overlay">
+      <div class="absolute inset-0 cursor-pointer" @click="closePreview" />
+
+      <div class="member-form-panel member-preview-panel">
+        <div class="member-form-card member-preview-card">
+          <button class="member-form-close" @click="closePreview">✕</button>
+
+          <div class="mb-8 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
+                Fiche generee
+              </p>
+              <h3 class="mt-3 text-3xl font-black text-black md:text-4xl">
+                Procuration AMCI
+              </h3>
+              <p class="mt-3 max-w-2xl text-base leading-7 text-gray-600">
+                Verifiez le contenu ci-dessous puis telechargez immediatement le document en PDF.
+              </p>
+            </div>
+
+            <button class="member-primary-button" @click="downloadProcurationPdf">
+              Telecharger le PDF
+            </button>
+          </div>
+
+          <div class="procuration-preview">
+            <div class="procuration-preview__meta">
+              <p><strong>Nom :</strong> {{ forms.procuration.lastName }}</p>
+              <p><strong>Prenom :</strong> {{ forms.procuration.firstName }}</p>
+              <p><strong>Tel :</strong> {{ forms.procuration.phone }}</p>
+              <p><strong>Adresse :</strong> {{ forms.procuration.address }}</p>
+              <p><strong>N° matricule :</strong> {{ forms.procuration.matricule }}</p>
+            </div>
+
+            <div class="procuration-preview__letter">
+              <p class="procuration-preview__line">À AMCI</p>
+              <p class="procuration-preview__line"><strong>Motif :</strong> Procuration</p>
+              <p class="procuration-preview__line">
+                Je soussigné {{ procurationFullName }} titulaire de CIN numérotée {{ forms.procuration.cinNumber }} autorise
+                {{ forms.procuration.procuratorName }} titulaire de CIN numérotée {{ forms.procuration.procuratorCin }} à se procurer à mon nom mon attestation de bourse auprès de vous.
+              </p>
+              <p class="procuration-preview__line">Je vous prie d’agréer mes salutations.</p>
+              <p class="procuration-preview__line procuration-preview__line--signature">Marrakech, le {{ procurationFormattedDate }}.</p>
+            </div>
+          </div>
+
+          <div class="mt-8 flex justify-end gap-3">
+            <button class="member-secondary-button" @click="reopenProcurationForm">
+              Modifier
+            </button>
+            <button class="member-primary-button" @click="downloadProcurationPdf">
+              Telecharger le PDF
             </button>
           </div>
         </div>
@@ -336,6 +467,7 @@ const services = [
 
 const activeKey = ref('procuration')
 const modalType = ref('')
+const previewType = ref('')
 const professionOptions = [
   { label: 'Etudiant(e)', value: 'etudiant' },
   { label: 'Travailleur(euse)', value: 'travailleur' },
@@ -353,10 +485,15 @@ const reclamationHistory = ref([
 
 const forms = reactive({
   procuration: {
-    fullName: '',
-    delegate: '',
+    lastName: '',
+    firstName: '',
+    phone: '',
+    address: '',
+    matricule: '',
+    cinNumber: '',
+    procuratorName: '',
+    procuratorCin: '',
     date: '',
-    reason: '',
   },
   reclamation: {
     subject: '',
@@ -384,6 +521,8 @@ const forms = reactive({
 })
 
 const activeService = computed(() => services.find(service => service.key === activeKey.value) ?? services[0])
+const procurationFullName = computed(() => `${forms.procuration.lastName} ${forms.procuration.firstName}`.trim())
+const procurationFormattedDate = computed(() => formatDisplayDate(forms.procuration.date))
 
 function setActiveService(key) {
   activeKey.value = key
@@ -391,12 +530,164 @@ function setActiveService(key) {
 }
 
 function openModal(type) {
+  previewType.value = ''
   modalType.value = type
   activeKey.value = type
 }
 
 function closeModal() {
   modalType.value = ''
+}
+
+function closePreview() {
+  previewType.value = ''
+}
+
+function reopenProcurationForm() {
+  previewType.value = ''
+  modalType.value = 'procuration'
+}
+
+function formatDisplayDate(value) {
+  if (!value) {
+    return new Date().toLocaleDateString('fr-FR')
+  }
+
+  return new Date(`${value}T00:00:00`).toLocaleDateString('fr-FR')
+}
+
+function getProcurationPdfLines() {
+  return [
+    'À l’AMCI',
+    'Motif : Procuration',
+    '',
+    `Nom : ${forms.procuration.lastName}`,
+    `Prenom : ${forms.procuration.firstName}`,
+    `Tel : ${forms.procuration.phone}`,
+    `Adresse : ${forms.procuration.address}`,
+    `N° matricule : ${forms.procuration.matricule}`,
+    '',
+    `Je soussigné ${procurationFullName.value} titulaire de CIN numérotée ${forms.procuration.cinNumber} autorise ${forms.procuration.procuratorName} titulaire de CIN numérotée ${forms.procuration.procuratorCin} à se procurer à mon nom mon attestation de bourse auprès de vous.`,
+    '',
+    'Je vous prie d’agréer mes salutations.',
+    '',
+    `Marrakech, le ${procurationFormattedDate.value}.`,
+  ]
+}
+
+function escapePdfText(value) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\\/g, '\\\\')
+    .replace(/\(/g, '\\(')
+    .replace(/\)/g, '\\)')
+}
+
+function wrapPdfText(value, maxLength = 88) {
+  if (!value) {
+    return ['']
+  }
+
+  const words = value.split(/\s+/)
+  const lines = []
+  let currentLine = ''
+
+  for (const word of words) {
+    const candidate = currentLine ? `${currentLine} ${word}` : word
+
+    if (candidate.length <= maxLength) {
+      currentLine = candidate
+      continue
+    }
+
+    if (currentLine) {
+      lines.push(currentLine)
+    }
+
+    currentLine = word
+  }
+
+  if (currentLine) {
+    lines.push(currentLine)
+  }
+
+  return lines
+}
+
+function downloadProcurationPdf() {
+  const pdfLines = ['Procuration AMCI', '', ...getProcurationPdfLines().flatMap(line => wrapPdfText(line))]
+  const textOperations = []
+  let cursorY = 800
+
+  for (const line of pdfLines) {
+    textOperations.push(`BT /F1 12 Tf 50 ${cursorY} Td (${escapePdfText(line)}) Tj ET`)
+    cursorY -= line ? 18 : 10
+  }
+
+  const contentStream = textOperations.join('\n')
+  const pdfObjects = [
+    '1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj',
+    '2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj',
+    '3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj',
+    '4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj',
+    `5 0 obj << /Length ${contentStream.length} >> stream\n${contentStream}\nendstream endobj`,
+  ]
+
+  let pdfContent = '%PDF-1.4\n'
+  const offsets = [0]
+
+  for (const object of pdfObjects) {
+    offsets.push(pdfContent.length)
+    pdfContent += `${object}\n`
+  }
+
+  const xrefStart = pdfContent.length
+  pdfContent += `xref\n0 ${pdfObjects.length + 1}\n`
+  pdfContent += '0000000000 65535 f \n'
+
+  for (let index = 1; index < offsets.length; index += 1) {
+    pdfContent += `${String(offsets[index]).padStart(10, '0')} 00000 n \n`
+  }
+
+  pdfContent += `trailer << /Size ${pdfObjects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`
+
+  const blob = new Blob([pdfContent], { type: 'application/pdf' })
+  const downloadUrl = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+
+  link.href = downloadUrl
+  link.download = `procuration-${forms.procuration.lastName || 'amci'}.pdf`
+  link.click()
+
+  URL.revokeObjectURL(downloadUrl)
+}
+
+function submitActiveForm() {
+  if (modalType.value !== 'procuration') {
+    closeModal()
+    return
+  }
+
+  const requiredValues = [
+    forms.procuration.lastName,
+    forms.procuration.firstName,
+    forms.procuration.phone,
+    forms.procuration.address,
+    forms.procuration.matricule,
+    forms.procuration.cinNumber,
+    forms.procuration.procuratorName,
+    forms.procuration.procuratorCin,
+    forms.procuration.date,
+  ]
+
+  if (requiredValues.some(value => !String(value).trim())) {
+    window.alert('Veuillez remplir tous les champs de la demande de procuration avant de continuer.')
+    return
+  }
+
+  closeModal()
+  previewType.value = 'procuration'
 }
 </script>
 
@@ -601,6 +892,47 @@ function closeModal() {
   box-shadow: 0 12px 28px rgba(22, 163, 74, 0.22);
 }
 
+.member-preview-panel {
+  width: min(900px, calc(100vw - 2rem));
+}
+
+.member-preview-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(240, 253, 244, 0.94));
+}
+
+.procuration-preview {
+  border: 1px solid rgba(34, 197, 94, 0.18);
+  border-radius: 24px;
+  background: white;
+  padding: 1.5rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.procuration-preview__meta {
+  display: grid;
+  gap: 0.75rem;
+  border-bottom: 1px solid rgba(209, 250, 229, 0.9);
+  padding-bottom: 1rem;
+  color: #374151;
+}
+
+.procuration-preview__letter {
+  display: grid;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  color: #111827;
+  line-height: 1.85;
+}
+
+.procuration-preview__line {
+  font-size: 1rem;
+}
+
+.procuration-preview__line--signature {
+  padding-top: 1rem;
+  text-align: right;
+}
+
 .member-secondary-button {
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid #e5e7eb;
@@ -615,6 +947,10 @@ function closeModal() {
 
   .member-form-card {
     padding: 1.25rem;
+  }
+
+  .procuration-preview {
+    padding: 1rem;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="member-page h-[89.5vh] overflow-hidden bg-white">
+  <div class="member-page h-[89.5vh] overflow-y-auto bg-white">
     <div class="member-page__backdrop" />
 
     <div class="relative z-10 grid h-[89.5vh] lg:grid-cols-[320px_1fr]">
