@@ -1,7 +1,7 @@
 <template>
   <div class=" flex border border-b py-4 justify-between px-4">
     <div class=" flex flex-row items-center justify-center">
-      <img alt="logo" class=" w-12" src="../../public/img/logo.png">
+      <img alt="logo" class=" w-12" src="/img/logo.png">
       <span class=" ml-5">Tsingy Marrakech</span>
     </div>
     <div class=" flex items-center justify-center">
@@ -30,7 +30,7 @@
 <!-- <div   class="flex border border-b py-4 justify-center" id="membre">
     <div class=" flex ">
         <span class="text-3xl ">Tsingy</span>
-        <img src="../../public/img/logo.png" alt="logo" class="logo-img"/>
+    <img src="/img/logo.png" alt="logo" class="logo-img"/>
         <span class="text-3xl">Marrakech</span>
     </div>
 </div> -->

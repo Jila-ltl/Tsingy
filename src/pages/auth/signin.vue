@@ -103,7 +103,7 @@
 
 <style scoped>
 #bg_img {
-    background-image: url("../../../public/img/img1.png");
+  background-image: url('/img/img1.png');
     background-size: cover;
 }
 

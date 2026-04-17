@@ -1,5 +1,5 @@
 <template>
-<div class="parallax-hero w-full bg-white">
+<div class="parallax-hero w-full bg-white overflow-y-auto h-[89vh]">
     <div class=" flex flex-row h-[90vh] items-center justify-center backdrop-blur-md bg-cover bg-center">
         <div class="absolute inset-0 z-0 bg-gradient-to-br from-white/90 via-white/70 to-white/30" />
         <div class="lg:col-span-2 z-50 p-10 shadow-sm  w-[750px] justify-center">
@@ -161,47 +161,30 @@
 
     </div>
 
-    <!-- Reclamation -->ù
-    <div class=" bg-[#0a190a7f] h-[90vh]">
-      <div class="flex justify-center items-center pt-10"  gradient opacity=".7" thickness="3">
-        <span class="h-[10px] w-[200px] mr-3 bg-gradient-to-l from-green-500 to-transparent"></span>
-        <h1 class="text-green-500">RECLAMATION</h1>
-        <span class="h-[10px] w-[200px] ml-3 bg-gradient-to-r  from-green-500 to-transparent "></span>
-      </div>
-      <div class="w-ful h-fit">
-        <div class=" grid grid-cols-2 p-3 h-fit gap-4 mb-20 m-auto w-fit pb-10 ">
-          <div v-for="item, i in reclamation " :key="i" class=" w-full rounded-lg cursor-pointer " :class="item.status==='envoye' ? ' bg-gray-800/30 border border-gray-800' : 'backdrop-blur-md'">
-            <div class="flex flex-row p-3">
-              <img alt="Avatar" class="avatar" :src="item.avatar">
-              <div class=" grid grid-cols-1 p-2 gap-2">
-                <span class=" text-white text-sm"><strong>{{ item.name }}</strong> </span>
-                <span class=" text-slate-400">{{ item.message }} </span>
-                <span class=" text-sm text-slate-400">{{ item.time }}</span>
-              </div>
-
-            </div>
-            <div class="flex flex-row px-10 pl-4 pb-4 gap-2">
-              <button
-                class="rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                type="submit"
-                @click="check('receptionee', item)"
-              >
-                Receptioner
-              </button>
-              <button
-                class="rounded-md border border-transparentborder-gray-300 bg-white py-2 px-4 text-sm font-medium  shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                type="submit"
-                @click="check('valide',item)"
-              >
-                Valider
-              </button>
-            </div>
-
+    <section
+      id="pres_bureau"
+      class="reveal-section bg-stone-100 px-4 py-16 text-stone-900 sm:px-6 sm:py-20 md:px-10 md:py-24 lg:px-16"
+    >
+      <div class="mx-auto max-w-7xl">
+        <div class="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.35em] text-emerald-700">
+              Bureau
+            </p>
+            <h2 class="mt-3 font-serif text-3xl font-semibold sm:text-4xl md:text-5xl">
+              Les membres du bureau
+            </h2>
           </div>
+          <p class="max-w-xl text-base leading-8 text-stone-600">
+            Une équipe engagée pour faire avancer l’association, coordonner les actions et maintenir un lien durable entre les membres.
+          </p>
         </div>
 
+        <div class="interactive-card overflow-hidden rounded-[1.5rem] bg-white p-4 shadow-[0_20px_60px_rgba(0,0,0,0.08)] sm:rounded-[2rem] sm:p-6 md:p-8">
+          <MyCarousel />
+        </div>
       </div>
-    </div>
+    </section>
     <!-- Demande de procuration -->
 
     <div class=" ">
@@ -251,6 +234,7 @@ import {
 import {
     useRouter,
 } from 'vue-router'
+import MyCarousel from '../../components/Carousel.vue'
 
 const search = ref('')
 const headers = [{
@@ -422,58 +406,6 @@ function procuration(message, item) {
         }
     }
 }
-
-function check(message, item) {
-    for (const element of reclamation.value) {
-        if (element === item) {
-            element.status = message
-        }
-    }
-}
-
-const reclamation = ref([{
-        name: 'Julie Vallet',
-        message: 'Je souhaiterais modifier mon adresse de livraison pour la commande #994.',
-        time: '12 minutes ago',
-        status: 'envoye',
-        avatar: 'https://i.pravatar.cc/150?u=julie',
-    },
-    {
-        name: 'Sophie Fontenelle',
-        message: 'Le code promotionnel "BIENVENUE10" ne semble pas s’appliquer à mon panier.',
-        time: '45 minutes ago',
-        status: 'envoye',
-        avatar: 'https://i.pravatar.cc/150?u=sophie',
-    },
-    {
-        name: 'Karim Mansour',
-        message: 'Est-il possible d’avoir un suivi plus précis sur l’expédition internationale ?',
-        time: '1 hour ago',
-        status: 'envoye',
-        avatar: 'https://i.pravatar.cc/150?u=karim',
-    },
-    {
-        name: 'Emma Watson',
-        message: 'Je n’ai toujours pas reçu mon email de confirmation après 24 heures.',
-        time: '2 hours ago',
-        status: 'envoye',
-        avatar: 'https://i.pravatar.cc/150?u=emma',
-    },
-    {
-        name: 'Lucas Dupont',
-        message: 'Une erreur 500 s’affiche lorsque j’essaie d’accéder à mes factures.',
-        time: '3 hours ago',
-        status: 'envoye',
-        avatar: 'https://i.pravatar.cc/150?u=lucas',
-    },
-    {
-        name: 'Sarah Jenkins',
-        message: 'Serait-il possible de renouveler mon abonnement par virement bancaire ?',
-        time: '5 hours ago',
-        status: 'envoye',
-        avatar: 'https://i.pravatar.cc/150?u=sarah',
-    },
-])
 
 const icons = ref([{
         name: 'Annonce',

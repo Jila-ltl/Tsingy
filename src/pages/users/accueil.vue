@@ -1,5 +1,6 @@
 <template>
-<div class="flex items-center bg-gray-200 h-12 overflow-hidden">
+  <div class=" overflow-y-auto h-[89vh]">
+    <div class="flex items-center bg-gray-200 h-12 ">
 
   <!-- Bloc NEWS -->
   <div class="bg-red-600 text-white px-6 h-full flex items-center font-bold">
@@ -129,16 +130,6 @@
     </div>
 
   </section>
-  <section id="pres_bureau" class="bg-gray-100 pb-16">
-    <div class="w-full bg-green-900 py-6 text-center mb-12">
-      <h1 class="text-white text-3xl font-semibold">
-        Les membres du bureau
-      </h1>
-    </div>
-
-    <MyCarousel />
-
-  </section>
   <section id="espace_membre" class="py-20 text-center bg-gray-50">
     <div class="max-w-5xl mx-auto">
 
@@ -244,6 +235,8 @@
   </div>
 
 </section>
+  </div>
+
 
 </template>
 
@@ -252,7 +245,6 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation } from 'swiper/modules'
 import { annoncesValides } from '@/data/annonces'
-import MyCarousel from '../../components/Carousel.vue'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -301,7 +293,7 @@ body {
   text-align: center;
 }
 #container {
-    background-image: url("../../../public/img/quisn2.png");
+  background-image: url('/img/bg.jpg');
     background-size: center;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
