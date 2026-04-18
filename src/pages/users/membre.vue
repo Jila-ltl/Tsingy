@@ -2,17 +2,17 @@
   <div class="member-service-page h-[89vh] overflow-y-auto bg-white">
     <div class="member-service-page__backdrop" />
 
-    <div class="relative z-10 p-4 md:p-8">
-      <section class="overflow-hidden rounded-[32px] border border-green-100 bg-white/78 shadow-[0_24px_80px_rgba(15,23,42,0.10)] backdrop-blur-xl">
-        <div class="grid gap-8 p-8 lg:grid-cols-[1.2fr_0.8fr] lg:p-10">
+    <div class="relative z-10 p-3 sm:p-4 md:p-8">
+      <section class="overflow-hidden rounded-[24px] border border-green-100 bg-white/78 shadow-[0_24px_80px_rgba(15,23,42,0.10)] backdrop-blur-xl sm:rounded-[32px]">
+        <div class="grid gap-6 p-4 sm:gap-8 sm:p-6 md:p-8 lg:grid-cols-[1.2fr_0.8fr] lg:p-10">
           <div>
             <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
               Services membre
             </p>
-            <h1 class="mt-4 text-4xl font-black text-black md:text-5xl">
+            <h1 class="mt-4 text-3xl font-black leading-tight text-black sm:text-4xl md:text-5xl">
               Espace membre Tsingy Marrakech
             </h1>
-            <p class="mt-4 max-w-3xl text-base leading-8 text-gray-600 md:text-lg">
+            <p class="mt-4 max-w-3xl text-sm leading-7 text-gray-600 sm:text-base md:text-lg md:leading-8">
               Accedez rapidement a vos demandes de procuration, reclamations, depot de certificats et modifications de profil dans un espace harmonise avec la page d accueil.
             </p>
 
@@ -32,7 +32,7 @@
             </div>
           </div>
 
-          <div class="relative overflow-hidden rounded-[28px] border border-green-100 bg-gradient-to-br from-white via-green-50 to-red-50 p-5">
+          <div class="relative overflow-hidden rounded-[22px] border border-green-100 bg-gradient-to-br from-white via-green-50 to-red-50 p-4 sm:rounded-[28px] sm:p-5">
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(34,197,94,0.18),_transparent_45%),radial-gradient(circle_at_bottom_left,_rgba(239,68,68,0.16),_transparent_40%)]" />
             <div class="relative flex h-full flex-col justify-between gap-6">
               <div>
@@ -55,7 +55,7 @@
         </div>
       </section>
 
-      <section class="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      <section class="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
         <button
           v-for="service in services"
           :key="service.key"
@@ -65,8 +65,8 @@
           <div class="service-card__icon" :class="service.iconClass">
             <span :class="service.icon" class="text-3xl" />
           </div>
-          <div class="px-6 pb-6">
-            <p class="text-xl font-black text-black">{{ service.title }}</p>
+          <div class="px-5 pb-5 sm:px-6 sm:pb-6">
+            <p class="text-lg font-black text-black sm:text-xl">{{ service.title }}</p>
             <p class="mt-3 text-sm leading-6 text-gray-600">
               {{ service.description }}
             </p>
@@ -80,18 +80,18 @@
         </button>
       </section>
 
-      <section class="mt-8 grid gap-8 xl:grid-cols-2">
-        <div class="rounded-[32px] border border-green-100 bg-white/72 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur-xl md:p-8">
-          <div class="mb-6 flex items-end justify-between gap-4">
+      <section class="mt-6 grid gap-6 sm:mt-8 sm:gap-8 xl:grid-cols-2">
+        <div class="rounded-[24px] border border-green-100 bg-white/72 p-4 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:rounded-[32px] sm:p-6 md:p-8">
+          <div class="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
                 Procurations
               </p>
-              <h2 class="mt-2 text-2xl font-black text-black md:text-3xl">
+              <h2 class="mt-2 text-xl font-black text-black sm:text-2xl md:text-3xl">
                 Mes demandes recentes
               </h2>
             </div>
-            <button class="member-primary-button" @click="openModal('procuration')">
+            <button class="member-primary-button w-full sm:w-auto" @click="openModal('procuration')">
               Nouvelle demande
             </button>
           </div>
@@ -108,10 +108,10 @@
               </thead>
               <tbody>
                 <tr v-for="item in procurationHistory" :key="item.id">
-                  <td>{{ item.title }}</td>
-                  <td>{{ item.description }}</td>
-                  <td>{{ item.date }}</td>
-                  <td>
+                  <td data-label="Objet">{{ item.title }}</td>
+                  <td data-label="Description">{{ item.description }}</td>
+                  <td data-label="Date">{{ item.date }}</td>
+                  <td data-label="Etat">
                     <span class="status-chip" :class="item.status === 'Validee' ? 'status-chip--success' : 'status-chip--pending'">
                       {{ item.status }}
                     </span>
@@ -122,17 +122,17 @@
           </div>
         </div>
 
-        <div class="rounded-[32px] border border-green-100 bg-white/72 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur-xl md:p-8">
-          <div class="mb-6 flex items-end justify-between gap-4">
+        <div class="rounded-[24px] border border-green-100 bg-white/72 p-4 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:rounded-[32px] sm:p-6 md:p-8">
+          <div class="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
                 Reclamations
               </p>
-              <h2 class="mt-2 text-2xl font-black text-black md:text-3xl">
+              <h2 class="mt-2 text-xl font-black text-black sm:text-2xl md:text-3xl">
                 Suivi des messages
               </h2>
             </div>
-            <button class="member-primary-button" @click="openModal('reclamation')">
+            <button class="member-primary-button w-full sm:w-auto" @click="openModal('reclamation')">
               Nouvelle reclamation
             </button>
           </div>
@@ -149,10 +149,10 @@
               </thead>
               <tbody>
                 <tr v-for="item in reclamationHistory" :key="item.id">
-                  <td>{{ item.title }}</td>
-                  <td>{{ item.description }}</td>
-                  <td>{{ item.date }}</td>
-                  <td>
+                  <td data-label="Sujet">{{ item.title }}</td>
+                  <td data-label="Message">{{ item.description }}</td>
+                  <td data-label="Date">{{ item.date }}</td>
+                  <td data-label="Etat">
                     <span class="status-chip" :class="item.status === 'Traitee' ? 'status-chip--success' : 'status-chip--pending'">
                       {{ item.status }}
                     </span>
@@ -172,11 +172,11 @@
         <div class="member-form-card">
           <button class="member-form-close" @click="closeModal">✕</button>
 
-          <div class="mb-8">
+          <div class="mb-8 pr-10 sm:pr-12">
             <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
               Formulaire
             </p>
-            <h3 class="mt-3 text-4xl font-black text-black">
+            <h3 class="mt-3 text-3xl font-black text-black sm:text-4xl">
               {{ activeService.title }}
             </h3>
             <p class="mt-3 text-base leading-7 text-gray-600">
@@ -359,11 +359,11 @@
             </div>
           </div>
 
-          <div class="mt-8 flex justify-end gap-3">
-            <button class="member-secondary-button" @click="closeModal">
+          <div class="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+            <button class="member-secondary-button w-full sm:w-auto" @click="closeModal">
               Annuler
             </button>
-            <button class="member-primary-button" @click="submitActiveForm">
+            <button class="member-primary-button w-full sm:w-auto" @click="submitActiveForm">
               Envoyer
             </button>
           </div>
@@ -383,7 +383,7 @@
               <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
                 Fiche generee
               </p>
-              <h3 class="mt-3 text-3xl font-black text-black md:text-4xl">
+              <h3 class="mt-3 text-2xl font-black text-black sm:text-3xl md:text-4xl">
                 Procuration AMCI
               </h3>
               <p class="mt-3 max-w-2xl text-base leading-7 text-gray-600">
@@ -391,7 +391,7 @@
               </p>
             </div>
 
-            <button class="member-primary-button" @click="downloadProcurationPdf">
+            <button class="member-primary-button w-full sm:w-auto" @click="downloadProcurationPdf">
               Telecharger le PDF
             </button>
           </div>
@@ -423,11 +423,11 @@
             </div>
           </div>
 
-          <div class="mt-8 flex justify-end gap-3">
-            <button class="member-secondary-button" @click="reopenProcurationForm">
+          <div class="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+            <button class="member-secondary-button w-full sm:w-auto" @click="reopenProcurationForm">
               Modifier
             </button>
-            <button class="member-primary-button" @click="downloadProcurationPdf">
+            <button class="member-primary-button w-full sm:w-auto" @click="downloadProcurationPdf">
               Telecharger le PDF
             </button>
           </div>
@@ -803,6 +803,7 @@ function submitActiveForm() {
 <style scoped>
 .member-service-page {
   position: relative;
+  min-width: 0;
   background:
     radial-gradient(circle at top left, rgba(34, 197, 94, 0.18), transparent 28%),
     radial-gradient(circle at bottom right, rgba(239, 68, 68, 0.14), transparent 22%),
@@ -880,6 +881,7 @@ function submitActiveForm() {
   background: rgba(255, 255, 255, 0.92);
   color: #374151;
   font-size: 0.92rem;
+  vertical-align: top;
 }
 
 .member-table tbody tr td:first-child {
@@ -942,6 +944,7 @@ function submitActiveForm() {
   background: rgba(255, 255, 255, 0.96);
   padding: 2rem;
   box-shadow: 0 24px 80px rgba(15, 23, 42, 0.22);
+  overflow: hidden;
 }
 
 .member-form-close {
@@ -1092,6 +1095,12 @@ function submitActiveForm() {
     padding: 1.25rem;
   }
 
+  .service-card__icon {
+    width: 58px;
+    height: 58px;
+    margin: 1.2rem 1.2rem 0.9rem;
+  }
+
   .procuration-preview {
     min-height: auto;
     padding: 1rem;
@@ -1111,6 +1120,127 @@ function submitActiveForm() {
 
   .procuration-preview__signature-line {
     width: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .member-service-page__backdrop {
+    background-position: 62% center;
+  }
+
+  .member-table th {
+    padding-inline: 0.7rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+  }
+
+  .member-table td {
+    padding: 0.85rem;
+    font-size: 0.88rem;
+  }
+
+  .member-form-overlay {
+    align-items: flex-start;
+    padding: 0.5rem;
+  }
+
+  .member-form-close {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 40px;
+    height: 40px;
+  }
+
+  .member-input {
+    padding: 0.85rem 0.95rem;
+  }
+
+  .procuration-preview__meta {
+    font-size: 0.88rem;
+  }
+
+  .procuration-preview__topline {
+    gap: 0.5rem;
+  }
+
+  .procuration-preview__signature-block {
+    padding-top: 4rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .member-table,
+  .member-table thead,
+  .member-table tbody,
+  .member-table tr,
+  .member-table th,
+  .member-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .member-table thead {
+    display: none;
+  }
+
+  .member-table {
+    border-spacing: 0;
+  }
+
+  .member-table tbody {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .member-table tbody tr {
+    overflow: hidden;
+    border: 1px solid #dcfce7;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  }
+
+  .member-table tbody tr td {
+    border-radius: 0 !important;
+    background: transparent;
+    padding: 0.8rem 0.9rem;
+  }
+
+  .member-table tbody tr td + td {
+    border-top: 1px solid #ecfdf5;
+  }
+
+  .member-table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.35rem;
+    color: #15803d;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .member-form-panel {
+    width: 100%;
+  }
+
+  .member-preview-panel {
+    width: 100%;
+  }
+
+  .procuration-preview {
+    border-radius: 14px;
+    padding: 0.85rem;
+  }
+
+  .procuration-preview__line {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .procuration-preview__signature-block {
+    padding-top: 2.5rem;
   }
 }
 </style>

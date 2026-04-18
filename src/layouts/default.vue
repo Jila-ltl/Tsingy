@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen d-flex flex-column">
+  <div class="h-[100vh] overflow-hidden">
     <appHeader />
     <v-main class=" overflow-hidden">
       <router-view />
