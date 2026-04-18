@@ -1,5 +1,5 @@
 <template>
-  <div id="bg_img" class="flex h-full w-full flex-row items-center justify-center">
+  <div id="bg_img" class="flex h-[100vh] w-full flex-row items-center justify-center">
     <div id="container" class="flex flex-row sm:w-[80vw]">
       <div class="signin-form-panel sm:w-[50%] pa-12 border-x-2">
         <div class="mb-10 ml-48">

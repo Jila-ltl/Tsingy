@@ -1,5 +1,5 @@
 <template>
-  <div id="bg_img" class="flex h-full w-full items-center justify-center">
+  <div id="bg_img" class="flex h-[100vh] w-full items-center justify-center">
     <div class="signup-shell sm:w-[80vw]">
       <div class="form-container">
         <div class="mb-8 text-center sm:text-left">
