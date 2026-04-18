@@ -1,9 +1,9 @@
 <template>
-  <div class="member-service-page h-[89vh] overflow-y-auto bg-white">
+  <div ref="pageRef" class="member-service-page h-[89vh] overflow-y-auto bg-white">
     <div class="member-service-page__backdrop" />
 
     <div class="relative z-10 p-3 sm:p-4 md:p-8">
-      <section class="overflow-hidden rounded-[24px] border border-green-100 bg-white/78 shadow-[0_24px_80px_rgba(15,23,42,0.10)] backdrop-blur-xl sm:rounded-[32px]">
+      <section class="member-hero overflow-hidden rounded-[24px] border border-green-100 bg-white/78 shadow-[0_24px_80px_rgba(15,23,42,0.10)] backdrop-blur-xl sm:rounded-[32px]">
         <div class="grid gap-6 p-4 sm:gap-8 sm:p-6 md:p-8 lg:grid-cols-[1.2fr_0.8fr] lg:p-10">
           <div>
             <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
@@ -55,7 +55,7 @@
         </div>
       </section>
 
-      <section class="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
+      <section class="member-service-grid mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
         <button
           v-for="service in services"
           :key="service.key"
@@ -66,22 +66,22 @@
             <span :class="service.icon" class="text-3xl" />
           </div>
           <div class="px-5 pb-5 sm:px-6 sm:pb-6">
-            <p class="text-lg font-black text-black sm:text-xl">{{ service.title }}</p>
-            <p class="mt-3 text-sm leading-6 text-gray-600">
+            <p class="service-card__title text-lg font-black text-black sm:text-xl">{{ service.title }}</p>
+            <p class="service-card__description mt-3 text-sm leading-6 text-gray-600">
               {{ service.description }}
             </p>
             <div class="mt-5 flex items-center justify-between">
-              <span class="rounded-full bg-green-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-green-700">
+              <span class="service-card__cta rounded-full bg-green-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-green-700">
                 Ouvrir
               </span>
-              <span class="text-2xl text-red-500">+</span>
+              <span class="service-card__plus text-2xl text-red-500">+</span>
             </div>
           </div>
         </button>
       </section>
 
-      <section class="mt-6 grid gap-6 sm:mt-8 sm:gap-8 xl:grid-cols-2">
-        <div class="rounded-[24px] border border-green-100 bg-white/72 p-4 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:rounded-[32px] sm:p-6 md:p-8">
+      <section class="member-history-grid mt-6 grid gap-6 sm:mt-8 sm:gap-8 xl:grid-cols-2">
+        <div class="member-history-card rounded-[24px] border border-green-100 bg-white/72 p-4 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:rounded-[32px] sm:p-6 md:p-8">
           <div class="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
@@ -122,7 +122,7 @@
           </div>
         </div>
 
-        <div class="rounded-[24px] border border-green-100 bg-white/72 p-4 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:rounded-[32px] sm:p-6 md:p-8">
+        <div class="member-history-card rounded-[24px] border border-green-100 bg-white/72 p-4 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:rounded-[32px] sm:p-6 md:p-8">
           <div class="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
@@ -438,7 +438,11 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const services = [
   {
@@ -474,6 +478,7 @@ const services = [
 const activeKey = ref('procuration')
 const modalType = ref('')
 const previewType = ref('')
+const pageRef = ref(null)
 const professionOptions = [
   { label: 'Etudiant(e)', value: 'etudiant' },
   { label: 'Travailleur(euse)', value: 'travailleur' },
@@ -529,6 +534,7 @@ const forms = reactive({
 const activeService = computed(() => services.find(service => service.key === activeKey.value) ?? services[0])
 const procurationFullName = computed(() => `${forms.procuration.lastName} ${forms.procuration.firstName}`.trim())
 const procurationFormattedDate = computed(() => formatDisplayDate(forms.procuration.date))
+let animationContext
 
 function setActiveService(key) {
   activeKey.value = key
@@ -798,6 +804,129 @@ function submitActiveForm() {
   closeModal()
   previewType.value = 'procuration'
 }
+
+function animateOverlayCard(selector) {
+  const element = document.querySelector(selector)
+
+  if (!element) {
+    return
+  }
+
+  gsap.fromTo(
+    element,
+    { autoAlpha: 0, scale: 0.94, y: 26 },
+    { autoAlpha: 1, duration: 0.55, ease: 'power3.out', scale: 1, y: 0 },
+  )
+}
+
+onMounted(() => {
+  animationContext = gsap.context(() => {
+    const scroller = pageRef.value
+
+    if (!scroller) {
+      return
+    }
+
+    const serviceCards = gsap.utils.toArray('.service-card')
+    const historyCards = gsap.utils.toArray('.member-history-card')
+    const tableRows = gsap.utils.toArray('.member-table tbody tr')
+
+    gsap.fromTo(
+      '.member-hero',
+      { autoAlpha: 0, y: 32 },
+      { autoAlpha: 1, duration: 0.85, ease: 'power3.out', y: 0 },
+    )
+
+    gsap.fromTo(
+      serviceCards,
+      { autoAlpha: 0, y: 46, scale: 0.96 },
+      {
+        autoAlpha: 1,
+        duration: 0.75,
+        ease: 'power3.out',
+        scale: 1,
+        stagger: 0.1,
+        y: 0,
+        scrollTrigger: {
+          scroller,
+          start: 'top 78%',
+          trigger: '.member-service-grid',
+        },
+      },
+    )
+
+    gsap.fromTo(
+      historyCards,
+      { autoAlpha: 0, y: 54 },
+      {
+        autoAlpha: 1,
+        duration: 0.85,
+        ease: 'power3.out',
+        stagger: 0.14,
+        y: 0,
+        scrollTrigger: {
+          scroller,
+          start: 'top 78%',
+          trigger: '.member-history-grid',
+        },
+      },
+    )
+
+    gsap.fromTo(
+      tableRows,
+      { autoAlpha: 0, x: -22 },
+      {
+        autoAlpha: 1,
+        duration: 0.55,
+        ease: 'power2.out',
+        stagger: 0.06,
+        x: 0,
+        scrollTrigger: {
+          scroller,
+          start: 'top 72%',
+          trigger: '.member-history-grid',
+        },
+      },
+    )
+
+    gsap.to('.service-card', {
+      duration: 3.2,
+      ease: 'sine.inOut',
+      repeat: -1,
+      stagger: 0.18,
+      y: -6,
+      yoyo: true,
+    })
+  }, pageRef.value)
+})
+
+onUnmounted(() => {
+  animationContext?.revert()
+  ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+})
+
+watch(modalType, async value => {
+  if (!value) {
+    return
+  }
+
+  await nextTick()
+  animateOverlayCard('.member-form-card')
+})
+
+watch(previewType, async value => {
+  if (!value) {
+    return
+  }
+
+  await nextTick()
+  animateOverlayCard('.member-preview-card')
+  gsap.fromTo(
+    '.procuration-preview',
+    { autoAlpha: 0, y: 24 },
+    { autoAlpha: 1, delay: 0.08, duration: 0.5, ease: 'power3.out', y: 0 },
+  )
+})
 </script>
 
 <style scoped>
@@ -822,7 +951,33 @@ function submitActiveForm() {
 }
 
 .service-card {
+  position: relative;
+  overflow: hidden;
   backdrop-filter: blur(12px);
+  transform-origin: center bottom;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: -30% auto auto -120%;
+  width: 70%;
+  height: 180%;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
+  opacity: 0;
+  pointer-events: none;
+  transform: rotate(14deg);
+  transition: opacity 0.25s ease;
+}
+
+.member-hero,
+.service-card,
+.member-history-card,
+.member-form-card,
+.member-preview-card,
+.procuration-preview {
+  will-change: transform, opacity;
 }
 
 .service-card__icon {
@@ -833,6 +988,62 @@ function submitActiveForm() {
   height: 64px;
   margin: 1.5rem 1.5rem 1rem;
   border-radius: 20px;
+  transition: transform 0.32s ease, box-shadow 0.32s ease, filter 0.32s ease;
+}
+
+.service-card__title,
+.service-card__description,
+.service-card__cta,
+.service-card__plus {
+  transition: transform 0.3s ease, color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-10px) rotate(-0.35deg);
+  box-shadow: 0 22px 54px rgba(22, 163, 74, 0.18);
+}
+
+.service-card:hover::before {
+  opacity: 1;
+  animation: service-card-sheen 0.8s ease forwards;
+}
+
+.service-card:hover .service-card__icon {
+  transform: translateY(-4px) scale(1.08) rotate(-6deg);
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.12);
+  filter: saturate(1.15);
+}
+
+.service-card:hover .service-card__title {
+  transform: translateX(8px);
+  color: #166534;
+}
+
+.service-card:hover .service-card__description {
+  transform: translateX(4px);
+  color: #334155;
+}
+
+.service-card:hover .service-card__cta {
+  background: #166534;
+  color: white;
+  box-shadow: 0 10px 20px rgba(22, 101, 52, 0.24);
+  transform: translateX(4px);
+}
+
+.service-card:hover .service-card__plus {
+  transform: translateX(4px) rotate(90deg) scale(1.15);
+  color: #15803d;
+}
+
+@keyframes service-card-sheen {
+  from {
+    transform: translateX(0) rotate(14deg);
+  }
+
+  to {
+    transform: translateX(340%) rotate(14deg);
+  }
 }
 
 .service-card__icon--green {
@@ -1002,6 +1213,42 @@ function submitActiveForm() {
   background: linear-gradient(135deg, #22c55e, #166534);
   color: white;
   box-shadow: 0 12px 28px rgba(22, 163, 74, 0.22);
+}
+
+.member-primary-button:hover,
+.member-secondary-button:hover {
+  transform: translateY(-2px);
+}
+
+.member-history-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.member-history-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.06), transparent 44%, rgba(239, 68, 68, 0.05));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.member-history-card:hover::before {
+  opacity: 1;
+}
+
+.member-hero::after {
+  content: '';
+  position: absolute;
+  inset: auto -10% -40% auto;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0));
+  filter: blur(18px);
+  pointer-events: none;
 }
 
 .member-preview-panel {
