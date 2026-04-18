@@ -9,6 +9,10 @@
     "build": "vite build --configLoader runner",
     "preview": "vite preview --configLoader runner",
     "lint": "eslint . --fix",
+    "backend:dev": "npm --prefix back_end run dev",
+    "backend:start": "npm --prefix back_end run start",
+    "backend:prisma:generate": "npm --prefix back_end run prisma:generate",
+    "backend:prisma:push": "npm --prefix back_end run prisma:push",
     "py": "cd back_end && python3 APP.py",
     "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
     "electron:build": "npm run build && electron-builder"

@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  MEMBER
+  BUREAU
+  ADMIN
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id             Int                    @id @default(autoincrement())
+  email          String                 @unique
+  passwordHash   String
+  role           UserRole               @default(MEMBER)
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  profile        MemberProfile?
+  procurations   ProcurationRequest[]
+  reclamations   Reclamation[]
+  certificates   CertificateSubmission[]
+}
+
+model MemberProfile {
+  id             Int       @id @default(autoincrement())
+  userId         Int       @unique
+  firstName      String
+  lastName       String
+  phone          String?
+  address        String?
+  matricule      String?   @unique
+  cinNumber      String?   @unique
+  school         String?
+  profession     String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ProcurationRequest {
+  id               Int           @id @default(autoincrement())
+  userId           Int
+  title            String
+  status           RequestStatus @default(PENDING)
+  ownerFirstName   String
+  ownerLastName    String
+  ownerPhone       String
+  ownerAddress     String
+  ownerMatricule   String
+  ownerCinNumber   String
+  proxyFullName    String
+  proxyCinNumber   String
+  requestDate      DateTime
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Reclamation {
+  id           Int           @id @default(autoincrement())
+  userId       Int
+  subject      String
+  message      String        @db.Text
+  status       RequestStatus @default(PENDING)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CertificateSubmission {
+  id             Int           @id @default(autoincrement())
+  userId         Int
+  schoolYear     String
+  fileName       String
+  reference      String?
+  status         RequestStatus @default(PENDING)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

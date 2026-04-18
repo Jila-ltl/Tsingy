@@ -4,6 +4,60 @@ Hello Juilane , there are the require compentent that you need:
 - python  v >3
 - Mysql 8&
 
+## Backend Node.js + Prisma
+
+Le projet contient maintenant un backend Node.js dans `back_end` avec Express, Prisma et MySQL.
+
+### Structure
+
+- `back_end/src/app.js` : configuration Express
+- `back_end/src/server.js` : point d'entree du serveur
+- `back_end/src/routes/member.routes.js` : routes membres, procurations, reclamations, certificats
+- `back_end/prisma/schema.prisma` : schema Prisma MySQL
+- `back_end/.env.example` : variables d'environnement a copier dans `.env`
+
+### Installation backend
+
+Depuis la racine du projet :
+
+```bash
+cd back_end
+npm install
+copy .env.example .env
+```
+
+Mettez ensuite votre connexion MySQL dans `back_end/.env` :
+
+```env
+DATABASE_URL="mysql://root:password@localhost:3306/tsingy_db"
+PORT=4000
+CLIENT_URL="http://localhost:3000"
+```
+
+### Initialisation Prisma
+
+```bash
+npm run backend:prisma:generate
+npm run backend:prisma:push
+```
+
+Si vous voulez des donnees de demo :
+
+```bash
+cd back_end
+npm run seed
+```
+
+### Lancer le backend
+
+Depuis la racine du projet :
+
+```bash
+npm run backend:dev
+```
+
+API disponible par defaut sur `http://localhost:4000`.
+
 
 # Vuetify (Default)
 
