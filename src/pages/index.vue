@@ -2,7 +2,7 @@
   <div
     id="container"
     ref="pageRef"
-    class="home-page h-screen overflow-y-auto overflow-x-hidden bg-stone-950 text-stone-50"
+    class="home-page h-[89vh] overflow-y-auto overflow-x-hidden bg-stone-950 text-stone-50"
   >
     <section
       ref="heroSectionRef"
@@ -356,30 +356,7 @@
       </div>
     </section>
 
-    <section
-      id="pres_bureau"
-      class="reveal-section bg-stone-100 px-4 py-16 text-stone-900 sm:px-6 sm:py-20 md:px-10 md:py-24 lg:px-16"
-    >
-      <div class="mx-auto max-w-7xl">
-        <div class="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.35em] text-emerald-700">
-              Bureau
-            </p>
-            <h2 class="mt-3 font-serif text-3xl font-semibold sm:text-4xl md:text-5xl">
-              Les membres du bureau
-            </h2>
-          </div>
-          <p class="max-w-xl text-base leading-8 text-stone-600">
-            Une équipe engagée pour faire avancer l’association, coordonner les actions et maintenir un lien durable entre les membres.
-          </p>
-        </div>
 
-        <div class="interactive-card overflow-hidden rounded-[1.5rem] bg-white p-4 shadow-[0_20px_60px_rgba(0,0,0,0.08)] sm:rounded-[2rem] sm:p-6 md:p-8">
-          <MyCarousel />
-        </div>
-      </div>
-    </section>
 
     <section
       id="espace_membre"
@@ -437,7 +414,7 @@
       </div>
     </section>
 
-    <footer
+    <!-- <footer
       id="contact"
       class="reveal-section bg-black px-4 py-16 text-white sm:px-6 sm:py-20 md:px-10 lg:px-16"
     >
@@ -485,8 +462,8 @@
 
       <div class="mx-auto mt-14 max-w-6xl border-t border-white/10 pt-6 text-center text-sm text-stone-500">
         © 2026 Tsingy Marrakech — Tous droits réservés
-      </div>
-    </footer>
+      </div> -->
+    <foot />
   </div>
 </template>
 

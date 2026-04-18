@@ -405,15 +405,21 @@
               <p><strong>N° matricule :</strong> {{ forms.procuration.matricule }}</p>
             </div>
 
+            <div class="procuration-preview__topline">
+              <p class="procuration-preview__recipient">À l'AMCI</p>
+            </div>
+
             <div class="procuration-preview__letter">
-              <p class="procuration-preview__line">À AMCI</p>
-              <p class="procuration-preview__line"><strong>Motif :</strong> Procuration</p>
+              <p class="procuration-preview__line"><strong>Objet :</strong> Demande de procuration</p>
               <p class="procuration-preview__line">
-                Je soussigné {{ procurationFullName }} titulaire de CIN numérotée {{ forms.procuration.cinNumber }} autorise
+                Je soussigné(e) {{ procurationFullName }} titulaire de CIN numérotée {{ forms.procuration.cinNumber }} autorise
                 {{ forms.procuration.procuratorName }} titulaire de CIN numérotée {{ forms.procuration.procuratorCin }} à se procurer à mon nom mon attestation de bourse auprès de vous.
               </p>
-              <p class="procuration-preview__line">Je vous prie d’agréer mes salutations.</p>
-              <p class="procuration-preview__line procuration-preview__line--signature">Marrakech, le {{ procurationFormattedDate }}.</p>
+              <p class="procuration-preview__line">Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations les plus distinguées.</p>
+              <div class="procuration-preview__signature-block">
+                <p class="procuration-preview__signature-title">Signature</p>
+                <div class="procuration-preview__signature-line" />
+              </div>
             </div>
           </div>
 
@@ -558,33 +564,25 @@ function formatDisplayDate(value) {
 
 function getProcurationPdfLines() {
   return [
-    'À l’AMCI',
-    'Motif : Procuration',
-    '',
     `Nom : ${forms.procuration.lastName}`,
     `Prenom : ${forms.procuration.firstName}`,
     `Tel : ${forms.procuration.phone}`,
     `Adresse : ${forms.procuration.address}`,
     `N° matricule : ${forms.procuration.matricule}`,
     '',
-    `Je soussigné ${procurationFullName.value} titulaire de CIN numérotée ${forms.procuration.cinNumber} autorise ${forms.procuration.procuratorName} titulaire de CIN numérotée ${forms.procuration.procuratorCin} à se procurer à mon nom mon attestation de bourse auprès de vous.`,
+    'À l\'AMCI',
     '',
-    'Je vous prie d’agréer mes salutations.',
+    'Objet : Demande de procuration',
     '',
-    `Marrakech, le ${procurationFormattedDate.value}.`,
+    'Madame, Monsieur,',
+    '',
+    `Je soussigné(e) ${procurationFullName.value} titulaire de CIN numérotée ${forms.procuration.cinNumber} autorise ${forms.procuration.procuratorName} titulaire de CIN numérotée ${forms.procuration.procuratorCin} à se procurer à mon nom mon attestation de bourse auprès de vous.`,
+    '',
+    "Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations les plus distinguées.",
   ]
 }
 
-function escapePdfText(value) {
-  return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/\\/g, '\\\\')
-    .replace(/\(/g, '\\(')
-    .replace(/\)/g, '\\)')
-}
-
-function wrapPdfText(value, maxLength = 88) {
+function wrapCanvasText(context, value, maxWidth) {
   if (!value) {
     return ['']
   }
@@ -596,7 +594,7 @@ function wrapPdfText(value, maxLength = 88) {
   for (const word of words) {
     const candidate = currentLine ? `${currentLine} ${word}` : word
 
-    if (candidate.length <= maxLength) {
+    if (context.measureText(candidate).width <= maxWidth) {
       currentLine = candidate
       continue
     }
@@ -615,44 +613,155 @@ function wrapPdfText(value, maxLength = 88) {
   return lines
 }
 
-function downloadProcurationPdf() {
-  const pdfLines = ['Procuration AMCI', '', ...getProcurationPdfLines().flatMap(line => wrapPdfText(line))]
-  const textOperations = []
-  let cursorY = 800
+function createPdfFromJpeg(imageBytes, imageWidth, imageHeight) {
+  const encoder = new TextEncoder()
+  const parts = []
+  const offsets = [0]
+  let totalLength = 0
 
-  for (const line of pdfLines) {
-    textOperations.push(`BT /F1 12 Tf 50 ${cursorY} Td (${escapePdfText(line)}) Tj ET`)
-    cursorY -= line ? 18 : 10
+  function pushBytes(bytes) {
+    parts.push(bytes)
+    totalLength += bytes.length
   }
 
-  const contentStream = textOperations.join('\n')
-  const pdfObjects = [
-    '1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj',
-    '2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj',
-    '3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj',
-    '4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj',
-    `5 0 obj << /Length ${contentStream.length} >> stream\n${contentStream}\nendstream endobj`,
+  function pushString(value) {
+    pushBytes(encoder.encode(value))
+  }
+
+  const pageWidth = 595
+  const pageHeight = 842
+  const contentStream = 'q\n595 0 0 842 0 0 cm\n/Im0 Do\nQ'
+
+  pushBytes(Uint8Array.from([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x34, 0x0a, 0x25, 0xff, 0xff, 0xff, 0xff, 0x0a]))
+
+  offsets.push(totalLength)
+  pushString('1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n')
+
+  offsets.push(totalLength)
+  pushString('2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n')
+
+  offsets.push(totalLength)
+  pushString('3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 5 0 R >> >> /Contents 4 0 R >> endobj\n')
+
+  offsets.push(totalLength)
+  pushString(`4 0 obj << /Length ${contentStream.length} >> stream\n${contentStream}\nendstream\nendobj\n`)
+
+  offsets.push(totalLength)
+  pushString(`5 0 obj << /Type /XObject /Subtype /Image /Width ${imageWidth} /Height ${imageHeight} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imageBytes.length} >> stream\n`)
+  pushBytes(imageBytes)
+  pushString('\nendstream\nendobj\n')
+
+  const xrefOffset = totalLength
+  pushString('xref\n0 6\n')
+  pushString('0000000000 65535 f \n')
+
+  for (let index = 1; index <= 5; index += 1) {
+    pushString(`${String(offsets[index]).padStart(10, '0')} 00000 n \n`)
+  }
+
+  pushString(`trailer << /Size 6 /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`)
+
+  const pdfBytes = new Uint8Array(totalLength)
+  let cursor = 0
+
+  for (const part of parts) {
+    pdfBytes.set(part, cursor)
+    cursor += part.length
+  }
+
+  return pdfBytes
+}
+
+function downloadProcurationPdf() {
+  const scale = 2
+  const canvas = document.createElement('canvas')
+  const context = canvas.getContext('2d')
+
+  if (!context) {
+    window.alert('Impossible de générer le PDF pour le moment.')
+    return
+  }
+
+  canvas.width = Math.round(595 * scale)
+  canvas.height = Math.round(842 * scale)
+
+  context.fillStyle = '#ffffff'
+  context.fillRect(0, 0, canvas.width, canvas.height)
+  context.fillStyle = '#111827'
+  context.textBaseline = 'top'
+  context.textAlign = 'left'
+
+  const left = 28 * scale
+  const right = canvas.width - (28 * scale)
+  let cursorY = 26 * scale
+  const textWidth = right - left
+
+  const metadataRows = [
+    ['Nom :', forms.procuration.lastName],
+    ['Prenom :', forms.procuration.firstName],
+    ['Tel :', forms.procuration.phone],
+    ['Adresse :', forms.procuration.address],
+    ['N° matricule :', forms.procuration.matricule],
   ]
 
-  let pdfContent = '%PDF-1.4\n'
-  const offsets = [0]
-
-  for (const object of pdfObjects) {
-    offsets.push(pdfContent.length)
-    pdfContent += `${object}\n`
+  for (const [label, value] of metadataRows) {
+    context.font = `700 ${16 * scale}px Arial`
+    context.fillText(label, left, cursorY)
+    const labelWidth = context.measureText(label).width
+    context.font = `${16 * scale}px Arial`
+    context.fillText(value, left + labelWidth + (6 * scale), cursorY)
+    cursorY += 30 * scale
   }
 
-  const xrefStart = pdfContent.length
-  pdfContent += `xref\n0 ${pdfObjects.length + 1}\n`
-  pdfContent += '0000000000 65535 f \n'
+  cursorY += 52 * scale
+  context.font = `${16 * scale}px Arial`
+  context.fillText(`À l'AMCI`, right - context.measureText(`À l'AMCI`).width, cursorY)
+  cursorY += 34 * scale
+  context.fillText(`Marrakech, le ${procurationFormattedDate.value}.`, right - context.measureText(`Marrakech, le ${procurationFormattedDate.value}.`).width, cursorY)
 
-  for (let index = 1; index < offsets.length; index += 1) {
-    pdfContent += `${String(offsets[index]).padStart(10, '0')} 00000 n \n`
+  cursorY += 66 * scale
+  context.font = `700 ${16 * scale}px Arial`
+  context.fillText('Objet :', left, cursorY)
+  const objectLabelWidth = context.measureText('Objet :').width
+  context.font = `${16 * scale}px Arial`
+  context.fillText('Demande de procuration', left + objectLabelWidth + (6 * scale), cursorY)
+  cursorY += 54 * scale
+  context.fillText('Madame, Monsieur,', left, cursorY)
+  cursorY += 54 * scale
+  context.font = `${16 * scale}px Arial`
+  const letterLines = wrapCanvasText(
+    context,
+    `Je soussigné(e) ${procurationFullName.value} titulaire de CIN numérotée ${forms.procuration.cinNumber} autorise ${forms.procuration.procuratorName} titulaire de CIN numérotée ${forms.procuration.procuratorCin} à se procurer à mon nom mon attestation de bourse auprès de vous.`,
+    textWidth,
+  )
+
+  for (const line of letterLines) {
+    context.fillText(line, left, cursorY)
+    cursorY += 30 * scale
   }
 
-  pdfContent += `trailer << /Size ${pdfObjects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`
+  cursorY += 30 * scale
+  const closingLines = wrapCanvasText(
+    context,
+    "Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations les plus distinguées.",
+    textWidth,
+  )
 
-  const blob = new Blob([pdfContent], { type: 'application/pdf' })
+  for (const line of closingLines) {
+    context.fillText(line, left, cursorY)
+    cursorY += 30 * scale
+  }
+
+  const signatureTextY = canvas.height - (72 * scale)
+  context.textAlign = 'right'
+  context.font = `${15 * scale}px Arial`
+  context.fillStyle = '#475569'
+  context.fillText('Signature', right, signatureTextY)
+
+  const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.96)
+  const imageBytes = Uint8Array.from(atob(jpegDataUrl.split(',')[1]), character => character.charCodeAt(0))
+  const pdfBytes = createPdfFromJpeg(imageBytes, canvas.width, canvas.height)
+  const blob = new Blob([pdfBytes], { type: 'application/pdf' })
   const downloadUrl = URL.createObjectURL(blob)
   const link = document.createElement('a')
 
@@ -901,36 +1010,70 @@ function submitActiveForm() {
 }
 
 .procuration-preview {
-  border: 1px solid rgba(34, 197, 94, 0.18);
-  border-radius: 24px;
+  border: 1px solid rgba(209, 250, 229, 0.95);
+  border-radius: 18px;
   background: white;
-  padding: 1.5rem;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  width: min(794px, 100%);
+  min-height: 1123px;
+  margin-inline: auto;
+  padding: 1.5rem 1.45rem 2.5rem;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
 }
 
 .procuration-preview__meta {
   display: grid;
+  gap: 0.65rem;
+  padding-bottom: 0.2rem;
+  color: #0f172a;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.procuration-preview__topline {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   gap: 0.75rem;
-  border-bottom: 1px solid rgba(209, 250, 229, 0.9);
-  padding-bottom: 1rem;
-  color: #374151;
+  margin-top: 2.1rem;
+  color: #0f172a;
+  font-size: 0.92rem;
+}
+
+.procuration-preview__recipient,
+.procuration-preview__date {
+  text-align: right;
 }
 
 .procuration-preview__letter {
   display: grid;
-  gap: 1rem;
-  padding-top: 1.5rem;
-  color: #111827;
-  line-height: 1.85;
+  gap: 1.2rem;
+  padding-top: 1.9rem;
+  color: #0f172a;
+  line-height: 1.7;
 }
 
 .procuration-preview__line {
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
-.procuration-preview__line--signature {
-  padding-top: 1rem;
-  text-align: right;
+.procuration-preview__signature-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 12rem;
+}
+
+.procuration-preview__signature-title {
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.procuration-preview__signature-line {
+  width: min(220px, 100%);
+  border-bottom: 1.5px solid #94a3b8;
 }
 
 .member-secondary-button {
@@ -950,7 +1093,24 @@ function submitActiveForm() {
   }
 
   .procuration-preview {
+    min-height: auto;
     padding: 1rem;
+  }
+
+  .procuration-preview__line {
+    font-size: 0.98rem;
+  }
+
+  .procuration-preview__topline {
+    margin-top: 1.4rem;
+  }
+
+  .procuration-preview__signature-block {
+    padding-top: 6rem;
+  }
+
+  .procuration-preview__signature-line {
+    width: 180px;
   }
 }
 </style>
