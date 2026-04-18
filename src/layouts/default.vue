@@ -1,7 +1,7 @@
 <template>
-  <div class="h-[100vh] overflow-hidden">
+  <div class="min-h-screen overflow-x-hidden">
     <appHeader />
-    <v-main class=" overflow-hidden">
+    <v-main class="overflow-x-hidden">
       <router-view />
     </v-main>
   </div>

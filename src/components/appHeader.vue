@@ -1,5 +1,6 @@
 <template>
   <header
+    ref="headerRef"
     class="header-shell px-4 py-3 sm:px-6 lg:px-8"
     :class="mobileMenuOpen ? 'header-shell--menu-open' : ''"
   >
@@ -49,40 +50,49 @@
       </button>
     </div>
 
-    <Transition name="mobile-menu">
-      <div v-if="mobileMenuOpen" class="mobile-overlay lg:hidden">
-        <nav class="mobile-panel">
-          <div class="mobile-panel__intro">
-            <p class="mobile-panel__eyebrow">Navigation</p>
-            <p class="mobile-panel__title">Explorez Tsingy rapidement</p>
-          </div>
+    <Teleport to="body">
+      <Transition name="mobile-menu">
+        <div
+          v-if="mobileMenuOpen"
+          class="mobile-overlay lg:hidden"
+          :style="{ top: `${headerHeight}px` }"
+          @click.self="closeMobileMenu"
+        >
+          <nav class="mobile-panel">
+            <div class="mobile-panel__intro">
+              <p class="mobile-panel__eyebrow">Navigation</p>
+              <p class="mobile-panel__title">Explorez Tsingy rapidement</p>
+            </div>
 
-          <button
-            v-for="item in menuList"
-            :key="item.url"
-            class="mobile-link"
-            :class="isRouteActive(item.url) ? 'mobile-link--active' : ''"
-            type="button"
-            @click="redirectTo(item.url)"
-          >
-            <span class="mobile-link__content">
-              <span :class="item.ico" class="text-2xl" />
-              <span>{{ item.label }}</span>
-            </span>
-            <span class="mdi mdi-arrow-right text-lg text-white/40" />
-          </button>
+            <button
+              v-for="item in menuList"
+              :key="item.url"
+              class="mobile-link"
+              :class="isRouteActive(item.url) ? 'mobile-link--active' : ''"
+              type="button"
+              @click="redirectTo(item.url)"
+            >
+              <span class="mobile-link__content">
+                <span :class="item.ico" class="text-2xl" />
+                <span>{{ item.label }}</span>
+              </span>
+              <span class="mdi mdi-arrow-right text-lg text-white/40" />
+            </button>
 
-          <button class="login-button w-full justify-center" type="button" @click="login()">
-            Se connecter
-          </button>
-        </nav>
-      </div>
-    </Transition>
+            <button class="login-button w-full justify-center" type="button" @click="login()">
+              Se connecter
+            </button>
+          </nav>
+        </div>
+      </Transition>
+    </Teleport>
   </header>
 </template>
 
 <script setup>
   import {
+    nextTick,
+    onMounted,
     onBeforeUnmount,
     ref,
     watch,
@@ -91,6 +101,8 @@
 
   const router = useRouter()
   const route = useRoute()
+  const headerRef = ref(null)
+  const headerHeight = ref(72)
   const mobileMenuOpen = ref(false)
 
   const menuList = ref([
@@ -120,6 +132,18 @@
     mobileMenuOpen.value = false
   }
 
+  function syncHeaderHeight () {
+    headerHeight.value = headerRef.value?.offsetHeight || 72
+  }
+
+  function handleResize () {
+    syncHeaderHeight()
+
+    if (window.innerWidth >= 1024) {
+      closeMobileMenu()
+    }
+  }
+
   function toggleMobileMenu () {
     mobileMenuOpen.value = !mobileMenuOpen.value
   }
@@ -138,8 +162,19 @@
     document.body.style.overflow = isOpen ? 'hidden' : ''
   })
 
+  watch(() => route.fullPath, () => {
+    closeMobileMenu()
+  })
+
+  onMounted(async () => {
+    await nextTick()
+    syncHeaderHeight()
+    window.addEventListener('resize', handleResize)
+  })
+
   onBeforeUnmount(() => {
     document.body.style.overflow = ''
+    window.removeEventListener('resize', handleResize)
   })
 
 </script>
@@ -149,6 +184,7 @@
   position: sticky;
   top: 0;
   z-index: 40;
+  overflow: visible;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background:
     radial-gradient(circle at top left, rgba(34, 197, 94, 0.18), transparent 26%),
@@ -205,23 +241,42 @@
 
 .login-button {
   border: 1px solid rgba(255, 255, 255, 0.16);
-  background: #ffffff;
-  color: #111111;
+  background: linear-gradient(135deg, #22c55e, #166534);
+  color: #ffffff;
   padding: 0.75rem 1.2rem;
   font-weight: 600;
-  box-shadow: 0 12px 24px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 24px rgba(34, 197, 94, 0.2);
 }
 
 .login-button:hover {
   transform: translateY(-2px);
-  background: #dcfce7;
+  background: linear-gradient(135deg, #16a34a, #14532d);
   box-shadow: 0 16px 30px rgba(34, 197, 94, 0.22);
+}
+
+.mobile-overlay {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 80;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0.75rem 1rem 1rem;
+  background: rgba(2, 6, 10, 0.56);
+  backdrop-filter: blur(12px);
 }
 
 .mobile-panel {
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
+  width: 100%;
+  max-width: 42rem;
+  max-height: calc(100dvh - 96px);
+  justify-content: flex-start;
+  overflow-y: auto;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.5rem;
   background:
@@ -231,23 +286,24 @@
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
 }
 
-.mobile-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: flex;
-  padding: 5.5rem 1rem 1rem;
-  background:
-    radial-gradient(circle at top left, rgba(34, 197, 94, 0.22), transparent 30%),
-    linear-gradient(180deg, rgba(5, 5, 5, 0.92), rgba(10, 10, 10, 0.98));
-  backdrop-filter: blur(22px);
+.mobile-panel__intro {
+  padding: 0.35rem 0.2rem 0.6rem;
 }
 
-.mobile-overlay .mobile-panel {
-  width: 100%;
-  min-height: 100%;
-  justify-content: flex-start;
-  overflow-y: auto;
+.mobile-panel__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.mobile-panel__title {
+  margin: 0.4rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #ffffff;
 }
 
 .mobile-link {
@@ -262,26 +318,6 @@
   display: inline-flex;
   align-items: center;
   gap: 0.85rem;
-}
-
-.mobile-panel__intro {
-  padding: 0.35rem 0.2rem 0.6rem;
-}
-
-.mobile-panel__eyebrow {
-  margin: 0;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.mobile-panel__title {
-  margin: 0.4rem 0 0;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #ffffff;
 }
 
 .menu-toggle {
@@ -314,7 +350,7 @@
   }
 
   .mobile-overlay {
-    padding: 5.25rem 0.75rem 0.75rem;
+    padding: 0.65rem 0.75rem 0.75rem;
   }
 
   .mobile-panel {
