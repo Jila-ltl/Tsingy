@@ -20,13 +20,17 @@
           </div>
         </div>
 
+        <p v-if="appStore.error" class="signin-error">
+          {{ appStore.error }}
+        </p>
+
         <div class="flex flex-col">
           <v-btn
             class="flex-grow-1"
             height="48"
-            :loading="loading"
+            :loading="appStore.loading"
             variant="tonal"
-            @click="load()"
+            @click="load"
           >
             Se Connecter
           </v-btn>
@@ -47,9 +51,8 @@
           <v-btn
             class="flex-grow-1 ml-32"
             height="48"
-            :loading="loading"
             variant="tonal"
-            @click="inscription_rout()"
+            @click="inscription_rout"
           >
             S'inscrire
           </v-btn>
@@ -67,8 +70,10 @@
   } from 'vue'
 
   import { useRouter } from 'vue-router'
+  import { useAppStore } from '@/stores/app'
 
   const router = useRouter()
+  const appStore = useAppStore()
   const user_form = ref(
     [{
        id: 'signin-email',
@@ -89,15 +94,20 @@
     ],
   )
 
-  const loading = ref(false)
-  function load () {
-    loading.value = true
-    setTimeout(() => (loading.value = false), 3000)
-    setTimeout(() => (
-      router.push('/users/membre')), 3200)
+  async function load () {
+    try {
+      const user = await appStore.login({
+        email: user_form.value[0].field,
+        password: user_form.value[1].field,
+      })
+
+      await router.push(user.role === 'BUREAU' || user.role === 'ADMIN' ? '/bureau/accueil' : '/users/membre')
+    } catch {
+      return
+    }
   }
   function inscription_rout () {
-    router.push('signup')
+    router.push('/auth/signup')
   }
 </script>
 
@@ -141,6 +151,14 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.signin-error {
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 14px;
+  background: rgba(127, 29, 29, 0.45);
+  color: white;
+  padding: 0.85rem 1rem;
 }
 
 </style>

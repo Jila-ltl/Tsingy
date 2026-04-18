@@ -1,35 +1,44 @@
 <script setup>
-import { computed, ref } from 'vue'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Autoplay, EffectCoverflow, Navigation } from 'swiper/modules'
-import 'swiper/css'
-import 'swiper/css/effect-coverflow'
+  import { Autoplay, EffectCoverflow, Navigation } from 'swiper/modules'
+  import { Swiper, SwiperSlide } from 'swiper/vue'
+  import { computed, ref } from 'vue'
+  import { membres } from '@/data/membres'
+  import 'swiper/css'
 
-import { membres } from '@/data/membres'
+  import 'swiper/css/effect-coverflow'
 
-const modules = [Autoplay, EffectCoverflow, Navigation]
+  const props = defineProps({
+    members: {
+      type: Array,
+      default: () => [],
+    },
+  })
 
-const swiperInstance = ref(null)
-const activeIndex = ref(0)
+  const modules = [Autoplay, EffectCoverflow, Navigation]
 
-const activeMember = computed(() => membres[activeIndex.value] ?? membres[0])
+  const swiperInstance = ref(null)
+  const activeIndex = ref(0)
 
-const onSwiper = swiper => {
-  swiperInstance.value = swiper
-  activeIndex.value = swiper.realIndex ?? 0
-}
+  const carouselMembers = computed(() => props.members.length > 0 ? props.members : membres)
 
-const onSlideChange = swiper => {
-  activeIndex.value = swiper.realIndex ?? 0
-}
+  const activeMember = computed(() => carouselMembers.value[activeIndex.value] ?? carouselMembers.value[0])
 
-const goPrev = () => {
-  swiperInstance.value?.slidePrev()
-}
+  function onSwiper (swiper) {
+    swiperInstance.value = swiper
+    activeIndex.value = swiper.realIndex ?? 0
+  }
 
-const goNext = () => {
-  swiperInstance.value?.slideNext()
-}
+  function onSlideChange (swiper) {
+    activeIndex.value = swiper.realIndex ?? 0
+  }
+
+  function goPrev () {
+    swiperInstance.value?.slidePrev()
+  }
+
+  function goNext () {
+    swiperInstance.value?.slideNext()
+  }
 </script>
 
 <template>
@@ -63,7 +72,6 @@ const goNext = () => {
     </div>
 
     <swiper
-      :modules="modules"
       :autoplay="{ delay: 2800, disableOnInteraction: false, pauseOnMouseEnter: true }"
       :breakpoints="{
         320: { slidesPerView: 1.02, spaceBetween: 14 },
@@ -81,14 +89,15 @@ const goNext = () => {
         stretch: 0
       }"
       :effect="'coverflow'"
+      class="bureau-swiper overflow-visible pb-6 sm:pb-8"
       :grab-cursor="true"
       :loop="true"
-      class="bureau-swiper overflow-visible pb-6 sm:pb-8"
+      :modules="modules"
       @slide-change="onSlideChange"
       @swiper="onSwiper"
     >
       <swiper-slide
-        v-for="item in membres"
+        v-for="item in carouselMembers"
         :key="item.nom"
         class="bureau-slide"
       >
@@ -96,10 +105,10 @@ const goNext = () => {
           <div class="relative h-[21rem] overflow-hidden sm:h-[25rem]">
             <img
               :alt="`${item.nom} - ${item.poste}`"
-              :src="item.image"
               class="member-card__image h-full w-full object-cover"
+              :src="item.image"
             >
-            <div class="member-card__overlay absolute inset-0"></div>
+            <div class="member-card__overlay absolute inset-0" />
             <div class="absolute left-4 top-4 rounded-full border border-white/25 bg-black/20 px-3 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white backdrop-blur-md sm:left-5 sm:top-5 sm:px-4 sm:text-[0.65rem] sm:tracking-[0.28em]">
               Tsingy
             </div>
@@ -118,6 +127,7 @@ const goNext = () => {
         </article>
       </swiper-slide>
     </swiper>
+      class="bureau-swiper overflow-visible pb-6 sm:pb-8"
 
     <div class="active-member-panel mt-2 grid gap-5 rounded-[1.5rem] border border-emerald-100 bg-gradient-to-br from-white to-emerald-50/60 p-4 shadow-[0_20px_60px_rgba(16,185,129,0.08)] sm:mt-4 sm:rounded-[2rem] sm:p-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center md:p-8">
       <div>
@@ -138,7 +148,6 @@ const goNext = () => {
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <div class="detail-tile">
           <span class="detail-tile__label">École</span>
-          <strong class="detail-tile__value">{{ activeMember.details.ecole }}</strong>
         </div>
         <div class="detail-tile">
           <span class="detail-tile__label">Filière</span>

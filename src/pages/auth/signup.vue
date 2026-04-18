@@ -74,13 +74,17 @@
             v-else
             class="action-btn submit-btn"
             height="48"
-            :loading="loading"
+            :loading="appStore.loading"
             variant="tonal"
             @click="inscription_rout"
           >
             S'inscrire
           </v-btn>
         </div>
+
+        <p v-if="appStore.error" class="signup-error">
+          {{ appStore.error }}
+        </p>
       </div>
 
       <div class="aside-panel">
@@ -103,9 +107,10 @@
   import {
     useRouter,
   } from 'vue-router'
+  import { useAppStore } from '@/stores/app'
 
   const router = useRouter()
-  const loading = ref(false)
+  const appStore = useAppStore()
   const currentPage = ref(1)
   const champsParPage = 6
 
@@ -170,6 +175,36 @@
                                  type: 'text',
                                  placeholder: 'Votre adresse',
                                },
+                               {
+                                 id: 'email',
+                                 label: 'Email',
+                                 type: 'email',
+                                 placeholder: 'Votre email',
+                               },
+                               {
+                                 id: 'contact',
+                                 label: 'Contact',
+                                 type: 'text',
+                                 placeholder: 'Votre numero de telephone',
+                               },
+                               {
+                                 id: 'universite',
+                                 label: 'Universite',
+                                 type: 'text',
+                                 placeholder: 'Votre universite ou structure',
+                               },
+                               {
+                                 id: 'filiere',
+                                 label: 'Filiere',
+                                 type: 'text',
+                                 placeholder: 'Votre filiere ou domaine',
+                               },
+                               {
+                                 id: 'nom_facebook',
+                                 label: 'Facebook',
+                                 type: 'text',
+                                 placeholder: 'Votre profil Facebook',
+                               },
   ]
 
   const formValues = ref(
@@ -202,13 +237,30 @@
   }
 
   async function inscription_rout () {
-    loading.value = true
-
     try {
-      console.log('Donnees inscription', formValues.value)
-      await router.push('/auth/signin')
-    } finally {
-      loading.value = false
+      const professionType = formValues.value.profession === 'Travailleur' ? 'WORKER' : 'STUDENT'
+      const user = await appStore.register({
+        address: formValues.value.domicile,
+        arrivalDate: formValues.value.arrivee_maroc,
+        birthDate: formValues.value.date_naissance,
+        domicileAtMarrakech: formValues.value.domicile,
+        email: formValues.value.email,
+        facebookName: formValues.value.nom_facebook,
+        firstName: formValues.value.prenom,
+        lastName: formValues.value.nom,
+        matricule: formValues.value.matricule,
+        passportNumber: formValues.value.passeport,
+        password: formValues.value.mot_de_passe,
+        phone: formValues.value.contact,
+        professionType,
+        residenceCardNumber: formValues.value.carte_sejour,
+        school: formValues.value.universite,
+        track: formValues.value.filiere,
+      })
+
+      await router.push(user.role === 'BUREAU' || user.role === 'ADMIN' ? '/bureau/accueil' : '/users/membre')
+    } catch {
+      return
     }
   }
 </script>
@@ -256,6 +308,15 @@
     justify-content: space-between;
     gap: 1rem;
     margin-bottom: 1.5rem;
+}
+
+.signup-error {
+  margin-top: 1rem;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 14px;
+  background: rgba(127, 29, 29, 0.45);
+  color: white;
+  padding: 0.85rem 1rem;
 }
 
 .step-copy {

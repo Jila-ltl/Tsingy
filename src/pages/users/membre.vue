@@ -22,12 +22,12 @@
                 <p class="mt-2 text-lg font-bold text-black">{{ services.length }} modules</p>
               </div>
               <div class="rounded-2xl border border-red-100 bg-red-50 px-5 py-4">
-                <p class="text-xs uppercase tracking-[0.25em] text-red-600">Formulaires</p>
-                <p class="mt-2 text-lg font-bold text-black">En fenetre modale</p>
+                <p class="text-xs uppercase tracking-[0.25em] text-red-600">Demandes</p>
+                <p class="mt-2 text-lg font-bold text-black">{{ memberStats.procurations + memberStats.reclamations + memberStats.certificates }}</p>
               </div>
               <div class="rounded-2xl border border-gray-200 bg-white px-5 py-4">
-                <p class="text-xs uppercase tracking-[0.25em] text-gray-500">Etat</p>
-                <p class="mt-2 text-lg font-bold text-black">Pret a utiliser</p>
+                <p class="text-xs uppercase tracking-[0.25em] text-gray-500">Profil</p>
+                <p class="mt-2 text-lg font-bold text-black">{{ appStore.user?.isApproved ? 'Valide' : 'En attente' }}</p>
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@
           @click="setActiveService(service.key)"
         >
           <div class="service-card__icon" :class="service.iconClass">
-            <span :class="service.icon" class="text-3xl" />
+            <span class="text-3xl" :class="service.icon" />
           </div>
           <div class="px-5 pb-5 sm:px-6 sm:pb-6">
             <p class="service-card__title text-lg font-black text-black sm:text-xl">{{ service.title }}</p>
@@ -279,7 +279,13 @@
           <div v-else-if="modalType === 'reclamation'" class="grid gap-5">
             <div>
               <label class="member-label">Sujet</label>
-              <Input_ id="reclamation-subject" v-model="forms.reclamation.subject" class="member-input" placeholder="Sujet de la reclamation" type="text" />
+              <Input_
+                id="reclamation-subject"
+                v-model="forms.reclamation.subject"
+                class="member-input"
+                placeholder="Sujet de la reclamation"
+                type="text"
+              />
             </div>
             <div>
               <label class="member-label">Description</label>
@@ -290,15 +296,33 @@
           <div v-else-if="modalType === 'certificat'" class="grid gap-5">
             <div>
               <label class="member-label">Annee scolaire</label>
-              <Input_ id="certificat-school-year" v-model="forms.certificat.schoolYear" class="member-input" placeholder="2025 - 2026" type="text" />
+              <Input_
+                id="certificat-school-year"
+                v-model="forms.certificat.schoolYear"
+                class="member-input"
+                placeholder="2025 - 2026"
+                type="text"
+              />
             </div>
             <div>
               <label class="member-label">Nom du document</label>
-              <Input_ id="certificat-file-name" v-model="forms.certificat.fileName" class="member-input" placeholder="Certificat de scolarite" type="text" />
+              <Input_
+                id="certificat-file-name"
+                v-model="forms.certificat.fileName"
+                class="member-input"
+                placeholder="Certificat de scolarite"
+                type="text"
+              />
             </div>
             <div>
               <label class="member-label">Reference</label>
-              <Input_ id="certificat-reference" v-model="forms.certificat.reference" class="member-input" placeholder="Reference ou commentaire" type="text" />
+              <Input_
+                id="certificat-reference"
+                v-model="forms.certificat.reference"
+                class="member-input"
+                placeholder="Reference ou commentaire"
+                type="text"
+              />
             </div>
           </div>
 
@@ -438,495 +462,603 @@
 </template>
 
 <script setup>
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+  import gsap from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+  import { useAppStore } from '@/stores/app'
 
-gsap.registerPlugin(ScrollTrigger)
+  gsap.registerPlugin(ScrollTrigger)
 
-const services = [
-  {
-    key: 'procuration',
-    title: 'Demande de procuration',
-    description: 'Creez une nouvelle procuration et consultez l historique de vos demandes deja soumises.',
-    icon: 'mdi mdi-file-document-outline',
-    iconClass: 'service-card__icon--green',
-  },
-  {
-    key: 'reclamation',
-    title: 'Reclamation bourse',
-    description: 'Envoyez un message detaille a propos de votre bourse et suivez son traitement.',
-    icon: 'mdi mdi-alert-box-outline',
-    iconClass: 'service-card__icon--red',
-  },
-  {
-    key: 'certificat',
-    title: 'Depot de certificat',
-    description: 'Preparez le depot de votre certificat avec l annee scolaire et la reference du document.',
-    icon: 'mdi mdi-folder-arrow-up-outline',
-    iconClass: 'service-card__icon--blue',
-  },
-  {
-    key: 'modification',
-    title: 'Modifier mes infos',
-    description: 'Mettez a jour vos informations personnelles et administratives dans un formulaire unique.',
-    icon: 'mdi mdi-account-edit-outline',
-    iconClass: 'service-card__icon--yellow',
-  },
-]
+  const appStore = useAppStore()
 
-const activeKey = ref('procuration')
-const modalType = ref('')
-const previewType = ref('')
-const pageRef = ref(null)
-const professionOptions = [
-  { label: 'Etudiant(e)', value: 'etudiant' },
-  { label: 'Travailleur(euse)', value: 'travailleur' },
-]
-
-const procurationHistory = ref([
-  { id: 1, title: 'Procuration AG 2026', description: 'Representation pour l assemblee generale.', date: '11/04/2026', status: 'En attente' },
-  { id: 2, title: 'Retrait dossier', description: 'Autorisation de retrait administratif.', date: '02/04/2026', status: 'Validee' },
-])
-
-const reclamationHistory = ref([
-  { id: 1, title: 'Bourse AMCI', description: 'Retard de versement du mois de mars.', date: '08/04/2026', status: 'En attente' },
-  { id: 2, title: 'Regularisation', description: 'Correction d un dossier deja depose.', date: '29/03/2026', status: 'Traitee' },
-])
-
-const forms = reactive({
-  procuration: {
-    lastName: '',
-    firstName: '',
-    phone: '',
-    address: '',
-    matricule: '',
-    cinNumber: '',
-    procuratorName: '',
-    procuratorCin: '',
-    date: '',
-  },
-  reclamation: {
-    subject: '',
-    message: '',
-  },
-  certificat: {
-    schoolYear: '',
-    fileName: '',
-    reference: '',
-  },
-  modification: {
-    firstName: '',
-    lastName: '',
-    birthDate: '',
-    profession: 'etudiant',
-    university: '',
-    track: '',
-    passport: '',
-    arrivalDate: '',
-    address: '',
-    email: '',
-    contact: '',
-    social: '',
-  },
-})
-
-const activeService = computed(() => services.find(service => service.key === activeKey.value) ?? services[0])
-const procurationFullName = computed(() => `${forms.procuration.lastName} ${forms.procuration.firstName}`.trim())
-const procurationFormattedDate = computed(() => formatDisplayDate(forms.procuration.date))
-let animationContext
-
-function setActiveService(key) {
-  activeKey.value = key
-  openModal(key)
-}
-
-function openModal(type) {
-  previewType.value = ''
-  modalType.value = type
-  activeKey.value = type
-}
-
-function closeModal() {
-  modalType.value = ''
-}
-
-function closePreview() {
-  previewType.value = ''
-}
-
-function reopenProcurationForm() {
-  previewType.value = ''
-  modalType.value = 'procuration'
-}
-
-function formatDisplayDate(value) {
-  if (!value) {
-    return new Date().toLocaleDateString('fr-FR')
-  }
-
-  return new Date(`${value}T00:00:00`).toLocaleDateString('fr-FR')
-}
-
-function getProcurationPdfLines() {
-  return [
-    `Nom : ${forms.procuration.lastName}`,
-    `Prenom : ${forms.procuration.firstName}`,
-    `Tel : ${forms.procuration.phone}`,
-    `Adresse : ${forms.procuration.address}`,
-    `N° matricule : ${forms.procuration.matricule}`,
-    '',
-    'À l\'AMCI',
-    '',
-    'Objet : Demande de procuration',
-    '',
-    'Madame, Monsieur,',
-    '',
-    `Je soussigné(e) ${procurationFullName.value} titulaire de CIN numérotée ${forms.procuration.cinNumber} autorise ${forms.procuration.procuratorName} titulaire de CIN numérotée ${forms.procuration.procuratorCin} à se procurer à mon nom mon attestation de bourse auprès de vous.`,
-    '',
-    "Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations les plus distinguées.",
+  const services = [
+    {
+      key: 'procuration',
+      title: 'Demande de procuration',
+      description: 'Creez une nouvelle procuration et consultez l historique de vos demandes deja soumises.',
+      icon: 'mdi mdi-file-document-outline',
+      iconClass: 'service-card__icon--green',
+    },
+    {
+      key: 'reclamation',
+      title: 'Reclamation bourse',
+      description: 'Envoyez un message detaille a propos de votre bourse et suivez son traitement.',
+      icon: 'mdi mdi-alert-box-outline',
+      iconClass: 'service-card__icon--red',
+    },
+    {
+      key: 'certificat',
+      title: 'Depot de certificat',
+      description: 'Preparez le depot de votre certificat avec l annee scolaire et la reference du document.',
+      icon: 'mdi mdi-folder-arrow-up-outline',
+      iconClass: 'service-card__icon--blue',
+    },
+    {
+      key: 'modification',
+      title: 'Modifier mes infos',
+      description: 'Mettez a jour vos informations personnelles et administratives dans un formulaire unique.',
+      icon: 'mdi mdi-account-edit-outline',
+      iconClass: 'service-card__icon--yellow',
+    },
   ]
-}
 
-function wrapCanvasText(context, value, maxWidth) {
-  if (!value) {
-    return ['']
+  const activeKey = ref('procuration')
+  const modalType = ref('')
+  const previewType = ref('')
+  const pageRef = ref(null)
+  const professionOptions = [
+    { label: 'Etudiant(e)', value: 'etudiant' },
+    { label: 'Travailleur(euse)', value: 'travailleur' },
+  ]
+
+  const forms = reactive({
+    procuration: {
+      address: '',
+      cinNumber: '',
+      date: '',
+      firstName: '',
+      lastName: '',
+      matricule: '',
+      phone: '',
+      procuratorCin: '',
+      procuratorName: '',
+    },
+    reclamation: {
+      message: '',
+      subject: '',
+    },
+    certificat: {
+      fileName: '',
+      reference: '',
+      schoolYear: '',
+    },
+    modification: {
+      address: '',
+      arrivalDate: '',
+      birthDate: '',
+      contact: '',
+      email: '',
+      firstName: '',
+      lastName: '',
+      passport: '',
+      profession: 'etudiant',
+      social: '',
+      track: '',
+      university: '',
+    },
+  })
+
+  const activeService = computed(() => services.find(service => service.key === activeKey.value) ?? services[0])
+  const dashboard = computed(() => appStore.memberDashboard ?? { certificates: [], procurations: [], profile: null, reclamations: [], stats: {} })
+  const memberStats = computed(() => dashboard.value.stats ?? { certificates: 0, procurations: 0, reclamations: 0 })
+  const activeProfile = computed(() => dashboard.value.profile ?? appStore.user?.profile ?? null)
+  const procurationFullName = computed(() => `${forms.procuration.lastName} ${forms.procuration.firstName}`.trim())
+  const procurationFormattedDate = computed(() => formatDisplayDate(forms.procuration.date))
+  const procurationHistory = computed(() => dashboard.value.procurations.map(item => ({
+    date: formatDisplayDate(item.requestDate),
+    description: `${item.proxyFullName} - CIN ${item.proxyCinNumber}`,
+    id: item.id,
+    status: formatStatus(item.status),
+    title: item.title,
+  })))
+  const reclamationHistory = computed(() => dashboard.value.reclamations.map(item => ({
+    date: formatDisplayDate(item.createdAt),
+    description: item.message,
+    id: item.id,
+    status: formatStatus(item.status),
+    title: item.subject,
+  })))
+  let animationContext
+
+  function setActiveService (key) {
+    activeKey.value = key
+    openModal(key)
   }
 
-  const words = value.split(/\s+/)
-  const lines = []
-  let currentLine = ''
+  function resetForm (type) {
+    if (type === 'reclamation') {
+      forms.reclamation.message = ''
+      forms.reclamation.subject = ''
+    }
 
-  for (const word of words) {
-    const candidate = currentLine ? `${currentLine} ${word}` : word
+    if (type === 'certificat') {
+      forms.certificat.fileName = ''
+      forms.certificat.reference = ''
+      forms.certificat.schoolYear = ''
+    }
+  }
 
-    if (context.measureText(candidate).width <= maxWidth) {
-      currentLine = candidate
-      continue
+  function openModal (type) {
+    previewType.value = ''
+    modalType.value = type
+    activeKey.value = type
+  }
+
+  function closeModal () {
+    modalType.value = ''
+  }
+
+  function closePreview () {
+    previewType.value = ''
+  }
+
+  function reopenProcurationForm () {
+    previewType.value = ''
+    modalType.value = 'procuration'
+  }
+
+  function formatDisplayDate (value) {
+    if (!value) {
+      return new Date().toLocaleDateString('fr-FR')
+    }
+
+    const parsedDate = typeof value === 'string' && value.includes('T') ? new Date(value) : new Date(`${value}T00:00:00`)
+    return Number.isNaN(parsedDate.getTime()) ? new Date().toLocaleDateString('fr-FR') : parsedDate.toLocaleDateString('fr-FR')
+  }
+
+  function formatStatus (status) {
+    if (status === 'APPROVED') {
+      return 'Validee'
+    }
+
+    if (status === 'REJECTED') {
+      return 'Rejetee'
+    }
+
+    return 'En attente'
+  }
+
+  function syncProfileForms (profile) {
+    if (!profile) {
+      return
+    }
+
+    forms.procuration.address = profile.address || profile.domicileAtMarrakech || ''
+    forms.procuration.cinNumber = profile.cinNumber || ''
+    forms.procuration.firstName = profile.firstName || ''
+    forms.procuration.lastName = profile.lastName || ''
+    forms.procuration.matricule = profile.matricule || ''
+    forms.procuration.phone = profile.phone || ''
+    forms.procuration.date = forms.procuration.date || new Date().toISOString().slice(0, 10)
+
+    forms.modification.address = profile.address || profile.domicileAtMarrakech || ''
+    forms.modification.arrivalDate = profile.arrivalDate ? String(profile.arrivalDate).slice(0, 10) : ''
+    forms.modification.birthDate = profile.birthDate ? String(profile.birthDate).slice(0, 10) : ''
+    forms.modification.contact = profile.phone || ''
+    forms.modification.email = appStore.user?.email || ''
+    forms.modification.firstName = profile.firstName || ''
+    forms.modification.lastName = profile.lastName || ''
+    forms.modification.passport = profile.passportNumber || ''
+    forms.modification.profession = profile.professionType === 'WORKER' ? 'travailleur' : 'etudiant'
+    forms.modification.social = profile.facebookName || ''
+    forms.modification.track = profile.track || profile.jobTitle || ''
+    forms.modification.university = profile.school || ''
+  }
+
+  function wrapCanvasText (context, value, maxWidth) {
+    if (!value) {
+      return ['']
+    }
+
+    const words = value.split(/\s+/)
+    const lines = []
+    let currentLine = ''
+
+    for (const word of words) {
+      const candidate = currentLine ? `${currentLine} ${word}` : word
+
+      if (context.measureText(candidate).width <= maxWidth) {
+        currentLine = candidate
+        continue
+      }
+
+      if (currentLine) {
+        lines.push(currentLine)
+      }
+
+      currentLine = word
     }
 
     if (currentLine) {
       lines.push(currentLine)
     }
 
-    currentLine = word
+    return lines
   }
 
-  if (currentLine) {
-    lines.push(currentLine)
+  function createPdfFromJpeg (imageBytes, imageWidth, imageHeight) {
+    const encoder = new TextEncoder()
+    const parts = []
+    const offsets = [0]
+    let totalLength = 0
+
+    function pushBytes (bytes) {
+      parts.push(bytes)
+      totalLength += bytes.length
+    }
+
+    function pushString (value) {
+      pushBytes(encoder.encode(value))
+    }
+
+    const contentStream = 'q\n595 0 0 842 0 0 cm\n/Im0 Do\nQ'
+
+    pushBytes(Uint8Array.from([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x34, 0x0a, 0x25, 0xff, 0xff, 0xff, 0xff, 0x0a]))
+
+    offsets.push(totalLength)
+    pushString('1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n')
+
+    offsets.push(totalLength)
+    pushString('2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n')
+
+    offsets.push(totalLength)
+    pushString('3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 5 0 R >> >> /Contents 4 0 R >> endobj\n')
+
+    offsets.push(totalLength)
+    pushString(`4 0 obj << /Length ${contentStream.length} >> stream\n${contentStream}\nendstream\nendobj\n`)
+
+    offsets.push(totalLength)
+    pushString(`5 0 obj << /Type /XObject /Subtype /Image /Width ${imageWidth} /Height ${imageHeight} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imageBytes.length} >> stream\n`)
+    pushBytes(imageBytes)
+    pushString('\nendstream\nendobj\n')
+
+    const xrefOffset = totalLength
+    pushString('xref\n0 6\n')
+    pushString('0000000000 65535 f \n')
+
+    for (let index = 1; index <= 5; index += 1) {
+      pushString(`${String(offsets[index]).padStart(10, '0')} 00000 n \n`)
+    }
+
+    pushString(`trailer << /Size 6 /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`)
+
+    const pdfBytes = new Uint8Array(totalLength)
+    let cursor = 0
+
+    for (const part of parts) {
+      pdfBytes.set(part, cursor)
+      cursor += part.length
+    }
+
+    return pdfBytes
   }
 
-  return lines
-}
+  function downloadProcurationPdf () {
+    const scale = 2
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
 
-function createPdfFromJpeg(imageBytes, imageWidth, imageHeight) {
-  const encoder = new TextEncoder()
-  const parts = []
-  const offsets = [0]
-  let totalLength = 0
-
-  function pushBytes(bytes) {
-    parts.push(bytes)
-    totalLength += bytes.length
-  }
-
-  function pushString(value) {
-    pushBytes(encoder.encode(value))
-  }
-
-  const pageWidth = 595
-  const pageHeight = 842
-  const contentStream = 'q\n595 0 0 842 0 0 cm\n/Im0 Do\nQ'
-
-  pushBytes(Uint8Array.from([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x34, 0x0a, 0x25, 0xff, 0xff, 0xff, 0xff, 0x0a]))
-
-  offsets.push(totalLength)
-  pushString('1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n')
-
-  offsets.push(totalLength)
-  pushString('2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n')
-
-  offsets.push(totalLength)
-  pushString('3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 5 0 R >> >> /Contents 4 0 R >> endobj\n')
-
-  offsets.push(totalLength)
-  pushString(`4 0 obj << /Length ${contentStream.length} >> stream\n${contentStream}\nendstream\nendobj\n`)
-
-  offsets.push(totalLength)
-  pushString(`5 0 obj << /Type /XObject /Subtype /Image /Width ${imageWidth} /Height ${imageHeight} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imageBytes.length} >> stream\n`)
-  pushBytes(imageBytes)
-  pushString('\nendstream\nendobj\n')
-
-  const xrefOffset = totalLength
-  pushString('xref\n0 6\n')
-  pushString('0000000000 65535 f \n')
-
-  for (let index = 1; index <= 5; index += 1) {
-    pushString(`${String(offsets[index]).padStart(10, '0')} 00000 n \n`)
-  }
-
-  pushString(`trailer << /Size 6 /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`)
-
-  const pdfBytes = new Uint8Array(totalLength)
-  let cursor = 0
-
-  for (const part of parts) {
-    pdfBytes.set(part, cursor)
-    cursor += part.length
-  }
-
-  return pdfBytes
-}
-
-function downloadProcurationPdf() {
-  const scale = 2
-  const canvas = document.createElement('canvas')
-  const context = canvas.getContext('2d')
-
-  if (!context) {
-    window.alert('Impossible de générer le PDF pour le moment.')
-    return
-  }
-
-  canvas.width = Math.round(595 * scale)
-  canvas.height = Math.round(842 * scale)
-
-  context.fillStyle = '#ffffff'
-  context.fillRect(0, 0, canvas.width, canvas.height)
-  context.fillStyle = '#111827'
-  context.textBaseline = 'top'
-  context.textAlign = 'left'
-
-  const left = 28 * scale
-  const right = canvas.width - (28 * scale)
-  let cursorY = 26 * scale
-  const textWidth = right - left
-
-  const metadataRows = [
-    ['Nom :', forms.procuration.lastName],
-    ['Prenom :', forms.procuration.firstName],
-    ['Tel :', forms.procuration.phone],
-    ['Adresse :', forms.procuration.address],
-    ['N° matricule :', forms.procuration.matricule],
-  ]
-
-  for (const [label, value] of metadataRows) {
-    context.font = `700 ${16 * scale}px Arial`
-    context.fillText(label, left, cursorY)
-    const labelWidth = context.measureText(label).width
-    context.font = `${16 * scale}px Arial`
-    context.fillText(value, left + labelWidth + (6 * scale), cursorY)
-    cursorY += 30 * scale
-  }
-
-  cursorY += 52 * scale
-  context.font = `${16 * scale}px Arial`
-  context.fillText(`À l'AMCI`, right - context.measureText(`À l'AMCI`).width, cursorY)
-  cursorY += 34 * scale
-  context.fillText(`Marrakech, le ${procurationFormattedDate.value}.`, right - context.measureText(`Marrakech, le ${procurationFormattedDate.value}.`).width, cursorY)
-
-  cursorY += 66 * scale
-  context.font = `700 ${16 * scale}px Arial`
-  context.fillText('Objet :', left, cursorY)
-  const objectLabelWidth = context.measureText('Objet :').width
-  context.font = `${16 * scale}px Arial`
-  context.fillText('Demande de procuration', left + objectLabelWidth + (6 * scale), cursorY)
-  cursorY += 54 * scale
-  context.fillText('Madame, Monsieur,', left, cursorY)
-  cursorY += 54 * scale
-  context.font = `${16 * scale}px Arial`
-  const letterLines = wrapCanvasText(
-    context,
-    `Je soussigné(e) ${procurationFullName.value} titulaire de CIN numérotée ${forms.procuration.cinNumber} autorise ${forms.procuration.procuratorName} titulaire de CIN numérotée ${forms.procuration.procuratorCin} à se procurer à mon nom mon attestation de bourse auprès de vous.`,
-    textWidth,
-  )
-
-  for (const line of letterLines) {
-    context.fillText(line, left, cursorY)
-    cursorY += 30 * scale
-  }
-
-  cursorY += 30 * scale
-  const closingLines = wrapCanvasText(
-    context,
-    "Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations les plus distinguées.",
-    textWidth,
-  )
-
-  for (const line of closingLines) {
-    context.fillText(line, left, cursorY)
-    cursorY += 30 * scale
-  }
-
-  const signatureTextY = canvas.height - (72 * scale)
-  context.textAlign = 'right'
-  context.font = `${15 * scale}px Arial`
-  context.fillStyle = '#475569'
-  context.fillText('Signature', right, signatureTextY)
-
-  const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.96)
-  const imageBytes = Uint8Array.from(atob(jpegDataUrl.split(',')[1]), character => character.charCodeAt(0))
-  const pdfBytes = createPdfFromJpeg(imageBytes, canvas.width, canvas.height)
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' })
-  const downloadUrl = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-
-  link.href = downloadUrl
-  link.download = `procuration-${forms.procuration.lastName || 'amci'}.pdf`
-  link.click()
-
-  URL.revokeObjectURL(downloadUrl)
-}
-
-function submitActiveForm() {
-  if (modalType.value !== 'procuration') {
-    closeModal()
-    return
-  }
-
-  const requiredValues = [
-    forms.procuration.lastName,
-    forms.procuration.firstName,
-    forms.procuration.phone,
-    forms.procuration.address,
-    forms.procuration.matricule,
-    forms.procuration.cinNumber,
-    forms.procuration.procuratorName,
-    forms.procuration.procuratorCin,
-    forms.procuration.date,
-  ]
-
-  if (requiredValues.some(value => !String(value).trim())) {
-    window.alert('Veuillez remplir tous les champs de la demande de procuration avant de continuer.')
-    return
-  }
-
-  closeModal()
-  previewType.value = 'procuration'
-}
-
-function animateOverlayCard(selector) {
-  const element = document.querySelector(selector)
-
-  if (!element) {
-    return
-  }
-
-  gsap.fromTo(
-    element,
-    { autoAlpha: 0, scale: 0.94, y: 26 },
-    { autoAlpha: 1, duration: 0.55, ease: 'power3.out', scale: 1, y: 0 },
-  )
-}
-
-onMounted(() => {
-  animationContext = gsap.context(() => {
-    const scroller = pageRef.value
-
-    if (!scroller) {
+    if (!context) {
+      window.alert('Impossible de générer le PDF pour le moment.')
       return
     }
 
-    const serviceCards = gsap.utils.toArray('.service-card')
-    const historyCards = gsap.utils.toArray('.member-history-card')
-    const tableRows = gsap.utils.toArray('.member-table tbody tr')
+    canvas.width = Math.round(595 * scale)
+    canvas.height = Math.round(842 * scale)
 
-    gsap.fromTo(
-      '.member-hero',
-      { autoAlpha: 0, y: 32 },
-      { autoAlpha: 1, duration: 0.85, ease: 'power3.out', y: 0 },
+    context.fillStyle = '#ffffff'
+    context.fillRect(0, 0, canvas.width, canvas.height)
+    context.fillStyle = '#111827'
+    context.textBaseline = 'top'
+    context.textAlign = 'left'
+
+    const left = 28 * scale
+    const right = canvas.width - (28 * scale)
+    let cursorY = 26 * scale
+    const textWidth = right - left
+
+    const metadataRows = [
+      ['Nom :', forms.procuration.lastName],
+      ['Prenom :', forms.procuration.firstName],
+      ['Tel :', forms.procuration.phone],
+      ['Adresse :', forms.procuration.address],
+      ['N° matricule :', forms.procuration.matricule],
+    ]
+
+    for (const [label, value] of metadataRows) {
+      context.font = `700 ${16 * scale}px Arial`
+      context.fillText(label, left, cursorY)
+      const labelWidth = context.measureText(label).width
+      context.font = `${16 * scale}px Arial`
+      context.fillText(value, left + labelWidth + (6 * scale), cursorY)
+      cursorY += 30 * scale
+    }
+
+    cursorY += 52 * scale
+    context.font = `${16 * scale}px Arial`
+    context.fillText(`À l'AMCI`, right - context.measureText(`À l'AMCI`).width, cursorY)
+    cursorY += 34 * scale
+    context.fillText(`Marrakech, le ${procurationFormattedDate.value}.`, right - context.measureText(`Marrakech, le ${procurationFormattedDate.value}.`).width, cursorY)
+
+    cursorY += 66 * scale
+    context.font = `700 ${16 * scale}px Arial`
+    context.fillText('Objet :', left, cursorY)
+    const objectLabelWidth = context.measureText('Objet :').width
+    context.font = `${16 * scale}px Arial`
+    context.fillText('Demande de procuration', left + objectLabelWidth + (6 * scale), cursorY)
+    cursorY += 54 * scale
+    context.fillText('Madame, Monsieur,', left, cursorY)
+    cursorY += 54 * scale
+    context.font = `${16 * scale}px Arial`
+    const letterLines = wrapCanvasText(
+      context,
+      `Je soussigné(e) ${procurationFullName.value} titulaire de CIN numérotée ${forms.procuration.cinNumber} autorise ${forms.procuration.procuratorName} titulaire de CIN numérotée ${forms.procuration.procuratorCin} à se procurer à mon nom mon attestation de bourse auprès de vous.`,
+      textWidth,
     )
 
-    gsap.fromTo(
-      serviceCards,
-      { autoAlpha: 0, y: 46, scale: 0.96 },
-      {
-        autoAlpha: 1,
-        duration: 0.75,
-        ease: 'power3.out',
-        scale: 1,
-        stagger: 0.1,
-        y: 0,
-        scrollTrigger: {
-          scroller,
-          start: 'top 78%',
-          trigger: '.member-service-grid',
-        },
-      },
+    for (const line of letterLines) {
+      context.fillText(line, left, cursorY)
+      cursorY += 30 * scale
+    }
+
+    cursorY += 30 * scale
+    const closingLines = wrapCanvasText(
+      context,
+      'Je vous prie d\'agréer, Madame, Monsieur, l\'expression de mes salutations les plus distinguées.',
+      textWidth,
     )
 
-    gsap.fromTo(
-      historyCards,
-      { autoAlpha: 0, y: 54 },
-      {
-        autoAlpha: 1,
-        duration: 0.85,
-        ease: 'power3.out',
-        stagger: 0.14,
-        y: 0,
-        scrollTrigger: {
-          scroller,
-          start: 'top 78%',
-          trigger: '.member-history-grid',
-        },
-      },
-    )
+    for (const line of closingLines) {
+      context.fillText(line, left, cursorY)
+      cursorY += 30 * scale
+    }
+
+    const signatureTextY = canvas.height - (72 * scale)
+    context.textAlign = 'right'
+    context.font = `${15 * scale}px Arial`
+    context.fillStyle = '#475569'
+    context.fillText('Signature', right, signatureTextY)
+
+    const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.96)
+    const imageBytes = Uint8Array.from(atob(jpegDataUrl.split(',')[1]), character => character.codePointAt(0) ?? 0)
+    const pdfBytes = createPdfFromJpeg(imageBytes, canvas.width, canvas.height)
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+    const downloadUrl = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+
+    link.href = downloadUrl
+    link.download = `procuration-${forms.procuration.lastName || 'amci'}.pdf`
+    link.click()
+
+    URL.revokeObjectURL(downloadUrl)
+  }
+
+  async function submitActiveForm () {
+    try {
+      if (modalType.value === 'procuration') {
+        const requiredValues = [
+          forms.procuration.lastName,
+          forms.procuration.firstName,
+          forms.procuration.phone,
+          forms.procuration.address,
+          forms.procuration.matricule,
+          forms.procuration.cinNumber,
+          forms.procuration.procuratorName,
+          forms.procuration.procuratorCin,
+          forms.procuration.date,
+        ]
+
+        if (requiredValues.some(value => !String(value).trim())) {
+          window.alert('Veuillez remplir tous les champs de la demande de procuration avant de continuer.')
+          return
+        }
+
+        await appStore.submitProcuration({
+          ownerAddress: forms.procuration.address,
+          ownerCinNumber: forms.procuration.cinNumber,
+          ownerFirstName: forms.procuration.firstName,
+          ownerLastName: forms.procuration.lastName,
+          ownerMatricule: forms.procuration.matricule,
+          ownerPhone: forms.procuration.phone,
+          proxyCinNumber: forms.procuration.procuratorCin,
+          proxyFullName: forms.procuration.procuratorName,
+          requestDate: new Date(`${forms.procuration.date}T00:00:00`).toISOString(),
+          title: 'Demande de procuration AMCI',
+        })
+
+        closeModal()
+        previewType.value = 'procuration'
+        return
+      }
+
+      if (modalType.value === 'reclamation') {
+        await appStore.submitReclamation({
+          message: forms.reclamation.message,
+          subject: forms.reclamation.subject,
+        })
+        resetForm('reclamation')
+        closeModal()
+        window.alert('Votre reclamation a ete envoyee.')
+        return
+      }
+
+      if (modalType.value === 'certificat') {
+        await appStore.submitCertificate({
+          fileName: forms.certificat.fileName,
+          reference: forms.certificat.reference,
+          schoolYear: forms.certificat.schoolYear,
+        })
+        resetForm('certificat')
+        closeModal()
+        window.alert('Votre depot de certificat a ete enregistre.')
+        return
+      }
+
+      if (modalType.value === 'modification') {
+        await appStore.updateProfile({
+          address: forms.modification.address,
+          arrivalDate: forms.modification.arrivalDate || null,
+          birthDate: forms.modification.birthDate || null,
+          domicileAtMarrakech: forms.modification.address,
+          email: forms.modification.email,
+          facebookName: forms.modification.social,
+          firstName: forms.modification.firstName,
+          jobTitle: forms.modification.profession === 'travailleur' ? forms.modification.track : null,
+          lastName: forms.modification.lastName,
+          passportNumber: forms.modification.passport,
+          phone: forms.modification.contact,
+          professionType: forms.modification.profession === 'travailleur' ? 'WORKER' : 'STUDENT',
+          school: forms.modification.profession === 'etudiant' ? forms.modification.university : '',
+          track: forms.modification.profession === 'etudiant' ? forms.modification.track : '',
+        })
+        closeModal()
+        window.alert('Votre profil a ete mis a jour.')
+      }
+    } catch (error) {
+      window.alert(error.message || 'Une erreur est survenue.')
+    }
+  }
+
+  function animateOverlayCard (selector) {
+    const element = document.querySelector(selector)
+
+    if (!element) {
+      return
+    }
 
     gsap.fromTo(
-      tableRows,
-      { autoAlpha: 0, x: -22 },
-      {
-        autoAlpha: 1,
-        duration: 0.55,
-        ease: 'power2.out',
-        stagger: 0.06,
-        x: 0,
-        scrollTrigger: {
-          scroller,
-          start: 'top 72%',
-          trigger: '.member-history-grid',
-        },
-      },
+      element,
+      { autoAlpha: 0, scale: 0.94, y: 26 },
+      { autoAlpha: 1, duration: 0.55, ease: 'power3.out', scale: 1, y: 0 },
     )
+  }
 
-    gsap.to('.service-card', {
-      duration: 3.2,
-      ease: 'sine.inOut',
-      repeat: -1,
-      stagger: 0.18,
-      y: -6,
-      yoyo: true,
+  onMounted(() => {
+    appStore.fetchMemberDashboard().catch(error => {
+      window.alert(error.message || 'Impossible de charger les donnees membre.')
     })
-  }, pageRef.value)
-})
 
-onUnmounted(() => {
-  animationContext?.revert()
-  ScrollTrigger.getAll().forEach(trigger => trigger.kill())
-})
+    animationContext = gsap.context(() => {
+      const scroller = pageRef.value
 
-watch(modalType, async value => {
-  if (!value) {
-    return
-  }
+      if (!scroller) {
+        return
+      }
 
-  await nextTick()
-  animateOverlayCard('.member-form-card')
-})
+      const serviceCards = gsap.utils.toArray('.service-card')
+      const historyCards = gsap.utils.toArray('.member-history-card')
+      const tableRows = gsap.utils.toArray('.member-table tbody tr')
 
-watch(previewType, async value => {
-  if (!value) {
-    return
-  }
+      gsap.fromTo(
+        '.member-hero',
+        { autoAlpha: 0, y: 32 },
+        { autoAlpha: 1, duration: 0.85, ease: 'power3.out', y: 0 },
+      )
 
-  await nextTick()
-  animateOverlayCard('.member-preview-card')
-  gsap.fromTo(
-    '.procuration-preview',
-    { autoAlpha: 0, y: 24 },
-    { autoAlpha: 1, delay: 0.08, duration: 0.5, ease: 'power3.out', y: 0 },
-  )
-})
+      gsap.fromTo(
+        serviceCards,
+        { autoAlpha: 0, y: 46, scale: 0.96 },
+        {
+          autoAlpha: 1,
+          duration: 0.75,
+          ease: 'power3.out',
+          scale: 1,
+          stagger: 0.1,
+          y: 0,
+          scrollTrigger: {
+            scroller,
+            start: 'top 78%',
+            trigger: '.member-service-grid',
+          },
+        },
+      )
+
+      gsap.fromTo(
+        historyCards,
+        { autoAlpha: 0, y: 54 },
+        {
+          autoAlpha: 1,
+          duration: 0.85,
+          ease: 'power3.out',
+          stagger: 0.14,
+          y: 0,
+          scrollTrigger: {
+            scroller,
+            start: 'top 78%',
+            trigger: '.member-history-grid',
+          },
+        },
+      )
+
+      gsap.fromTo(
+        tableRows,
+        { autoAlpha: 0, x: -22 },
+        {
+          autoAlpha: 1,
+          duration: 0.55,
+          ease: 'power2.out',
+          stagger: 0.06,
+          x: 0,
+          scrollTrigger: {
+            scroller,
+            start: 'top 72%',
+            trigger: '.member-history-grid',
+          },
+        },
+      )
+
+      gsap.to('.service-card', {
+        duration: 3.2,
+        ease: 'sine.inOut',
+        repeat: -1,
+        stagger: 0.18,
+        y: -6,
+        yoyo: true,
+      })
+    }, pageRef.value)
+  })
+
+  onUnmounted(() => {
+    animationContext?.revert()
+    for (const trigger of ScrollTrigger.getAll()) trigger.kill()
+  })
+
+  watch(activeProfile, profile => {
+    syncProfileForms(profile)
+  }, { immediate: true })
+
+  watch(modalType, async value => {
+    if (!value) {
+      return
+    }
+
+    await nextTick()
+    animateOverlayCard('.member-form-card')
+  })
+
+  watch(previewType, async value => {
+    if (!value) {
+      return
+    }
+
+    await nextTick()
+    animateOverlayCard('.member-preview-card')
+    gsap.fromTo(
+      '.procuration-preview',
+      { autoAlpha: 0, y: 24 },
+      { autoAlpha: 1, delay: 0.08, duration: 0.5, ease: 'power3.out', y: 0 },
+    )
+  })
 </script>
 
 <style scoped>

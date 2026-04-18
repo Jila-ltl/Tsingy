@@ -10,6 +10,8 @@
     "preview": "vite preview --configLoader runner",
     "lint": "eslint . --fix",
     "backend:dev": "npm --prefix back_end run dev",
+    "backend:migrate": "npm --prefix back_end run prisma:migrate",
+    "backend:seed": "npm --prefix back_end run seed",
     "backend:start": "npm --prefix back_end run start",
     "backend:prisma:generate": "npm --prefix back_end run prisma:generate",
     "backend:prisma:push": "npm --prefix back_end run prisma:push",

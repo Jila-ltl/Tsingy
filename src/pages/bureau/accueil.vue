@@ -58,18 +58,18 @@
           <div ref="heroStatsRef" class="mt-10 grid gap-4 min-[520px]:grid-cols-3">
             <article class="bureau-stat-card rounded-[1.4rem] p-5">
               <p class="bureau-stat-card__label">Annonces</p>
-              <p class="mt-3 text-3xl font-semibold text-white">03</p>
+              <p class="mt-3 text-3xl font-semibold text-white">{{ stats.announcements }}</p>
               <p class="mt-2 text-sm text-emerald-50/70">En cours de diffusion</p>
             </article>
             <article class="bureau-stat-card rounded-[1.4rem] p-5">
               <p class="bureau-stat-card__label">Validations</p>
-              <p class="mt-3 text-3xl font-semibold text-white">10</p>
-              <p class="mt-2 text-sm text-emerald-50/70">Profils à examiner</p>
+              <p class="mt-3 text-3xl font-semibold text-white">{{ stats.pendingApprovals }}</p>
+              <p class="mt-2 text-sm text-emerald-50/70">Profils a examiner</p>
             </article>
             <article class="bureau-stat-card rounded-[1.4rem] p-5">
               <p class="bureau-stat-card__label">Coordination</p>
-              <p class="mt-3 text-3xl font-semibold text-white">24/7</p>
-              <p class="mt-2 text-sm text-emerald-50/70">Suivi de la communauté</p>
+              <p class="mt-3 text-3xl font-semibold text-white">{{ stats.members }}</p>
+              <p class="mt-2 text-sm text-emerald-50/70">Membres suivis</p>
             </article>
           </div>
         </div>
@@ -194,7 +194,7 @@
           <button class="bureau-button bureau-button--secondary" type="button" @click="closePopup">
             Annuler
           </button>
-          <button class="bureau-button bureau-button--primary" type="button" @click="closePopup">
+          <button class="bureau-button bureau-button--primary" type="button" @click="submitAnnouncement">
             Envoyer
           </button>
         </div>
@@ -244,10 +244,10 @@
             </div>
 
             <div class="flex items-center gap-3">
-              <button class="approbation-action approbation-action--approve" type="button">
+              <button class="approbation-action approbation-action--approve" type="button" @click="reviewPendingMember(item.id, true)">
                 <span class="mdi mdi-checkbox-marked text-2xl" />
               </button>
-              <button class="approbation-action approbation-action--reject" type="button">
+              <button class="approbation-action approbation-action--reject" type="button" @click="reviewPendingMember(item.id, false)">
                 <span class="mdi mdi-close-box text-2xl" />
               </button>
             </div>
@@ -294,7 +294,7 @@
           <button class="bureau-button bureau-button--secondary" type="button" @click="closePopup">
             Fermer
           </button>
-          <button class="bureau-button bureau-button--primary" type="button" @click="closePopup">
+          <button class="bureau-button bureau-button--primary" type="button" @click="submitEvent">
             Enregistrer
           </button>
         </div>
@@ -320,7 +320,7 @@
         </div>
 
         <div class="interactive-card overflow-hidden rounded-[1.5rem] bg-white p-4 shadow-[0_20px_60px_rgba(0,0,0,0.08)] sm:rounded-[2rem] sm:p-6 md:p-8">
-          <MyCarousel />
+          <MyCarousel :members="bureauMembers" />
         </div>
       </div>
     </section>
@@ -382,6 +382,7 @@
   import gsap from 'gsap'
   import { ScrollTrigger } from 'gsap/ScrollTrigger'
   import {
+    computed,
     onMounted,
     onUnmounted,
     ref,
@@ -389,11 +390,13 @@
   import {
     useRouter,
   } from 'vue-router'
+  import { useAppStore } from '@/stores/app'
   import MyCarousel from '../../components/Carousel.vue'
 
   gsap.registerPlugin(ScrollTrigger)
 
   const router = useRouter()
+  const appStore = useAppStore()
 
   const pageRef = ref(null)
   const heroRef = ref(null)
@@ -420,8 +423,24 @@
 
   const eventForm = ref({
     description: '',
+    eventDate: '',
+    location: '',
     title: '',
   })
+
+  const dashboard = computed(() => appStore.bureauDashboard ?? {
+    announcements: [],
+    bureauMembers: [],
+    pendingMembers: [],
+    stats: {
+      announcements: 0,
+      members: 0,
+      pendingApprovals: 0,
+      requests: 0,
+    },
+  })
+
+  const stats = computed(() => dashboard.value.stats)
 
   const headers = [{
                      align: 'start',
@@ -464,81 +483,68 @@
                          tag: 'Organisation',
                        }]
 
-  const newMembers = ref([{
-                            domicile: 'Paris',
-                            ecole: 'Lycée Henri IV',
-                            nom: 'Dupont',
-                            photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop',
-                            prenom: 'Jean',
-                          },
-                          {
-                            domicile: 'Lyon',
-                            ecole: 'INSA Lyon',
-                            nom: 'Martin',
-                            photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
-                            prenom: 'Alice',
-                          },
-                          {
-                            domicile: 'Lille',
-                            ecole: 'EDHEC Business School',
-                            nom: 'Lefebvre',
-                            photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
-                            prenom: 'Thomas',
-                          },
-                          {
-                            domicile: 'Bordeaux',
-                            ecole: 'Sciences Po',
-                            nom: 'Dubois',
-                            photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
-                            prenom: 'Sophie',
-                          },
-                          {
-                            domicile: 'Nantes',
-                            ecole: 'Centrale Nantes',
-                            nom: 'Moreau',
-                            photo: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=150&h=150&fit=crop',
-                            prenom: 'Lucas',
-                          },
-                          {
-                            domicile: 'Marseille',
-                            ecole: 'Kedge Business School',
-                            nom: 'Lambert',
-                            photo: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?w=150&h=150&fit=crop',
-                            prenom: 'Emma',
-                          },
-                          {
-                            domicile: 'Toulouse',
-                            ecole: 'ENAC',
-                            nom: 'Rousseau',
-                            photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop',
-                            prenom: 'Hugo',
-                          },
-                          {
-                            domicile: 'Strasbourg',
-                            ecole: 'Université de Strasbourg',
-                            nom: 'Girard',
-                            photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop',
-                            prenom: 'Chloé',
-                          },
-                          {
-                            domicile: 'Rennes',
-                            ecole: 'Rennes School of Business',
-                            nom: 'Mercier',
-                            photo: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=150&h=150&fit=crop',
-                            prenom: 'Antoine',
-                          },
-                          {
-                            domicile: 'Montpellier',
-                            ecole: 'Montpellier Business School',
-                            nom: 'Petit',
-                            photo: 'https://images.unsplash.com/photo-1557053910-d9eadeed1c58?w=150&h=150&fit=crop',
-                            prenom: 'Léa',
-                          }])
+  const newMembers = computed(() => dashboard.value.pendingMembers.map(member => ({
+    domicile: member.profile?.domicileAtMarrakech || member.profile?.address || 'Non renseigne',
+    ecole: member.profile?.school || member.profile?.jobTitle || 'Non renseigne',
+    id: member.id,
+    nom: member.profile?.lastName || '',
+    photo: member.profile?.imageUrl || '/img/member.png',
+    prenom: member.profile?.firstName || '',
+  })))
+
+  const bureauMembers = computed(() => dashboard.value.bureauMembers.map(member => ({
+    details: {
+      ecole: member.school,
+      filiere: member.track,
+      niveau: member.level,
+      role: member.mission,
+    },
+    image: member.imageUrl || '/img/member.png',
+    nom: member.fullName,
+    poste: member.title,
+  })))
 
   let animationContext
 
   function closePopup () {
     isOpen.value = null
+  }
+
+  async function submitAnnouncement () {
+    try {
+      await appStore.createAnnouncement({
+        expiresAt: announcementForm.value.expiration,
+        message: announcementForm.value.message,
+        title: announcementForm.value.title,
+      })
+      announcementForm.value = { expiration: '', message: '', title: '' }
+      closePopup()
+    } catch (error) {
+      window.alert(error.message || 'Impossible de publier l annonce.')
+    }
+  }
+
+  async function submitEvent () {
+    try {
+      await appStore.createEvent({
+        description: eventForm.value.description,
+        eventDate: eventForm.value.eventDate,
+        location: eventForm.value.location,
+        title: eventForm.value.title,
+      })
+      eventForm.value = { description: '', eventDate: '', location: '', title: '' }
+      closePopup()
+    } catch (error) {
+      window.alert(error.message || 'Impossible d enregistrer l evenement.')
+    }
+  }
+
+  async function reviewPendingMember (id, approved) {
+    try {
+      await appStore.reviewMember(id, approved)
+    } catch (error) {
+      window.alert(error.message || 'Impossible de mettre a jour ce membre.')
+    }
   }
 
   function diriger (message) {
@@ -566,6 +572,10 @@
   }
 
   onMounted(() => {
+    appStore.fetchBureauDashboard().catch(error => {
+      window.alert(error.message || 'Impossible de charger le tableau de bord bureau.')
+    })
+
     animationContext = gsap.context(() => {
       const scroller = pageRef.value
       const revealSections = gsap.utils.toArray('.bureau-section')
