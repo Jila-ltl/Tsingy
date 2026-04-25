@@ -12,7 +12,13 @@
       type: Array,
       default: () => [],
     },
+    showManageButton: {
+      type: Boolean,
+      default: false,
+    },
   })
+
+  const emit = defineEmits(['delete-slide', 'edit-slide', 'manage'])
 
   const modules = [Autoplay, EffectCoverflow, Navigation]
 
@@ -39,6 +45,18 @@
   function goNext () {
     swiperInstance.value?.slideNext()
   }
+
+  function openManager () {
+    emit('manage')
+  }
+
+  function editSlide (member) {
+    emit('edit-slide', member)
+  }
+
+  function deleteSlide (member) {
+    emit('delete-slide', member)
+  }
 </script>
 
 <template>
@@ -54,6 +72,14 @@
       </div>
 
       <div class="flex items-center gap-3 self-center lg:self-auto">
+        <button
+          v-if="showManageButton"
+          class="bureau-manage-button"
+          type="button"
+          @click="openManager"
+        >
+          Modifier
+        </button>
         <button
           class="bureau-control"
           type="button"
@@ -98,7 +124,7 @@
     >
       <swiper-slide
         v-for="item in carouselMembers"
-        :key="item.nom"
+        :key="item.id || item.nom"
         class="bureau-slide"
       >
         <article class="member-card overflow-hidden rounded-[1.5rem] border border-white/60 bg-white shadow-[0_25px_60px_rgba(15,23,42,0.12)] sm:rounded-[2rem]">
@@ -111,6 +137,25 @@
             <div class="member-card__overlay absolute inset-0" />
             <div class="absolute left-4 top-4 rounded-full border border-white/25 bg-black/20 px-3 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white backdrop-blur-md sm:left-5 sm:top-5 sm:px-4 sm:text-[0.65rem] sm:tracking-[0.28em]">
               Tsingy
+            </div>
+            <div
+              v-if="showManageButton"
+              class="member-card__actions absolute right-4 top-4 z-10 flex gap-2 sm:right-5 sm:top-5"
+            >
+              <button
+                class="member-card__action member-card__action--edit"
+                type="button"
+                @click.stop="editSlide(item)"
+              >
+                Edit
+              </button>
+              <button
+                class="member-card__action member-card__action--delete"
+                type="button"
+                @click.stop="deleteSlide(item)"
+              >
+                Supprimer
+              </button>
             </div>
             <div class="absolute inset-x-0 bottom-0 p-4 text-white sm:p-5">
               <p class="text-xs font-semibold uppercase tracking-[0.26em] text-emerald-200">
@@ -181,6 +226,28 @@
   transition: transform 180ms ease, background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
 }
 
+.bureau-manage-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.75rem 1.1rem;
+  border: 1px solid rgba(5, 150, 105, 0.18);
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(220, 252, 231, 0.95));
+  color: rgb(6 95 70);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.bureau-manage-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(5, 150, 105, 0.16);
+}
+
 .bureau-control:hover {
   background: rgb(5 150 105);
   color: white;
@@ -218,6 +285,42 @@
 .bureau-slide.swiper-slide-active .member-card {
   transform: translateY(-10px) scale(1.02);
   box-shadow: 0 28px 70px rgba(15, 23, 42, 0.18);
+}
+
+.member-card__actions {
+  opacity: 1;
+}
+
+.member-card__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.4rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 9999px;
+  background: rgba(6, 17, 13, 0.62);
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.member-card__action:hover {
+  transform: translateY(-1px);
+}
+
+.member-card__action--edit:hover {
+  background: rgba(5, 150, 105, 0.88);
+  border-color: rgba(167, 243, 208, 0.65);
+}
+
+.member-card__action--delete:hover {
+  background: rgba(220, 38, 38, 0.86);
+  border-color: rgba(254, 202, 202, 0.7);
 }
 
 .bureau-slide.swiper-slide-active .member-card__image,

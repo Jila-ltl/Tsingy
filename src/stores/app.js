@@ -1,11 +1,28 @@
 import { defineStore } from 'pinia'
-import { apiRequest } from '@/lib/api'
+import { API_BASE_URL, apiRequest } from '@/lib/api'
+
+const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '')
+
+function normalizeCarouselSlide (slide) {
+  if (!slide) {
+    return slide
+  }
+
+  const image = slide.image?.startsWith('/uploads/') ? `${API_ORIGIN}${slide.image}` : slide.image
+
+  return {
+    ...slide,
+    image,
+  }
+}
 
 export const useAppStore = defineStore('app', {
   state: () => ({
     bureauDashboard: null,
+    carouselSlides: [],
     directory: [],
     error: '',
+    events: [],
     initialized: false,
     loading: false,
     memberDashboard: null,
@@ -45,7 +62,9 @@ export const useAppStore = defineStore('app', {
       this.user = null
       this.memberDashboard = null
       this.bureauDashboard = null
+      this.carouselSlides = []
       this.directory = []
+      this.events = []
       localStorage.removeItem('tsingy-token')
     },
     async login (credentials) {
@@ -141,6 +160,39 @@ export const useAppStore = defineStore('app', {
       this.directory = directory
       return directory
     },
+    async fetchCarouselSlides () {
+      const slides = await apiRequest('/bureau/carousel-slides')
+      const normalizedSlides = slides.map(normalizeCarouselSlide)
+      this.carouselSlides = normalizedSlides
+      return normalizedSlides
+    },
+    async fetchEvents () {
+      const events = await apiRequest('/members/events')
+      this.events = events
+      return events
+    },
+    async createCarouselSlide (payload) {
+      const result = await apiRequest('/bureau/carousel-slides', {
+        body: JSON.stringify(payload),
+        method: 'POST',
+      })
+      await this.fetchCarouselSlides()
+      return normalizeCarouselSlide(result)
+    },
+    async updateCarouselSlide (id, payload) {
+      const result = await apiRequest(`/bureau/carousel-slides/${id}`, {
+        body: JSON.stringify(payload),
+        method: 'PATCH',
+      })
+      await this.fetchCarouselSlides()
+      return normalizeCarouselSlide(result)
+    },
+    async deleteCarouselSlide (id) {
+      await apiRequest(`/bureau/carousel-slides/${id}`, {
+        method: 'DELETE',
+      })
+      await this.fetchCarouselSlides()
+    },
     async reviewMember (id, approved) {
       const result = await apiRequest(`/bureau/members/${id}/review`, {
         body: JSON.stringify({ approved }),
@@ -162,8 +214,53 @@ export const useAppStore = defineStore('app', {
         body: JSON.stringify(payload),
         method: 'POST',
       })
-      await this.fetchBureauDashboard()
+      await Promise.all([
+        this.fetchBureauDashboard(),
+        this.fetchEvents(),
+      ])
       return result
+    },
+    async updateEvent (id, payload) {
+      const result = await apiRequest(`/bureau/events/${id}`, {
+        body: JSON.stringify(payload),
+        method: 'PATCH',
+      })
+      await Promise.all([
+        this.fetchBureauDashboard(),
+        this.fetchEvents(),
+      ])
+      return result
+    },
+    async deleteEvent (id) {
+      await apiRequest(`/bureau/events/${id}`, {
+        method: 'DELETE',
+      })
+      await Promise.all([
+        this.fetchBureauDashboard(),
+        this.fetchEvents(),
+      ])
+    },
+    async addEventImage (eventId, payload) {
+      const result = await apiRequest(`/bureau/events/${eventId}/images`, {
+        body: JSON.stringify(payload),
+        method: 'POST',
+      })
+      await this.fetchEvents()
+      return result
+    },
+    async updateEventImage (eventId, imageId, payload) {
+      const result = await apiRequest(`/bureau/events/${eventId}/images/${imageId}`, {
+        body: JSON.stringify(payload),
+        method: 'PATCH',
+      })
+      await this.fetchEvents()
+      return result
+    },
+    async deleteEventImage (eventId, imageId) {
+      await apiRequest(`/bureau/events/${eventId}/images/${imageId}`, {
+        method: 'DELETE',
+      })
+      await this.fetchEvents()
     },
   },
 })

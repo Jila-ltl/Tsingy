@@ -1,8 +1,15 @@
-import { ProfessionType } from '@prisma/client'
+import prismaPkg from '@prisma/client'
 import { Router } from 'express'
 import { z } from 'zod'
+import { listEventImagesMap } from '../lib/event-gallery-storage.js'
 import { prisma } from '../lib/prisma.js'
 import { authenticate } from '../middleware/auth.js'
+
+const {
+  bureauevent_status: EventStatus,
+  memberprofile_professionType: ProfessionType,
+  user_role: UserRole,
+} = prismaPkg
 
 const router = Router()
 
@@ -53,15 +60,15 @@ router.use(authenticate)
 router.get('/dashboard', async (req, res, next) => {
   try {
     const [procurations, reclamations, certificates] = await Promise.all([
-      prisma.procurationRequest.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } }),
+      prisma.procurationrequest.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } }),
       prisma.reclamation.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } }),
-      prisma.certificateSubmission.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } }),
+      prisma.certificatesubmission.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } }),
     ])
 
     res.json({
       certificates,
       procurations,
-      profile: req.user.profile,
+      profile: req.user.memberprofile,
       reclamations,
       stats: {
         certificates: certificates.length,
@@ -74,8 +81,38 @@ router.get('/dashboard', async (req, res, next) => {
   }
 })
 
+router.get('/events', async (req, res, next) => {
+  try {
+    const where = req.user.role === UserRole.ADMIN
+      ? {}
+      : { status: { in: [EventStatus.PUBLISHED, EventStatus.ARCHIVED] } }
+    const [events, imagesMap] = await Promise.all([
+      prisma.bureauevent.findMany({
+        where,
+        orderBy: [
+          { eventDate: 'desc' },
+          { createdAt: 'desc' },
+        ],
+      }),
+      listEventImagesMap(),
+    ])
+
+    res.json(events.map(event => ({
+      date: event.eventDate,
+      description: event.description,
+      id: event.id,
+      imageData: imagesMap[event.id] || [],
+      location: event.location,
+      status: event.status,
+      title: event.title,
+    })))
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.get('/me/profile', async (req, res) => {
-  res.json(req.user.profile)
+  res.json(req.user.memberprofile)
 })
 
 router.patch('/me/profile', async (req, res, next) => {
@@ -85,7 +122,7 @@ router.patch('/me/profile', async (req, res, next) => {
       where: { id: req.user.id },
       data: {
         email: payload.email || req.user.email,
-        profile: {
+        memberprofile: {
           update: {
             address: payload.address ?? null,
             arrivalDate: payload.arrivalDate ? new Date(payload.arrivalDate) : null,
@@ -104,10 +141,10 @@ router.patch('/me/profile', async (req, res, next) => {
           },
         },
       },
-      include: { profile: true },
+      include: { memberprofile: true },
     })
 
-    res.json(updated.profile)
+    res.json(updated.memberprofile)
   } catch (error) {
     next(error)
   }
@@ -115,7 +152,7 @@ router.patch('/me/profile', async (req, res, next) => {
 
 router.get('/procurations', async (req, res, next) => {
   try {
-    const requests = await prisma.procurationRequest.findMany({
+    const requests = await prisma.procurationrequest.findMany({
       where: { userId: req.user.id },
       orderBy: { createdAt: 'desc' },
     })
@@ -129,7 +166,7 @@ router.get('/procurations', async (req, res, next) => {
 router.post('/procurations', async (req, res, next) => {
   try {
     const payload = procurationSchema.parse(req.body)
-    const created = await prisma.procurationRequest.create({
+    const created = await prisma.procurationrequest.create({
       data: {
         ...payload,
         requestDate: new Date(payload.requestDate),
@@ -174,7 +211,7 @@ router.post('/reclamations', async (req, res, next) => {
 
 router.get('/certificates', async (req, res, next) => {
   try {
-    const certificates = await prisma.certificateSubmission.findMany({
+    const certificates = await prisma.certificatesubmission.findMany({
       where: { userId: req.user.id },
       orderBy: { createdAt: 'desc' },
     })
@@ -188,7 +225,7 @@ router.get('/certificates', async (req, res, next) => {
 router.post('/certificates', async (req, res, next) => {
   try {
     const payload = certificateSchema.parse(req.body)
-    const created = await prisma.certificateSubmission.create({
+    const created = await prisma.certificatesubmission.create({
       data: {
         ...payload,
         userId: req.user.id,

@@ -7,147 +7,183 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  MEMBER
-  BUREAU
-  ADMIN
+model announcement {
+  id          Int       @id @default(autoincrement())
+  title       String
+  message     String    @db.Text
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  publishedBy Int
+  user        user      @relation(fields: [publishedBy], references: [id], onDelete: Cascade, map: "Announcement_publishedBy_fkey")
+
+  @@index([publishedBy], map: "Announcement_publishedBy_fkey")
 }
 
-enum RequestStatus {
+model bureauevent {
+  id          Int                @id @default(autoincrement())
+  title       String
+  description String             @db.Text
+  location    String?
+  eventDate   DateTime?
+  status      bureauevent_status @default(DRAFT)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime
+  publishedBy Int
+  user        user               @relation(fields: [publishedBy], references: [id], onDelete: Cascade, map: "BureauEvent_publishedBy_fkey")
+
+  @@index([publishedBy], map: "BureauEvent_publishedBy_fkey")
+}
+
+model bureaumember {
+  id        Int      @id @default(autoincrement())
+  fullName  String
+  title     String
+  school    String?
+  track     String?
+  level     String?
+  mission   String?
+  imageUrl  String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model carouselslide {
+  id        String   @id @default(uuid())
+  nom       String
+  poste     String
+  ecole     String?
+  filiere   String?
+  niveau    String?
+  role      String?
+  imageUrl  String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model certificatesubmission {
+  id         Int                          @id @default(autoincrement())
+  userId     Int
+  schoolYear String
+  fileName   String
+  reference  String?
+  status     certificatesubmission_status @default(PENDING)
+  createdAt  DateTime                     @default(now())
+  updatedAt  DateTime
+  user       user                         @relation(fields: [userId], references: [id], onDelete: Cascade, map: "CertificateSubmission_userId_fkey")
+
+  @@index([userId], map: "CertificateSubmission_userId_fkey")
+}
+
+model memberprofile {
+  id                  Int                          @id @default(autoincrement())
+  userId              Int                          @unique(map: "MemberProfile_userId_key")
+  firstName           String
+  lastName            String
+  phone               String?
+  address             String?
+  domicileAtMarrakech String?
+  matricule           String?                      @unique(map: "MemberProfile_matricule_key")
+  cinNumber           String?                      @unique(map: "MemberProfile_cinNumber_key")
+  birthDate           DateTime?
+  professionType      memberprofile_professionType @default(STUDENT)
+  school              String?
+  track               String?
+  jobTitle            String?
+  passportNumber      String?
+  residenceCardNumber String?
+  arrivalDate         DateTime?
+  facebookName        String?
+  imageUrl            String?
+  createdAt           DateTime                     @default(now())
+  updatedAt           DateTime
+  user                user                         @relation(fields: [userId], references: [id], onDelete: Cascade, map: "MemberProfile_userId_fkey")
+}
+
+model procurationrequest {
+  id             Int                       @id @default(autoincrement())
+  userId         Int
+  title          String
+  status         procurationrequest_status @default(PENDING)
+  ownerFirstName String
+  ownerLastName  String
+  ownerPhone     String
+  ownerAddress   String
+  ownerMatricule String
+  ownerCinNumber String
+  proxyFullName  String
+  proxyCinNumber String
+  requestDate    DateTime
+  createdAt      DateTime                  @default(now())
+  updatedAt      DateTime
+  user           user                      @relation(fields: [userId], references: [id], onDelete: Cascade, map: "ProcurationRequest_userId_fkey")
+
+  @@index([userId], map: "ProcurationRequest_userId_fkey")
+}
+
+model reclamation {
+  id        Int                @id @default(autoincrement())
+  userId    Int
+  subject   String
+  message   String             @db.Text
+  status    reclamation_status @default(PENDING)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime
+  user      user               @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Reclamation_userId_fkey")
+
+  @@index([userId], map: "Reclamation_userId_fkey")
+}
+
+model user {
+  id                    Int                     @id @default(autoincrement())
+  email                 String                  @unique(map: "User_email_key")
+  passwordHash          String
+  role                  user_role               @default(MEMBER)
+  isApproved            Boolean                 @default(false)
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime
+  announcement          announcement[]
+  bureauevent           bureauevent[]
+  certificatesubmission certificatesubmission[]
+  memberprofile         memberprofile?
+  procurationrequest    procurationrequest[]
+  reclamation           reclamation[]
+}
+
+enum procurationrequest_status {
   PENDING
   APPROVED
   REJECTED
 }
 
-enum ProfessionType {
-  STUDENT
-  WORKER
-  OTHER
+enum user_role {
+  MEMBER
+  BUREAU
+  ADMIN
 }
 
-enum EventStatus {
+enum reclamation_status {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum bureauevent_status {
   DRAFT
   PUBLISHED
   ARCHIVED
 }
 
-model User {
-  id                  Int                    @id @default(autoincrement())
-  email               String                 @unique
-  passwordHash        String
-  role                UserRole               @default(MEMBER)
-  isApproved          Boolean                @default(false)
-  createdAt           DateTime               @default(now())
-  updatedAt           DateTime               @updatedAt
-  profile             MemberProfile?
-  procurations        ProcurationRequest[]
-  reclamations        Reclamation[]
-  certificates        CertificateSubmission[]
-  publishedAnnouncements Announcement[]      @relation("AnnouncementAuthor")
-  publishedEvents     BureauEvent[]          @relation("EventAuthor")
+enum certificatesubmission_status {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
-model MemberProfile {
-  id                   Int            @id @default(autoincrement())
-  userId               Int            @unique
-  firstName            String
-  lastName             String
-  phone                String?
-  address              String?
-  domicileAtMarrakech  String?
-  matricule            String?        @unique
-  cinNumber            String?        @unique
-  birthDate            DateTime?
-  professionType       ProfessionType @default(STUDENT)
-  school               String?
-  track                String?
-  jobTitle             String?
-  passportNumber       String?
-  residenceCardNumber  String?
-  arrivalDate          DateTime?
-  facebookName         String?
-  imageUrl             String?
-  createdAt            DateTime       @default(now())
-  updatedAt            DateTime       @updatedAt
-  user                 User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model ProcurationRequest {
-  id               Int           @id @default(autoincrement())
-  userId           Int
-  title            String
-  status           RequestStatus @default(PENDING)
-  ownerFirstName   String
-  ownerLastName    String
-  ownerPhone       String
-  ownerAddress     String
-  ownerMatricule   String
-  ownerCinNumber   String
-  proxyFullName    String
-  proxyCinNumber   String
-  requestDate      DateTime
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Reclamation {
-  id           Int           @id @default(autoincrement())
-  userId       Int
-  subject      String
-  message      String        @db.Text
-  status       RequestStatus @default(PENDING)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model CertificateSubmission {
-  id             Int           @id @default(autoincrement())
-  userId         Int
-  schoolYear     String
-  fileName       String
-  reference      String?
-  status         RequestStatus @default(PENDING)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Announcement {
-  id           Int       @id @default(autoincrement())
-  title        String
-  message      String    @db.Text
-  expiresAt    DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  publishedBy  Int
-  author       User      @relation("AnnouncementAuthor", fields: [publishedBy], references: [id], onDelete: Cascade)
-}
-
-model BureauEvent {
-  id           Int         @id @default(autoincrement())
-  title        String
-  description  String      @db.Text
-  location     String?
-  eventDate    DateTime?
-  status       EventStatus @default(DRAFT)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  publishedBy  Int
-  author       User        @relation("EventAuthor", fields: [publishedBy], references: [id], onDelete: Cascade)
-}
-
-model BureauMember {
-  id           Int      @id @default(autoincrement())
-  fullName     String
-  title        String
-  school       String?
-  track        String?
-  level        String?
-  mission      String?
-  imageUrl     String?
-  sortOrder    Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+enum memberprofile_professionType {
+  STUDENT
+  WORKER
+  OTHER
 }

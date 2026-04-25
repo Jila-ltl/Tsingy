@@ -29,7 +29,7 @@ export function serializeAuthUser (user) {
     email: user.email,
     id: user.id,
     isApproved: user.isApproved,
-    profile: user.profile,
+    profile: user.memberprofile || user.profile || null,
     role: user.role,
   }
 }
