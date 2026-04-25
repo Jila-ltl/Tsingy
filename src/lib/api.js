@@ -1,6 +1,6 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api'
 
-function getHeaders(customHeaders = {}) {
+function getHeaders (customHeaders = {}) {
   const token = localStorage.getItem('tsingy-token')
 
   return {
@@ -10,7 +10,7 @@ function getHeaders(customHeaders = {}) {
   }
 }
 
-export async function apiRequest(path, options = {}) {
+export async function apiRequest (path, options = {}) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
     headers: getHeaders(options.headers),

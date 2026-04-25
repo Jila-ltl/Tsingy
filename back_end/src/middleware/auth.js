@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import { env } from '../config/env.js'
 import { prisma } from '../lib/prisma.js'
 
-export async function authenticate(req, _res, next) {
+export async function authenticate (req, _res, next) {
   try {
     const authorization = req.headers.authorization || ''
     const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : ''
@@ -16,7 +16,7 @@ export async function authenticate(req, _res, next) {
     const payload = jwt.verify(token, env.jwtSecret)
     const user = await prisma.user.findUnique({
       where: { id: payload.sub },
-      include: { profile: true }
+      include: { profile: true },
     })
 
     if (!user) {
@@ -33,7 +33,7 @@ export async function authenticate(req, _res, next) {
   }
 }
 
-export function authorize(...roles) {
+export function authorize (...roles) {
   return (req, _res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {
       const error = new Error('Forbidden')

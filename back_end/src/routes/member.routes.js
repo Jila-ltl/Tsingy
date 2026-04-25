@@ -16,18 +16,18 @@ const procurationSchema = z.object({
   proxyCinNumber: z.string().min(1),
   proxyFullName: z.string().min(1),
   requestDate: z.string().datetime().or(z.string().date()),
-  title: z.string().min(1)
+  title: z.string().min(1),
 })
 
 const reclamationSchema = z.object({
   message: z.string().min(5),
-  subject: z.string().min(1)
+  subject: z.string().min(1),
 })
 
 const certificateSchema = z.object({
   fileName: z.string().min(1),
   reference: z.string().optional(),
-  schoolYear: z.string().min(1)
+  schoolYear: z.string().min(1),
 })
 
 const profileSchema = z.object({
@@ -45,7 +45,7 @@ const profileSchema = z.object({
   professionType: z.nativeEnum(ProfessionType).optional(),
   residenceCardNumber: z.string().optional().nullable(),
   school: z.string().optional().nullable(),
-  track: z.string().optional().nullable()
+  track: z.string().optional().nullable(),
 })
 
 router.use(authenticate)
@@ -55,7 +55,7 @@ router.get('/dashboard', async (req, res, next) => {
     const [procurations, reclamations, certificates] = await Promise.all([
       prisma.procurationRequest.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } }),
       prisma.reclamation.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } }),
-      prisma.certificateSubmission.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } })
+      prisma.certificateSubmission.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } }),
     ])
 
     res.json({
@@ -66,8 +66,8 @@ router.get('/dashboard', async (req, res, next) => {
       stats: {
         certificates: certificates.length,
         procurations: procurations.length,
-        reclamations: reclamations.length
-      }
+        reclamations: reclamations.length,
+      },
     })
   } catch (error) {
     next(error)
@@ -100,11 +100,11 @@ router.patch('/me/profile', async (req, res, next) => {
             professionType: payload.professionType || undefined,
             residenceCardNumber: payload.residenceCardNumber ?? null,
             school: payload.school ?? null,
-            track: payload.track ?? null
-          }
-        }
+            track: payload.track ?? null,
+          },
+        },
       },
-      include: { profile: true }
+      include: { profile: true },
     })
 
     res.json(updated.profile)
@@ -117,7 +117,7 @@ router.get('/procurations', async (req, res, next) => {
   try {
     const requests = await prisma.procurationRequest.findMany({
       where: { userId: req.user.id },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     })
 
     res.json(requests)
@@ -133,8 +133,8 @@ router.post('/procurations', async (req, res, next) => {
       data: {
         ...payload,
         requestDate: new Date(payload.requestDate),
-        userId: req.user.id
-      }
+        userId: req.user.id,
+      },
     })
 
     res.status(201).json(created)
@@ -147,7 +147,7 @@ router.get('/reclamations', async (req, res, next) => {
   try {
     const reclamations = await prisma.reclamation.findMany({
       where: { userId: req.user.id },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     })
 
     res.json(reclamations)
@@ -162,8 +162,8 @@ router.post('/reclamations', async (req, res, next) => {
     const created = await prisma.reclamation.create({
       data: {
         ...payload,
-        userId: req.user.id
-      }
+        userId: req.user.id,
+      },
     })
 
     res.status(201).json(created)
@@ -176,7 +176,7 @@ router.get('/certificates', async (req, res, next) => {
   try {
     const certificates = await prisma.certificateSubmission.findMany({
       where: { userId: req.user.id },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     })
 
     res.json(certificates)
@@ -191,8 +191,8 @@ router.post('/certificates', async (req, res, next) => {
     const created = await prisma.certificateSubmission.create({
       data: {
         ...payload,
-        userId: req.user.id
-      }
+        userId: req.user.id,
+      },
     })
 
     res.status(201).json(created)

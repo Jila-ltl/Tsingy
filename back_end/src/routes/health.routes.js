@@ -6,7 +6,7 @@ router.get('/', (_req, res) => {
   res.json({
     message: 'Tsingy backend is running',
     status: 'ok',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   })
 })
 

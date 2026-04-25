@@ -9,7 +9,7 @@ const router = Router()
 const announcementSchema = z.object({
   expiresAt: z.string().optional(),
   message: z.string().min(5),
-  title: z.string().min(1)
+  title: z.string().min(1),
 })
 
 const eventSchema = z.object({
@@ -17,11 +17,11 @@ const eventSchema = z.object({
   eventDate: z.string().optional(),
   location: z.string().optional(),
   status: z.nativeEnum(EventStatus).optional().default(EventStatus.DRAFT),
-  title: z.string().min(1)
+  title: z.string().min(1),
 })
 
 const reviewSchema = z.object({
-  approved: z.boolean()
+  approved: z.boolean(),
 })
 
 router.use(authenticate)
@@ -35,14 +35,14 @@ router.get('/dashboard', async (_req, res, next) => {
         where: { isApproved: false, role: UserRole.MEMBER },
         include: { profile: true },
         orderBy: { createdAt: 'desc' },
-        take: 10
+        take: 10,
       }),
       prisma.procurationRequest.findMany({ orderBy: { createdAt: 'desc' }, take: 8, include: { user: { include: { profile: true } } } }),
       prisma.reclamation.findMany({ orderBy: { createdAt: 'desc' }, take: 8, include: { user: { include: { profile: true } } } }),
       prisma.certificateSubmission.findMany({ orderBy: { createdAt: 'desc' }, take: 8, include: { user: { include: { profile: true } } } }),
       prisma.announcement.findMany({ orderBy: { createdAt: 'desc' }, take: 6 }),
       prisma.bureauEvent.findMany({ orderBy: { createdAt: 'desc' }, take: 6 }),
-      prisma.bureauMember.findMany({ orderBy: { sortOrder: 'asc' } })
+      prisma.bureauMember.findMany({ orderBy: { sortOrder: 'asc' } }),
     ])
 
     res.json({
@@ -57,8 +57,8 @@ router.get('/dashboard', async (_req, res, next) => {
         announcements: announcements.length,
         members: membersCount,
         pendingApprovals: pendingMembers.length,
-        requests: procurations.length + reclamations.length + certificates.length
-      }
+        requests: procurations.length + reclamations.length + certificates.length,
+      },
     })
   } catch (error) {
     next(error)
@@ -70,7 +70,7 @@ router.get('/directory', async (_req, res, next) => {
     const members = await prisma.user.findMany({
       where: { role: UserRole.MEMBER },
       include: { profile: true },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     })
 
     res.json(members)
@@ -87,8 +87,8 @@ router.post('/announcements', async (req, res, next) => {
         expiresAt: payload.expiresAt ? new Date(payload.expiresAt) : null,
         message: payload.message,
         publishedBy: req.user.id,
-        title: payload.title
-      }
+        title: payload.title,
+      },
     })
 
     res.status(201).json(created)
@@ -107,8 +107,8 @@ router.post('/events', async (req, res, next) => {
         location: payload.location || null,
         publishedBy: req.user.id,
         status: payload.status,
-        title: payload.title
-      }
+        title: payload.title,
+      },
     })
 
     res.status(201).json(created)
@@ -124,7 +124,7 @@ router.patch('/members/:id/review', async (req, res, next) => {
     const updated = await prisma.user.update({
       where: { id: memberId },
       data: { isApproved: payload.approved },
-      include: { profile: true }
+      include: { profile: true },
     })
 
     res.json(updated)

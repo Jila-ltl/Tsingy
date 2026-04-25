@@ -9,8 +9,8 @@
 
       <div
         v-for="item in annoncesValides"
-        :key="item.id"
         :id="item.id"
+        :key="item.id"
         class="flex gap-6 bg-white p-6 rounded-xl shadow mb-8 hover:bg-gray-50 transition"
       >
 
@@ -64,46 +64,46 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { annoncesValides } from '@/data/annonces'
+  import { computed, onMounted } from 'vue'
+  import { useRoute } from 'vue-router'
+  import { annoncesValides } from '@/data/annonces'
 
-const route = useRoute()
+  const route = useRoute()
 
-// 📌 Fonctions date
-const getDay = (date) => new Date(date).getDate().toString().padStart(2, '0')
+  // 📌 Fonctions date
+  const getDay = date => new Date(date).getDate().toString().padStart(2, '0')
 
-const getMonth = (date) =>
-  new Date(date).toLocaleString('fr-FR', { month: 'short' })
-
-const getYear = (date) => new Date(date).getFullYear()
-
-// 📌 Scroll vers l’annonce
-onMounted(() => {
-  if (route.hash) {
-    const el = document.querySelector(route.hash)
-    if (el) {
-      setTimeout(() => {
-        el.scrollIntoView({ behavior: 'smooth' })
-      }, 200)
-    }
+  function getMonth (date) {
+    return new Date(date).toLocaleString('fr-FR', { month: 'short' })
   }
-})
-import { computed } from 'vue'
 
-const today = new Date()
+  const getYear = date => new Date(date).getFullYear()
 
-const annoncesFiltrees = computed(() => {
-  const today = new Date()
-  today.setHours(0,0,0,0)
-
-  return annonces.filter(a => {
-    const dateAnnonce = new Date(a.date)
-    dateAnnonce.setHours(0,0,0,0)
-
-    return dateAnnonce >= today
+  // 📌 Scroll vers l’annonce
+  onMounted(() => {
+    if (route.hash) {
+      const el = document.querySelector(route.hash)
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth' })
+        }, 200)
+      }
+    }
   })
-})
+
+  const today = new Date()
+
+  const annoncesFiltrees = computed(() => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    return annonces.filter(a => {
+      const dateAnnonce = new Date(a.date)
+      dateAnnonce.setHours(0, 0, 0, 0)
+
+      return dateAnnonce >= today
+    })
+  })
 </script>
 
 <style scoped>

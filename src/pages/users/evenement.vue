@@ -96,8 +96,8 @@
                     >
                       <img
                         :alt="preview.name"
-                        :src="preview.url"
                         class="h-32 w-full object-cover"
+                        :src="preview.url"
                       >
                     </div>
                   </div>
@@ -131,8 +131,8 @@
                 <div class="relative overflow-hidden">
                   <img
                     :alt="item.name"
-                    :src="item.url"
                     class="h-56 w-full object-cover transition duration-300 group-hover:scale-105"
+                    :src="item.url"
                   >
                   <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent opacity-80" />
                   <div class="absolute bottom-4 left-4 rounded-full bg-white/85 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-green-700 backdrop-blur">
@@ -173,8 +173,8 @@
         <div class="relative overflow-hidden rounded-[30px]     p-3    ">
           <img
             :alt="showDialog.image[showDialog.index]?.name || 'Evenement image'"
-            :src="showDialog.image[showDialog.index]?.url"
             class="h-[78vh] w-[82vw] rounded-[24px] object-contain bg-black"
+            :src="showDialog.image[showDialog.index]?.url"
           >
 
           <div class="absolute bottom-6 left-6 rounded-full  px-4 py-2 text-sm font-semibold text-black">
@@ -204,118 +204,118 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+  import { ref } from 'vue'
 
-const events = ref([
-  {
-    name: 'Assemblee Generale',
-    id: 1,
-    date: '2024-06-01',
-    isSelect: true,
-    description: 'Reunion generale annuelle avec presentation des resultats, perspectives et prises de decision importantes pour la communaute.',
-    imageData: Array.from({ length: 18 }, (_, index) => ({
-      name: `assemblee-${index + 1}.jpg`,
-      type: 'image/jpeg',
-      url: `https://picsum.photos/id/${index + 21}/900/650`,
-    })),
-  },
-  {
-    name: 'Conference Tech',
-    id: 2,
-    date: '2024-07-15',
-    isSelect: false,
-    description: 'Conference consacree aux nouvelles technologies, a l innovation et a la place du numerique dans les projets du groupe.',
-    imageData: Array.from({ length: 18 }, (_, index) => ({
-      name: `tech-${index + 1}.jpg`,
-      type: 'image/jpeg',
-      url: `https://picsum.photos/id/${index + 60}/900/650`,
-    })),
-  },
-  {
-    name: 'Workshop Design',
-    id: 3,
-    date: '2024-08-10',
-    isSelect: false,
-    description: 'Atelier pratique autour du design UI et UX avec demonstrations, exercices collaboratifs et revue de prototypes.',
-    imageData: Array.from({ length: 18 }, (_, index) => ({
-      name: `design-${index + 1}.jpg`,
-      type: 'image/jpeg',
-      url: `https://picsum.photos/id/${index + 100}/900/650`,
-    })),
-  },
-  {
-    name: 'Seminaire Marketing',
-    id: 4,
-    date: '2024-09-05',
-    isSelect: false,
-    description: 'Seminaire centre sur la communication, les strategies marketing digitales et la croissance de l image du groupe.',
-    imageData: Array.from({ length: 18 }, (_, index) => ({
-      name: `marketing-${index + 1}.jpg`,
-      type: 'image/jpeg',
-      url: `https://picsum.photos/id/${index + 140}/900/650`,
-    })),
-  },
-  {
-    name: 'Hackathon Dev',
-    id: 5,
-    date: '2024-10-20',
-    isSelect: false,
-    description: 'Competition de developpement en equipe avec des idees innovantes, du prototypage rapide et une restitution finale en public.',
-    imageData: Array.from({ length: 18 }, (_, index) => ({
-      name: `hackathon-${index + 1}.jpg`,
-      type: 'image/jpeg',
-      url: `https://picsum.photos/id/${index + 180}/900/650`,
-    })),
-  },
-])
+  const events = ref([
+    {
+      name: 'Assemblee Generale',
+      id: 1,
+      date: '2024-06-01',
+      isSelect: true,
+      description: 'Reunion generale annuelle avec presentation des resultats, perspectives et prises de decision importantes pour la communaute.',
+      imageData: Array.from({ length: 18 }, (_, index) => ({
+        name: `assemblee-${index + 1}.jpg`,
+        type: 'image/jpeg',
+        url: `https://picsum.photos/id/${index + 21}/900/650`,
+      })),
+    },
+    {
+      name: 'Conference Tech',
+      id: 2,
+      date: '2024-07-15',
+      isSelect: false,
+      description: 'Conference consacree aux nouvelles technologies, a l innovation et a la place du numerique dans les projets du groupe.',
+      imageData: Array.from({ length: 18 }, (_, index) => ({
+        name: `tech-${index + 1}.jpg`,
+        type: 'image/jpeg',
+        url: `https://picsum.photos/id/${index + 60}/900/650`,
+      })),
+    },
+    {
+      name: 'Workshop Design',
+      id: 3,
+      date: '2024-08-10',
+      isSelect: false,
+      description: 'Atelier pratique autour du design UI et UX avec demonstrations, exercices collaboratifs et revue de prototypes.',
+      imageData: Array.from({ length: 18 }, (_, index) => ({
+        name: `design-${index + 1}.jpg`,
+        type: 'image/jpeg',
+        url: `https://picsum.photos/id/${index + 100}/900/650`,
+      })),
+    },
+    {
+      name: 'Seminaire Marketing',
+      id: 4,
+      date: '2024-09-05',
+      isSelect: false,
+      description: 'Seminaire centre sur la communication, les strategies marketing digitales et la croissance de l image du groupe.',
+      imageData: Array.from({ length: 18 }, (_, index) => ({
+        name: `marketing-${index + 1}.jpg`,
+        type: 'image/jpeg',
+        url: `https://picsum.photos/id/${index + 140}/900/650`,
+      })),
+    },
+    {
+      name: 'Hackathon Dev',
+      id: 5,
+      date: '2024-10-20',
+      isSelect: false,
+      description: 'Competition de developpement en equipe avec des idees innovantes, du prototypage rapide et une restitution finale en public.',
+      imageData: Array.from({ length: 18 }, (_, index) => ({
+        name: `hackathon-${index + 1}.jpg`,
+        type: 'image/jpeg',
+        url: `https://picsum.photos/id/${index + 180}/900/650`,
+      })),
+    },
+  ])
 
-const selectedEvent = ref(events.value.find(event => event.isSelect) ?? events.value[0])
-const showDialog = ref({ show: false, index: 0, image: [] })
+  const selectedEvent = ref(events.value.find(event => event.isSelect) ?? events.value[0])
+  const showDialog = ref({ show: false, index: 0, image: [] })
 
-function selecteItem(index, item) {
-  showDialog.value.show = true
-  showDialog.value.index = index
-  showDialog.value.image = item.imageData
-}
-
-function changeStatus(item) {
-  for (const eventItem of events.value) {
-    eventItem.isSelect = false
+  function selecteItem (index, item) {
+    showDialog.value.show = true
+    showDialog.value.index = index
+    showDialog.value.image = item.imageData
   }
 
-  item.isSelect = true
-  selectedEvent.value = item
-}
+  function changeStatus (item) {
+    for (const eventItem of events.value) {
+      eventItem.isSelect = false
+    }
 
-function nextImage() {
-  if (showDialog.value.index < showDialog.value.image.length - 1) {
-    showDialog.value.index += 1
-    return
+    item.isSelect = true
+    selectedEvent.value = item
   }
 
-  showDialog.value.index = 0
-}
+  function nextImage () {
+    if (showDialog.value.index < showDialog.value.image.length - 1) {
+      showDialog.value.index += 1
+      return
+    }
 
-function prevImage() {
-  if (showDialog.value.index > 0) {
-    showDialog.value.index -= 1
-    return
+    showDialog.value.index = 0
   }
 
-  showDialog.value.index = showDialog.value.image.length - 1
-}
+  function prevImage () {
+    if (showDialog.value.index > 0) {
+      showDialog.value.index -= 1
+      return
+    }
 
-function closeDialog() {
-  showDialog.value.show = false
-}
+    showDialog.value.index = showDialog.value.image.length - 1
+  }
 
-function formatDate(date) {
-  return new Intl.DateTimeFormat('fr-FR', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date(date))
-}
+  function closeDialog () {
+    showDialog.value.show = false
+  }
+
+  function formatDate (date) {
+    return new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    }).format(new Date(date))
+  }
 </script>
 
 <style scoped>

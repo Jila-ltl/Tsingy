@@ -14,7 +14,7 @@ app.use(morgan('dev'))
 app.get('/', (_req, res) => {
   res.json({
     message: 'Welcome to the Tsingy Node.js backend',
-    prisma: 'connected when DATABASE_URL is configured'
+    prisma: 'connected when DATABASE_URL is configured',
   })
 })
 

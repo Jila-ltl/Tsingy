@@ -80,6 +80,7 @@
         1024: { slidesPerView: 2.2, spaceBetween: 28 }
       }"
       :centered-slides="true"
+      class="bureau-swiper overflow-visible pb-6 sm:pb-8"
       :coverflow-effect="{
         depth: 120,
         modifier: 1,
@@ -89,7 +90,6 @@
         stretch: 0
       }"
       :effect="'coverflow'"
-      class="bureau-swiper overflow-visible pb-6 sm:pb-8"
       :grab-cursor="true"
       :loop="true"
       :modules="modules"
@@ -127,7 +127,7 @@
         </article>
       </swiper-slide>
     </swiper>
-      class="bureau-swiper overflow-visible pb-6 sm:pb-8"
+    class="bureau-swiper overflow-visible pb-6 sm:pb-8"
 
     <div class="active-member-panel mt-2 grid gap-5 rounded-[1.5rem] border border-emerald-100 bg-gradient-to-br from-white to-emerald-50/60 p-4 shadow-[0_20px_60px_rgba(16,185,129,0.08)] sm:mt-4 sm:rounded-[2rem] sm:p-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center md:p-8">
       <div>

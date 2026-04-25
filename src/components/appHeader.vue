@@ -30,7 +30,7 @@
           type="button"
           @click="redirectTo(item.url)"
         >
-          <span :class="item.ico" class="text-xl" />
+          <span class="text-xl" :class="item.ico" />
           <span>{{ item.label }}</span>
         </button>
 
@@ -40,10 +40,10 @@
       </nav>
 
       <button
-        class="menu-toggle inline-flex h-11 w-11 items-center justify-center rounded-full lg:hidden"
-        type="button"
         :aria-expanded="mobileMenuOpen ? 'true' : 'false'"
         :aria-label="mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'"
+        class="menu-toggle inline-flex h-11 w-11 items-center justify-center rounded-full lg:hidden"
+        type="button"
         @click="toggleMobileMenu"
       >
         <span :class="mobileMenuOpen ? 'mdi mdi-close text-2xl' : 'mdi mdi-menu text-2xl'" />
@@ -73,7 +73,7 @@
               @click="redirectTo(item.url)"
             >
               <span class="mobile-link__content">
-                <span :class="item.ico" class="text-2xl" />
+                <span class="text-2xl" :class="item.ico" />
                 <span>{{ item.label }}</span>
               </span>
               <span class="mdi mdi-arrow-right text-lg text-white/40" />
@@ -92,8 +92,8 @@
 <script setup>
   import {
     nextTick,
-    onMounted,
     onBeforeUnmount,
+    onMounted,
     ref,
     watch,
   } from 'vue'
@@ -158,7 +158,7 @@
     router.push('/auth/signin')
   }
 
-  watch(mobileMenuOpen, (isOpen) => {
+  watch(mobileMenuOpen, isOpen => {
     document.body.style.overflow = isOpen ? 'hidden' : ''
   })
 

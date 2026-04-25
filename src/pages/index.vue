@@ -8,9 +8,9 @@
       ref="heroSectionRef"
       class="hero-section relative isolate flex min-h-screen items-center overflow-hidden px-4 py-10 sm:px-6 md:px-10 lg:px-16"
     >
-      <div class="hero-mesh"></div>
-      <div class="hero-orb hero-orb--left"></div>
-      <div class="hero-orb hero-orb--right"></div>
+      <div class="hero-mesh" />
+      <div class="hero-orb hero-orb--left" />
+      <div class="hero-orb hero-orb--right" />
       <div class="hero-grid relative z-10 mx-auto grid w-full max-w-7xl items-center gap-8 sm:gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
         <div class="max-w-2xl">
           <p
@@ -57,7 +57,7 @@
           ref="heroVisualRef"
           class="hero-card interactive-card relative ml-auto w-full max-w-xl overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/10 p-3 shadow-[0_30px_120px_rgba(0,0,0,0.35)] backdrop-blur-md sm:rounded-[2rem] sm:p-4"
         >
-          <div class="absolute inset-0 bg-gradient-to-br from-emerald-300/20 via-transparent to-amber-200/10"></div>
+          <div class="absolute inset-0 bg-gradient-to-br from-emerald-300/20 via-transparent to-amber-200/10" />
           <div class="floating-chip floating-chip--one">Solidarité</div>
           <div class="floating-chip floating-chip--two">Culture</div>
           <div class="floating-chip floating-chip--three">Marrakech</div>
@@ -99,7 +99,7 @@
       >
         <span class="block">Scroll down</span>
         <span class="scroll-cue__mouse mx-auto mt-3 flex h-14 w-8 items-start justify-center rounded-full border border-white/30 p-2">
-          <span class="scroll-cue__dot block h-2.5 w-2.5 rounded-full bg-emerald-300"></span>
+          <span class="scroll-cue__dot block h-2.5 w-2.5 rounded-full bg-emerald-300" />
         </span>
       </button>
 
@@ -127,7 +127,7 @@
         </div>
 
         <div class="interactive-card rounded-[1.5rem] bg-white p-5 shadow-[0_20px_60px_rgba(0,0,0,0.08)] sm:rounded-[2rem] sm:p-8 md:p-12">
-          <div class="section-glint"></div>
+          <div class="section-glint" />
           <p class="text-xs font-semibold uppercase tracking-[0.35em] text-emerald-700">
             Qui sommes-nous
           </p>
@@ -356,8 +356,6 @@
       </div>
     </section>
 
-
-
     <section
       id="espace_membre"
       class="reveal-section bg-[#f6f2eb] px-4 py-16 text-stone-900 sm:px-6 sm:py-20 md:px-10 md:py-24 lg:px-16"
@@ -468,288 +466,288 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import MyCarousel from '../components/Carousel.vue'
+  import gsap from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  import { onMounted, onUnmounted, ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import MyCarousel from '../components/Carousel.vue'
 
-gsap.registerPlugin(ScrollTrigger)
+  gsap.registerPlugin(ScrollTrigger)
 
-const router = useRouter()
+  const router = useRouter()
 
-const pageRef = ref(null)
-const aboutRef = ref(null)
-const heroSectionRef = ref(null)
-const heroKickerRef = ref(null)
-const heroTitleRef = ref(null)
-const heroTextRef = ref(null)
-const heroActionsRef = ref(null)
-const heroVisualRef = ref(null)
-const scrollCueRef = ref(null)
+  const pageRef = ref(null)
+  const aboutRef = ref(null)
+  const heroSectionRef = ref(null)
+  const heroKickerRef = ref(null)
+  const heroTitleRef = ref(null)
+  const heroTextRef = ref(null)
+  const heroActionsRef = ref(null)
+  const heroVisualRef = ref(null)
+  const scrollCueRef = ref(null)
 
-let animationContext
-const cleanupCallbacks = []
+  let animationContext
+  const cleanupCallbacks = []
 
-const scrollToSection = sectionRef => {
-  sectionRef?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-}
+  function scrollToSection (sectionRef) {
+    sectionRef?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
-onMounted(() => {
-  animationContext = gsap.context(() => {
-    const scroller = pageRef.value
-    const revealSections = gsap.utils.toArray('.reveal-section')
-    const interactiveCards = gsap.utils.toArray('.interactive-card')
-    const pills = gsap.utils.toArray('.interactive-pill')
+  onMounted(() => {
+    animationContext = gsap.context(() => {
+      const scroller = pageRef.value
+      const revealSections = gsap.utils.toArray('.reveal-section')
+      const interactiveCards = gsap.utils.toArray('.interactive-card')
+      const pills = gsap.utils.toArray('.interactive-pill')
 
-    gsap.set(
-      [
-        heroKickerRef.value,
-        heroTitleRef.value,
-        heroTextRef.value,
-        heroActionsRef.value,
-        heroVisualRef.value,
-        scrollCueRef.value,
-      ],
-      { autoAlpha: 0 },
-    )
-
-    const heroTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } })
-
-    heroTimeline
-      .fromTo(heroKickerRef.value, { y: 28 }, { autoAlpha: 1, duration: 0.6, y: 0 })
-      .fromTo(heroTitleRef.value, { y: 54 }, { autoAlpha: 1, duration: 0.95, y: 0 }, '-=0.2')
-      .fromTo(heroTextRef.value, { y: 32 }, { autoAlpha: 1, duration: 0.75, y: 0 }, '-=0.45')
-      .fromTo(heroActionsRef.value, { y: 26 }, { autoAlpha: 1, duration: 0.7, y: 0 }, '-=0.4')
-      .fromTo(
-        heroVisualRef.value,
-        { autoAlpha: 0, rotate: -4, scale: 0.92, y: 40 },
-        { autoAlpha: 1, duration: 1.1, rotate: 0, scale: 1, y: 0 },
-        '-=0.85',
+      gsap.set(
+        [
+          heroKickerRef.value,
+          heroTitleRef.value,
+          heroTextRef.value,
+          heroActionsRef.value,
+          heroVisualRef.value,
+          scrollCueRef.value,
+        ],
+        { autoAlpha: 0 },
       )
-      .fromTo(scrollCueRef.value, { y: -8 }, { autoAlpha: 1, duration: 0.55, y: 0 }, '-=0.35')
 
-    gsap.to('.hero-flag', {
-      duration: 4.5,
-      ease: 'sine.inOut',
-      repeat: -1,
-      rotation: 2,
-      transformOrigin: '50% 20%',
-      y: -12,
-      yoyo: true,
-    })
+      const heroTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } })
 
-    gsap.to('.hero-orb--left', {
-      duration: 7,
-      ease: 'sine.inOut',
-      repeat: -1,
-      x: 30,
-      y: -18,
-      yoyo: true,
-    })
+      heroTimeline
+        .fromTo(heroKickerRef.value, { y: 28 }, { autoAlpha: 1, duration: 0.6, y: 0 })
+        .fromTo(heroTitleRef.value, { y: 54 }, { autoAlpha: 1, duration: 0.95, y: 0 }, '-=0.2')
+        .fromTo(heroTextRef.value, { y: 32 }, { autoAlpha: 1, duration: 0.75, y: 0 }, '-=0.45')
+        .fromTo(heroActionsRef.value, { y: 26 }, { autoAlpha: 1, duration: 0.7, y: 0 }, '-=0.4')
+        .fromTo(
+          heroVisualRef.value,
+          { autoAlpha: 0, rotate: -4, scale: 0.92, y: 40 },
+          { autoAlpha: 1, duration: 1.1, rotate: 0, scale: 1, y: 0 },
+          '-=0.85',
+        )
+        .fromTo(scrollCueRef.value, { y: -8 }, { autoAlpha: 1, duration: 0.55, y: 0 }, '-=0.35')
 
-    gsap.to('.hero-orb--right', {
-      duration: 8,
-      ease: 'sine.inOut',
-      repeat: -1,
-      x: -25,
-      y: 24,
-      yoyo: true,
-    })
+      gsap.to('.hero-flag', {
+        duration: 4.5,
+        ease: 'sine.inOut',
+        repeat: -1,
+        rotation: 2,
+        transformOrigin: '50% 20%',
+        y: -12,
+        yoyo: true,
+      })
 
-    gsap.to('.floating-chip--one', {
-      duration: 4.4,
-      ease: 'sine.inOut',
-      repeat: -1,
-      rotation: -4,
-      y: -10,
-      yoyo: true,
-    })
+      gsap.to('.hero-orb--left', {
+        duration: 7,
+        ease: 'sine.inOut',
+        repeat: -1,
+        x: 30,
+        y: -18,
+        yoyo: true,
+      })
 
-    gsap.to('.floating-chip--two', {
-      duration: 5.2,
-      ease: 'sine.inOut',
-      repeat: -1,
-      rotation: 3,
-      x: 8,
-      y: 12,
-      yoyo: true,
-    })
+      gsap.to('.hero-orb--right', {
+        duration: 8,
+        ease: 'sine.inOut',
+        repeat: -1,
+        x: -25,
+        y: 24,
+        yoyo: true,
+      })
 
-    gsap.to('.floating-chip--three', {
-      duration: 4.8,
-      ease: 'sine.inOut',
-      repeat: -1,
-      rotation: 5,
-      x: -6,
-      y: -8,
-      yoyo: true,
-    })
+      gsap.to('.floating-chip--one', {
+        duration: 4.4,
+        ease: 'sine.inOut',
+        repeat: -1,
+        rotation: -4,
+        y: -10,
+        yoyo: true,
+      })
 
-    gsap.to('.scroll-cue__dot', {
-      duration: 1.15,
-      ease: 'power1.inOut',
-      opacity: 0.35,
-      repeat: -1,
-      y: 18,
-      yoyo: true,
-    })
+      gsap.to('.floating-chip--two', {
+        duration: 5.2,
+        ease: 'sine.inOut',
+        repeat: -1,
+        rotation: 3,
+        x: 8,
+        y: 12,
+        yoyo: true,
+      })
 
-    gsap.to('.about-image-secondary', {
-      ease: 'none',
-      scrollTrigger: {
-        end: 'bottom top',
-        scroller,
-        scrub: true,
-        start: 'top bottom',
-        trigger: aboutRef.value,
-      },
-      y: -45,
-    })
+      gsap.to('.floating-chip--three', {
+        duration: 4.8,
+        ease: 'sine.inOut',
+        repeat: -1,
+        rotation: 5,
+        x: -6,
+        y: -8,
+        yoyo: true,
+      })
 
-    gsap.to('.about-image-main', {
-      ease: 'none',
-      scale: 1.08,
-      scrollTrigger: {
-        end: 'bottom top',
-        scroller,
-        scrub: true,
-        start: 'top bottom',
-        trigger: aboutRef.value,
-      },
-      y: -20,
-    })
+      gsap.to('.scroll-cue__dot', {
+        duration: 1.15,
+        ease: 'power1.inOut',
+        opacity: 0.35,
+        repeat: -1,
+        y: 18,
+        yoyo: true,
+      })
 
-    gsap.to('.hero-grid', {
-      ease: 'none',
-      scrollTrigger: {
-        end: 'bottom top',
-        scroller,
-        scrub: true,
-        start: 'top top',
-        trigger: heroSectionRef.value,
-      },
-      y: 90,
-    })
-
-    gsap.to('.hero-mesh', {
-      ease: 'none',
-      opacity: 0.2,
-      scrollTrigger: {
-        end: 'bottom top',
-        scroller,
-        scrub: true,
-        start: 'top top',
-        trigger: heroSectionRef.value,
-      },
-      scale: 1.08,
-    })
-
-    gsap.to(scrollCueRef.value, {
-      autoAlpha: 0,
-      ease: 'none',
-      scrollTrigger: {
-        end: '40% top',
-        scroller,
-        scrub: true,
-        start: 'top top',
-        trigger: heroSectionRef.value,
-      },
-      y: 40,
-    })
-
-    revealSections.forEach(section => {
-      gsap.fromTo(
-        section,
-        { autoAlpha: 0, y: 80, scale: 0.98 },
-        {
-          autoAlpha: 1,
-          duration: 1,
-          ease: 'power3.out',
-          scale: 1,
-          scrollTrigger: {
-            scroller,
-            start: 'top 78%',
-            toggleActions: 'play none none reverse',
-            trigger: section,
-          },
-          y: 0,
+      gsap.to('.about-image-secondary', {
+        ease: 'none',
+        scrollTrigger: {
+          end: 'bottom top',
+          scroller,
+          scrub: true,
+          start: 'top bottom',
+          trigger: aboutRef.value,
         },
-      )
-    })
-
-    interactiveCards.forEach(card => {
-      const onMove = event => {
-        const bounds = card.getBoundingClientRect()
-        const offsetX = event.clientX - bounds.left
-        const offsetY = event.clientY - bounds.top
-        const rotateY = ((offsetX / bounds.width) - 0.5) * 10
-        const rotateX = -((offsetY / bounds.height) - 0.5) * 10
-
-        gsap.to(card, {
-          duration: 0.35,
-          ease: 'power2.out',
-          rotateX,
-          rotateY,
-          transformPerspective: 900,
-          x: rotateY * 0.6,
-          y: rotateX * -0.6,
-        })
-      }
-
-      const onLeave = () => {
-        gsap.to(card, {
-          duration: 0.45,
-          ease: 'power3.out',
-          rotateX: 0,
-          rotateY: 0,
-          x: 0,
-          y: 0,
-        })
-      }
-
-      card.addEventListener('mousemove', onMove)
-      card.addEventListener('mouseleave', onLeave)
-      cleanupCallbacks.push(() => {
-        card.removeEventListener('mousemove', onMove)
-        card.removeEventListener('mouseleave', onLeave)
+        y: -45,
       })
-    })
 
-    pills.forEach(pill => {
-      const onEnter = () => {
-        gsap.to(pill, {
-          duration: 0.3,
-          ease: 'power2.out',
-          scale: 1.04,
-          y: -3,
-        })
-      }
-
-      const onLeave = () => {
-        gsap.to(pill, {
-          duration: 0.3,
-          ease: 'power2.out',
-          scale: 1,
-          y: 0,
-        })
-      }
-
-      pill.addEventListener('mouseenter', onEnter)
-      pill.addEventListener('mouseleave', onLeave)
-      cleanupCallbacks.push(() => {
-        pill.removeEventListener('mouseenter', onEnter)
-        pill.removeEventListener('mouseleave', onLeave)
+      gsap.to('.about-image-main', {
+        ease: 'none',
+        scale: 1.08,
+        scrollTrigger: {
+          end: 'bottom top',
+          scroller,
+          scrub: true,
+          start: 'top bottom',
+          trigger: aboutRef.value,
+        },
+        y: -20,
       })
-    })
-  }, pageRef.value)
-})
 
-onUnmounted(() => {
-  cleanupCallbacks.forEach(cleanup => cleanup())
-  cleanupCallbacks.length = 0
-  animationContext?.revert()
-})
+      gsap.to('.hero-grid', {
+        ease: 'none',
+        scrollTrigger: {
+          end: 'bottom top',
+          scroller,
+          scrub: true,
+          start: 'top top',
+          trigger: heroSectionRef.value,
+        },
+        y: 90,
+      })
+
+      gsap.to('.hero-mesh', {
+        ease: 'none',
+        opacity: 0.2,
+        scrollTrigger: {
+          end: 'bottom top',
+          scroller,
+          scrub: true,
+          start: 'top top',
+          trigger: heroSectionRef.value,
+        },
+        scale: 1.08,
+      })
+
+      gsap.to(scrollCueRef.value, {
+        autoAlpha: 0,
+        ease: 'none',
+        scrollTrigger: {
+          end: '40% top',
+          scroller,
+          scrub: true,
+          start: 'top top',
+          trigger: heroSectionRef.value,
+        },
+        y: 40,
+      })
+
+      for (const section of revealSections) {
+        gsap.fromTo(
+          section,
+          { autoAlpha: 0, y: 80, scale: 0.98 },
+          {
+            autoAlpha: 1,
+            duration: 1,
+            ease: 'power3.out',
+            scale: 1,
+            scrollTrigger: {
+              scroller,
+              start: 'top 78%',
+              toggleActions: 'play none none reverse',
+              trigger: section,
+            },
+            y: 0,
+          },
+        )
+      }
+
+      for (const card of interactiveCards) {
+        const onMove = event => {
+          const bounds = card.getBoundingClientRect()
+          const offsetX = event.clientX - bounds.left
+          const offsetY = event.clientY - bounds.top
+          const rotateY = ((offsetX / bounds.width) - 0.5) * 10
+          const rotateX = -((offsetY / bounds.height) - 0.5) * 10
+
+          gsap.to(card, {
+            duration: 0.35,
+            ease: 'power2.out',
+            rotateX,
+            rotateY,
+            transformPerspective: 900,
+            x: rotateY * 0.6,
+            y: rotateX * -0.6,
+          })
+        }
+
+        const onLeave = () => {
+          gsap.to(card, {
+            duration: 0.45,
+            ease: 'power3.out',
+            rotateX: 0,
+            rotateY: 0,
+            x: 0,
+            y: 0,
+          })
+        }
+
+        card.addEventListener('mousemove', onMove)
+        card.addEventListener('mouseleave', onLeave)
+        cleanupCallbacks.push(() => {
+          card.removeEventListener('mousemove', onMove)
+          card.removeEventListener('mouseleave', onLeave)
+        })
+      }
+
+      for (const pill of pills) {
+        const onEnter = () => {
+          gsap.to(pill, {
+            duration: 0.3,
+            ease: 'power2.out',
+            scale: 1.04,
+            y: -3,
+          })
+        }
+
+        const onLeave = () => {
+          gsap.to(pill, {
+            duration: 0.3,
+            ease: 'power2.out',
+            scale: 1,
+            y: 0,
+          })
+        }
+
+        pill.addEventListener('mouseenter', onEnter)
+        pill.addEventListener('mouseleave', onLeave)
+        cleanupCallbacks.push(() => {
+          pill.removeEventListener('mouseenter', onEnter)
+          pill.removeEventListener('mouseleave', onLeave)
+        })
+      }
+    }, pageRef.value)
+  })
+
+  onUnmounted(() => {
+    for (const cleanup of cleanupCallbacks) cleanup()
+    cleanupCallbacks.length = 0
+    animationContext?.revert()
+  })
 </script>
 
 <style scoped>
