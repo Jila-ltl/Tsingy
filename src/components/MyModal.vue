@@ -14,7 +14,7 @@
           <img
             :alt="`Photo de ${fullName}`"
             class="h-56 w-full rounded-lg object-cover shadow-lg"
-            :src="member.photo"
+            :src="member.photo || member.imageUrl || '/img/member.png'"
           >
           <v-chip
             color="red"
@@ -62,7 +62,7 @@
                 Domicile
               </p>
               <p class="mt-2 text-base font-bold text-black">
-                {{ member.domicile }}
+                {{ member.domicile || member.domicile_a_marrakech || member.address || 'Non renseigne' }}
               </p>
             </div>
 
@@ -71,7 +71,7 @@
                 Ecole
               </p>
               <p class="mt-2 text-base font-bold text-black">
-                {{ member.ecole }}
+                {{ member.ecole || member.univ || member.school || 'Non renseigne' }}
               </p>
             </div>
           </div>
@@ -112,7 +112,7 @@
       return ''
     }
 
-    return `${props.member.prenom} ${props.member.nom}`
+    return [props.member.prenom, props.member.nom].filter(Boolean).join(' ')
   })
 
   const description = computed(() => {
@@ -120,7 +120,10 @@
       return ''
     }
 
-    return `${fullName.value} est un membre rattache a ${props.member.ecole} et reside a ${props.member.domicile}.`
+    const school = props.member.ecole || props.member.univ || props.member.school || 'une structure non renseignee'
+    const domicile = props.member.domicile || props.member.domicile_a_marrakech || props.member.address || 'un lieu non renseigne'
+
+    return `${fullName.value} est un membre rattache a ${school} et reside a ${domicile}.`
   })
 </script>
 

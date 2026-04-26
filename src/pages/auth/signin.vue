@@ -1,10 +1,9 @@
 <template>
-  <div id="bg_img" class="flex h-full w-full flex-row items-center justify-center">
-    <div class=" signing-shell items-center justify-center p-10 gap-10">
-        <div class="mb-10 flex flex-col gap-3 items-center justify-center p-5">
-          <div class="logo-tsingy"></div>
-          <span class="text-white text-3xl font-bold font-sans">Connexion membre</span>
-          <p>Tsingy Marrakech</p>
+  <div id="bg_img" class="flex h-[100vh] w-full flex-row items-center justify-center">
+    <div id="container" class="flex flex-row sm:w-[80vw]">
+      <div class="signin-form-panel sm:w-[50%] pa-12 border-x-2">
+        <div class="mb-10 ml-48">
+          <span class="text-white text-3xl font-bold">Login</span>
         </div>
 
         <div class="signin-fields">
@@ -21,21 +20,24 @@
           </div>
         </div>
 
-        <div class="flex flex-col mt-5">
+        <p v-if="appStore.error" class="signin-error">
+          {{ appStore.error }}
+        </p>
+
+        <div class="flex flex-col">
           <v-btn
             class="flex-grow-1"
             height="48"
-            :loading="loading"
+            :loading="appStore.loading"
             variant="tonal"
-            @click="load()"
+            @click="load"
           >
             Se Connecter
           </v-btn>
 
         </div>
-    </div>
-
-      <!-- <div class="flex flex-col justify-center sm:px-24 sm:w-[50%]">
+      </div>
+      <div class="flex flex-col justify-center sm:px-24 sm:w-[50%]">
         <div class="justify-end ml-32">
           <v-icon size="100">mdi-account-circle</v-icon>
         </div>
@@ -49,15 +51,14 @@
           <v-btn
             class="flex-grow-1 ml-32"
             height="48"
-            :loading="loading"
             variant="tonal"
-            @click="inscription_rout()"
+            @click="inscription_rout"
           >
             S'inscrire
           </v-btn>
         </div>
-      </div> -->
-
+      </div>
+    </div>
 
   </div>
 </template>
@@ -69,8 +70,10 @@
   } from 'vue'
 
   import { useRouter } from 'vue-router'
+  import { useAppStore } from '@/stores/app'
 
   const router = useRouter()
+  const appStore = useAppStore()
   const user_form = ref(
     [{
        id: 'signin-email',
@@ -91,42 +94,26 @@
     ],
   )
 
-  const loading = ref(false)
-  function load () {
-    loading.value = true
-    setTimeout(() => (loading.value = false), 3000)
-    setTimeout(() => (
-      router.push('/users/membre')), 3200)
+  async function load () {
+    try {
+      const user = await appStore.login({
+        email: user_form.value[0].field,
+        password: user_form.value[1].field,
+      })
+
+      await router.push(user.role === 'BUREAU' || user.role === 'ADMIN' ? '/bureau/accueil' : '/users/membre')
+    } catch {
+      return
+    }
   }
   function inscription_rout () {
-    router.push('signup')
+    router.push('/auth/signup')
   }
 </script>
 
 <style scoped>
-.signing-shell {
-    width: min(700px, 92vw);
-  height: min(700px, 82vh);
-    gap: 2rem;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: 20px;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-  overflow: hidden;
-}
-.logo-tsingy {
-    width: 80px;
-    height: 80px;
-    margin: auto;
-    background-image: url("/img/logo.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
 #bg_img {
-    background-image: url("../../../public/img/img1.png");
+  background-image: url('/img/img1.png');
     background-size: cover;
 }
 
@@ -164,6 +151,14 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.signin-error {
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 14px;
+  background: rgba(127, 29, 29, 0.45);
+  color: white;
+  padding: 0.85rem 1rem;
 }
 
 </style>

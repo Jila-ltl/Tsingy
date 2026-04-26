@@ -8,10 +8,34 @@ import { setupLayouts } from 'virtual:generated-layouts'
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from 'vue-router/auto-routes'
+import pinia from '@/stores'
+import { useAppStore } from '@/stores/app'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: setupLayouts(routes),
+})
+
+router.beforeEach(async to => {
+  const store = useAppStore(pinia)
+  await store.initAuth()
+
+  const needsAuth = to.path.startsWith('/users') || to.path.startsWith('/bureau')
+  const needsBureau = to.path.startsWith('/bureau')
+
+  if (needsAuth && !store.isAuthenticated) {
+    return '/auth/signin'
+  }
+
+  if (needsBureau && !store.isBureau) {
+    return '/users/membre'
+  }
+
+  if (store.isAuthenticated && (to.path === '/auth/signin' || to.path === '/auth/signup')) {
+    return store.isBureau ? '/bureau/accueil' : '/users/membre'
+  }
+
+  return true
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
