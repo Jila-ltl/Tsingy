@@ -14,7 +14,7 @@ declare module 'vue' {
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     AppHeader: typeof import('./src/components/appHeader.vue')['default']
     BlobImage: typeof import('./src/components/BlobImage.vue')['default']
-    Carousel: typeof import('./src/components/carousel.vue')['default']
+    Carousel: typeof import('./src/components/Carousel.vue')['default']
     Carousel3D: typeof import('./src/components/carousel3D.vue')['default']
     Foot: typeof import('./src/components/foot.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']

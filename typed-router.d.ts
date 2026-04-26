@@ -25,6 +25,7 @@ declare module 'vue-router/auto-routes' {
     '/bureau/accueil': RouteRecordInfo<'/bureau/accueil', '/bureau/accueil', Record<never, never>, Record<never, never>>,
     '/bureau/liste_membre': RouteRecordInfo<'/bureau/liste_membre', '/bureau/liste_membre', Record<never, never>, Record<never, never>>,
     '/bureau/Login': RouteRecordInfo<'/bureau/Login', '/bureau/Login', Record<never, never>, Record<never, never>>,
+    '/users/accueil': RouteRecordInfo<'/users/accueil', '/users/accueil', Record<never, never>, Record<never, never>>,
     '/users/annonces': RouteRecordInfo<'/users/annonces', '/users/annonces', Record<never, never>, Record<never, never>>,
     '/users/evenement': RouteRecordInfo<'/users/evenement', '/users/evenement', Record<never, never>, Record<never, never>>,
     '/users/membre': RouteRecordInfo<'/users/membre', '/users/membre', Record<never, never>, Record<never, never>>,
@@ -67,6 +68,10 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/bureau/Login.vue': {
       routes: '/bureau/Login'
+      views: never
+    }
+    'src/pages/users/accueil.vue': {
+      routes: '/users/accueil'
       views: never
     }
     'src/pages/users/annonces.vue': {
