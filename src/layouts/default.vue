@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen d-flex flex-column">
+  <div class="h-[100vh] overflow-hidden">
     <appHeader />
-    <v-main class=" overflow-y-auto max-h-[89.5vh]">
+    <v-main class=" overflow-hidden">
       <router-view />
     </v-main>
   </div>

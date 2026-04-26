@@ -1,7 +1,7 @@
 <template>
   <div class=" flex border border-b py-4 justify-between px-4">
     <div class=" flex flex-row items-center justify-center">
-      <img alt="logo" class=" w-12" src="../../public/img/logo.png">
+      <img alt="logo" class=" w-12" src="/img/logo.png">
       <span class=" ml-5">Tsingy Marrakech</span>
     </div>
     <div class=" flex items-center justify-center">
@@ -23,10 +23,17 @@
         >
         <span v-else class=" text-3xl" :class="item.ico " @click="router.push(item.url)" />
       </div>
+      <div class="cursor-pointer ml-10 bg-green-500 rounded-full px-3 py-1" @click="login()">se connecter</div>
     </div>
-    <div class="cursor-pointer ml-10 bg-green-500 rounded-full p-3" @click="login()">Section bureau</div>
   </div>
 
+<!-- <div   class="flex border border-b py-4 justify-center" id="membre">
+    <div class=" flex ">
+        <span class="text-3xl ">Tsingy</span>
+    <img src="/img/logo.png" alt="logo" class="logo-img"/>
+        <span class="text-3xl">Marrakech</span>
+    </div>
+</div> -->
 </template>
 
 <script setup>
@@ -46,12 +53,12 @@
     },
     {
       label: 'Blog',
-       url: '/users/evenement',
+      url: '/bureau/accueil',
       ico: 'mdi mdi-ticket-account',
     },
     {
       label: 'Contact',
-      url: '/auth/presentation',
+      url: '/users/membre',
       ico: 'mdi mdi-account-group',
     },
 
@@ -66,7 +73,7 @@
   }
 
   function login () {
-    router.push('/bureau/Login')
+    router.push('/auth/signin')
   }
 
 </script>

@@ -24,7 +24,7 @@ export const membres = [
   {
     poste: "Trésorière",
     nom: "Valisoa Razaiarimalala",
-    image: "/img/m3.jpg",
+    image: "/img/member.png",
     details: {
       ecole: "FSJES",
       filiere: "Economie",
@@ -57,7 +57,7 @@ export const membres = [
   {
     poste: "Responsable logistique",
     nom: "Guiot Ranaivomanana",
-    image: "/img/m6.jpg",
+    image: "/img/member.png",
     details: {
       ecole: "FST",
       filiere: "MISA",
