@@ -1,9 +1,14 @@
+import prismaPkg from '@prisma/client'
 import { Router } from 'express'
-import { ProfessionType, UserRole } from '@prisma/client'
 import { z } from 'zod'
-import { prisma } from '../lib/prisma.js'
 import { hashPassword, serializeAuthUser, signToken, verifyPassword } from '../lib/auth.js'
+import { prisma } from '../lib/prisma.js'
 import { authenticate } from '../middleware/auth.js'
+
+const {
+  memberprofile_professionType: ProfessionType,
+  user_role: UserRole,
+} = prismaPkg
 
 const router = Router()
 
@@ -23,17 +28,18 @@ const registerSchema = z.object({
   professionType: z.nativeEnum(ProfessionType).optional().default(ProfessionType.STUDENT),
   residenceCardNumber: z.string().optional().default(''),
   school: z.string().optional().default(''),
-  track: z.string().optional().default('')
+  track: z.string().optional().default(''),
 })
 
 const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(1)
+  password: z.string().min(1),
 })
 
 router.post('/register', async (req, res, next) => {
   try {
     const payload = registerSchema.parse(req.body)
+    const now = new Date()
     const existingUser = await prisma.user.findUnique({ where: { email: payload.email } })
 
     if (existingUser) {
@@ -48,7 +54,8 @@ router.post('/register', async (req, res, next) => {
         isApproved: false,
         passwordHash: await hashPassword(payload.password),
         role: UserRole.MEMBER,
-        profile: {
+        updatedAt: now,
+        memberprofile: {
           create: {
             address: payload.address || null,
             arrivalDate: payload.arrivalDate ? new Date(payload.arrivalDate) : null,
@@ -63,16 +70,17 @@ router.post('/register', async (req, res, next) => {
             professionType: payload.professionType,
             residenceCardNumber: payload.residenceCardNumber || null,
             school: payload.school || null,
-            track: payload.track || null
-          }
-        }
+            track: payload.track || null,
+            updatedAt: now,
+          },
+        },
       },
-      include: { profile: true }
+      include: { memberprofile: true },
     })
 
     res.status(201).json({
       token: signToken(user),
-      user: serializeAuthUser(user)
+      user: serializeAuthUser(user),
     })
   } catch (error) {
     next(error)
@@ -84,7 +92,7 @@ router.post('/login', async (req, res, next) => {
     const payload = loginSchema.parse(req.body)
     const user = await prisma.user.findUnique({
       where: { email: payload.email },
-      include: { profile: true }
+      include: { memberprofile: true },
     })
 
     if (!user || !(await verifyPassword(payload.password, user.passwordHash))) {
@@ -95,7 +103,7 @@ router.post('/login', async (req, res, next) => {
 
     res.json({
       token: signToken(user),
-      user: serializeAuthUser(user)
+      user: serializeAuthUser(user),
     })
   } catch (error) {
     next(error)

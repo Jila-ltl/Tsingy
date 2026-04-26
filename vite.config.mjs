@@ -63,6 +63,9 @@ export default defineConfig(({ command }) => ({
       'unplugin-vue-router/data-loaders/basic',
     ],
   },
+  css: {
+    preprocessorMaxWorkers: 0,
+  },
   define: { 'process.env': {} },
   resolve: {
     alias: {

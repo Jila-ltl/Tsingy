@@ -3,7 +3,7 @@ import { hashPassword } from '../src/lib/auth.js'
 
 const prisma = new PrismaClient()
 
-async function main() {
+async function main () {
   const memberPasswordHash = await hashPassword('member123')
   const bureauPasswordHash = await hashPassword('bureau123')
 
@@ -24,7 +24,7 @@ async function main() {
             phone: '0349459128',
             professionType: ProfessionType.STUDENT,
             school: 'ENCG Marrakech',
-            track: 'Audit'
+            track: 'Audit',
           },
           update: {
             address: 'Marrakech',
@@ -36,10 +36,10 @@ async function main() {
             phone: '0349459128',
             professionType: ProfessionType.STUDENT,
             school: 'ENCG Marrakech',
-            track: 'Audit'
-          }
-        }
-      }
+            track: 'Audit',
+          },
+        },
+      },
     },
     create: {
       email: 'member@tsingy.app',
@@ -58,11 +58,11 @@ async function main() {
           passportNumber: 'MG123456',
           professionType: ProfessionType.STUDENT,
           school: 'ENCG Marrakech',
-          track: 'Audit'
-        }
-      }
+          track: 'Audit',
+        },
+      },
     },
-    include: { profile: true }
+    include: { profile: true },
   })
 
   const pendingMember = await prisma.user.upsert({
@@ -77,7 +77,7 @@ async function main() {
             lastName: 'Randria',
             professionType: ProfessionType.WORKER,
             jobTitle: 'Developpeur Fullstack',
-            phone: '+212600000001'
+            phone: '+212600000001',
           },
           update: {
             domicileAtMarrakech: 'Semlalia',
@@ -85,10 +85,10 @@ async function main() {
             lastName: 'Randria',
             professionType: ProfessionType.WORKER,
             jobTitle: 'Developpeur Fullstack',
-            phone: '+212600000001'
-          }
-        }
-      }
+            phone: '+212600000001',
+          },
+        },
+      },
     },
     create: {
       email: 'pending@tsingy.app',
@@ -101,11 +101,11 @@ async function main() {
           lastName: 'Randria',
           professionType: ProfessionType.WORKER,
           jobTitle: 'Developpeur Fullstack',
-          phone: '+212600000001'
-        }
-      }
+          phone: '+212600000001',
+        },
+      },
     },
-    include: { profile: true }
+    include: { profile: true },
   })
 
   const bureauUser = await prisma.user.upsert({
@@ -122,7 +122,7 @@ async function main() {
             phone: '+212600000010',
             professionType: ProfessionType.STUDENT,
             school: 'ENCG Marrakech',
-            track: 'Audit'
+            track: 'Audit',
           },
           update: {
             firstName: 'Marie',
@@ -130,10 +130,10 @@ async function main() {
             phone: '+212600000010',
             professionType: ProfessionType.STUDENT,
             school: 'ENCG Marrakech',
-            track: 'Audit'
-          }
-        }
-      }
+            track: 'Audit',
+          },
+        },
+      },
     },
     create: {
       email: 'bureau@tsingy.app',
@@ -147,29 +147,29 @@ async function main() {
           phone: '+212600000010',
           professionType: ProfessionType.STUDENT,
           school: 'ENCG Marrakech',
-          track: 'Audit'
-        }
-      }
+          track: 'Audit',
+        },
+      },
     },
-    include: { profile: true }
+    include: { profile: true },
   })
 
   await prisma.procurationRequest.deleteMany({
     where: {
-      userId: { in: [demoUser.id, pendingMember.id] }
-    }
+      userId: { in: [demoUser.id, pendingMember.id] },
+    },
   })
 
   await prisma.reclamation.deleteMany({
     where: {
-      userId: { in: [demoUser.id, pendingMember.id] }
-    }
+      userId: { in: [demoUser.id, pendingMember.id] },
+    },
   })
 
   await prisma.certificateSubmission.deleteMany({
     where: {
-      userId: { in: [demoUser.id, pendingMember.id] }
-    }
+      userId: { in: [demoUser.id, pendingMember.id] },
+    },
   })
 
   await prisma.procurationRequest.createMany({
@@ -186,7 +186,7 @@ async function main() {
         ownerCinNumber: 'E034606W',
         proxyFullName: 'Vony Veronique',
         proxyCinNumber: 'A20X01417',
-        requestDate: new Date()
+        requestDate: new Date(),
       },
       {
         userId: pendingMember.id,
@@ -200,9 +200,9 @@ async function main() {
         ownerCinNumber: 'M123456',
         proxyFullName: 'Lova Raman',
         proxyCinNumber: 'CIN-8891',
-        requestDate: new Date()
-      }
-    ]
+        requestDate: new Date(),
+      },
+    ],
   })
 
   await prisma.reclamation.createMany({
@@ -211,15 +211,15 @@ async function main() {
         userId: demoUser.id,
         subject: 'Bourse AMCI',
         message: 'Le versement du mois en cours n a pas encore ete recu.',
-        status: RequestStatus.PENDING
+        status: RequestStatus.PENDING,
       },
       {
         userId: pendingMember.id,
         subject: 'Regularisation du dossier',
         message: 'Merci de verifier la mise a jour de mes informations administratives.',
-        status: RequestStatus.APPROVED
-      }
-    ]
+        status: RequestStatus.APPROVED,
+      },
+    ],
   })
 
   await prisma.certificateSubmission.createMany({
@@ -229,9 +229,9 @@ async function main() {
         schoolYear: '2025 - 2026',
         fileName: 'Certificat de scolarite',
         reference: 'Depot numerique',
-        status: RequestStatus.PENDING
-      }
-    ]
+        status: RequestStatus.PENDING,
+      },
+    ],
   })
 
   await prisma.announcement.deleteMany({ where: { publishedBy: bureauUser.id } })
@@ -244,15 +244,15 @@ async function main() {
         title: 'Assemblee generale 2026',
         message: 'L assemblee generale se tiendra samedi prochain au siege de Marrakech.',
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-        publishedBy: bureauUser.id
+        publishedBy: bureauUser.id,
       },
       {
         title: 'Campagne de mise a jour des profils',
         message: 'Merci de verifier vos informations avant la fin du mois.',
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
-        publishedBy: bureauUser.id
-      }
-    ]
+        publishedBy: bureauUser.id,
+      },
+    ],
   })
 
   await prisma.bureauEvent.createMany({
@@ -263,9 +263,9 @@ async function main() {
         location: 'Marrakech',
         eventDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 10),
         status: EventStatus.PUBLISHED,
-        publishedBy: bureauUser.id
-      }
-    ]
+        publishedBy: bureauUser.id,
+      },
+    ],
   })
 
   await prisma.bureauMember.createMany({
@@ -278,7 +278,7 @@ async function main() {
         level: '4eme annee',
         mission: 'Coordination generale',
         imageUrl: '/img/waren.jpeg',
-        sortOrder: 1
+        sortOrder: 1,
       },
       {
         fullName: 'Jade Ismael',
@@ -288,7 +288,7 @@ async function main() {
         level: '3eme annee',
         mission: 'Support SG',
         imageUrl: '/img/jade.jpeg',
-        sortOrder: 2
+        sortOrder: 2,
       },
       {
         fullName: 'Ulrica Chadia Baozaka',
@@ -298,16 +298,16 @@ async function main() {
         level: '2eme annee',
         mission: 'Communication des informations',
         imageUrl: '/img/chadia.jpeg',
-        sortOrder: 3
-      }
-    ]
+        sortOrder: 3,
+      },
+    ],
   })
 
   console.log('Seed completed:', {
     bureauUser: bureauUser.email,
     memberUser: demoUser.email,
     passwordBureau: 'bureau123',
-    passwordMember: 'member123'
+    passwordMember: 'member123',
   })
 }
 

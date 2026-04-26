@@ -7,5 +7,5 @@ export const env = {
   databaseUrl: process.env.DATABASE_URL || '',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   jwtSecret: process.env.JWT_SECRET || 'change-this-secret',
-  port: Number(process.env.PORT || 4000)
+  port: Number(process.env.PORT || 4000),
 }

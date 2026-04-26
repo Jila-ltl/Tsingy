@@ -8,12 +8,8 @@
           <p class="text-sm font-semibold uppercase tracking-[0.35em] text-green-700">
             Repertoire
           </p>
-          <h1 class="mt-3 text-4xl font-black uppercase tracking-tight text-black">
-            Liste membres
-          </h1>
-          <p class="mt-4 text-sm leading-6 text-gray-600">
-            Filtrez rapidement les profils de la communaute selon l annee d arrivee, la profession et l etablissement, avec le meme theme visuel que la page evenement.
-          </p>
+
+
 
           <div class="mt-8 space-y-5">
             <div>
@@ -153,45 +149,52 @@
                 </h3>
               </div>
               <p class="text-sm text-gray-500">
-                Cliquez sur une carte pour afficher la fiche detaillee.
+                Cliquez sur une ligne du tableau pour afficher la fiche detaillee.
               </p>
             </div>
 
-            <div v-if="filteredMembers.length > 0" class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-              <button
-                v-for="member in filteredMembers"
-                :key="member.email"
-                class="member-card group overflow-hidden rounded-[24px] border border-white bg-white/85 text-left shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition duration-200 hover:-translate-y-1 hover:border-green-200 hover:shadow-[0_20px_50px_rgba(22,163,74,0.15)]"
-                @click="openMember(member)"
-              >
-                <div class="relative overflow-hidden">
-                  <img
-                    :alt="`${member.prenom} ${member.nom}`"
-                    class="h-72 w-full object-cover transition duration-300 group-hover:scale-105"
-                    :src="member.photo"
-                  >
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/5 to-transparent opacity-85" />
-                  <div class="absolute bottom-4 left-4 rounded-full bg-white/85 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-green-700 backdrop-blur">
-                    {{ member.profession }}
-                  </div>
-                </div>
-                <div class="space-y-3 px-5 py-5">
-                  <div>
-                    <p class="text-lg font-black text-black">{{ member.prenom }} {{ member.nom }}</p>
-                    <p class="mt-1 text-sm text-gray-500">{{ member.domicile_a_marrakech }}</p>
-                  </div>
-                  <div class="grid gap-2 text-sm">
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="text-gray-500">Arrivee</span>
-                      <span class="font-semibold text-black">{{ member.date_arrivee_maroc }}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="text-gray-500">Structure</span>
-                      <span class="font-semibold text-red-600 line-clamp-1">{{ member.univ || member.metier || 'Non renseigne' }}</span>
-                    </div>
-                  </div>
-                </div>
-              </button>
+            <div v-if="filteredMembers.length > 0" class="overflow-hidden rounded-[28px] border border-green-100 bg-white/90 shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
+              <div class="overflow-x-auto">
+                <table class="min-w-full border-collapse text-left">
+                  <thead class="bg-gradient-to-r from-stone-950 via-green-950 to-stone-950 text-white">
+                    <tr>
+                      <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.25em]">Utilisateur</th>
+                      <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.25em]">Email</th>
+                      <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.25em]">Profession</th>
+                      <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.25em]">Arrivee</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="member in filteredMembers"
+                      :key="member.email"
+                      class="cursor-pointer border-t border-green-100 transition hover:bg-green-50/70"
+                      @click="openMember(member)"
+                    >
+                      <td class="px-5 py-4">
+                        <div class="flex items-center gap-4">
+                          <img
+                            :alt="`${member.prenom} ${member.nom}`"
+                            class="h-12 w-12 rounded-full border border-green-100 object-cover"
+                            :src="member.photo"
+                          >
+                          <div>
+                            <p class="font-bold text-black">{{ member.prenom }} {{ member.nom }}</p>
+                            <p class="text-sm text-gray-500">{{ member.domicile_a_marrakech || 'Non renseigne' }}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-5 py-4 text-sm text-gray-700">{{ member.email || 'Non renseigne' }}</td>
+                      <td class="px-5 py-4">
+                        <span class="inline-flex rounded-full bg-green-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-green-700">
+                          {{ member.profession }}
+                        </span>
+                      </td>
+                      <td class="px-5 py-4 text-sm text-gray-700">{{ member.date_arrivee_maroc || 'Non renseigne' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             <div v-else class="rounded-[28px] border border-dashed border-green-200 bg-white/80 p-12 text-center">
@@ -301,12 +304,19 @@
   const appStore = useAppStore()
 
   function mapMember (member) {
-    const profile = member.profile || {}
+    const profile = member.profile || member.memberprofile || {}
+    const arrivalDate = profile.arrivalDate ? new Date(profile.arrivalDate) : null
 
     return {
       code_amci: profile.matricule || '',
       contact: profile.phone || '',
-      date_arrivee_maroc: profile.arrivalDate ? new Date(profile.arrivalDate).getFullYear() : '',
+      date_arrivee_maroc: arrivalDate && !Number.isNaN(arrivalDate.getTime())
+        ? arrivalDate.toLocaleDateString('fr-FR', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        })
+        : '',
       date_de_naissance: profile.birthDate ? String(profile.birthDate).slice(0, 10) : '',
       domicile_a_marrakech: profile.domicileAtMarrakech || profile.address || '',
       email: member.email,

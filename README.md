@@ -32,12 +32,14 @@ copy .env.example .env
 
 Mettez ensuite votre connexion MySQL dans `back_end/.env` :
 
+Configuration recommandee :
+
 ```env
 DATABASE_URL="mysql://root:password@localhost:3306/tsingy_db"
-PORT=4000
-CLIENT_URL="http://localhost:3000"
 JWT_SECRET="change-this-secret"
 JWT_EXPIRES_IN="7d"
+PORT=4000
+CLIENT_URL="http://localhost:3000"
 ```
 
 Ajoutez aussi cote frontend si besoin :

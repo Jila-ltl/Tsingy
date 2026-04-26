@@ -301,6 +301,113 @@
       </div>
     </div>
 
+    <div v-if="isOpen === 'carousel' && isAdmin" class="overlay bureau-overlay bureau-overlay--fullscreen" @click.self="closePopup">
+      <div class="bureau-modal bureau-modal--dark bureau-modal--fullscreen">
+        <div class="bureau-modal__header">
+          <div>
+            <p class="bureau-modal__eyebrow">Carousel</p>
+            <h2 class="bureau-modal__title">Gerer les images du carousel</h2>
+            <p class="bureau-modal__subtitle">
+              Les images ajoutees sont enregistrees dans le dossier backend du carousel.
+            </p>
+          </div>
+          <button class="bureau-modal__close" type="button" @click="closePopup">
+            <span class="mdi mdi-window-close" />
+          </button>
+        </div>
+
+        <div class="bureau-carousel-modal__content grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <div class="bureau-carousel-modal__panel bureau-carousel-modal__panel--list space-y-4 pr-1">
+            <div
+              v-for="slide in carouselSlides"
+              :key="slide.id"
+              class="rounded-[1.35rem] border border-white/10 bg-white/6 p-4"
+            >
+              <div class="flex items-start gap-4">
+                <img
+                  :alt="slide.nom"
+                  class="h-24 w-24 rounded-2xl object-cover"
+                  :src="slide.image"
+                >
+                <div class="min-w-0 flex-1">
+                  <p class="text-lg font-semibold text-white">{{ slide.nom }}</p>
+                  <p class="mt-1 text-sm text-emerald-200/80">{{ slide.poste }}</p>
+                  <p class="mt-2 text-xs uppercase tracking-[0.22em] text-white/45">
+                    {{ slide.details?.role || 'Mission non renseignee' }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="mt-4 flex flex-wrap gap-3">
+                <button class="bureau-button bureau-button--secondary w-auto !px-5 !py-3 !text-[0.68rem]" type="button" @click="startEditCarouselSlide(slide)">
+                  Modifier
+                </button>
+                <button class="bureau-button bureau-button--primary w-auto !px-5 !py-3 !text-[0.68rem]" type="button" @click="removeCarouselSlide(slide.id)">
+                  Supprimer
+                </button>
+              </div>
+            </div>
+
+            <div v-if="carouselSlides.length === 0" class="rounded-[1.35rem] border border-dashed border-white/15 bg-white/4 p-6 text-sm text-white/70">
+              Aucune image personnalisée pour le moment. Ajoutez votre premier slide.
+            </div>
+          </div>
+
+          <div class="bureau-carousel-modal__panel bureau-carousel-modal__panel--form grid gap-5">
+            <div class="grid gap-5 sm:grid-cols-2">
+              <label class="bureau-field sm:col-span-2">
+                <span class="bureau-field__label">Nom affiche</span>
+                <input v-model="carouselForm.nom" class="bureau-field__input" placeholder="Nom ou titre de la slide" type="text">
+              </label>
+
+              <label class="bureau-field sm:col-span-2">
+                <span class="bureau-field__label">Poste</span>
+                <input v-model="carouselForm.poste" class="bureau-field__input" placeholder="Fonction ou sous-titre" type="text">
+              </label>
+
+              <label class="bureau-field">
+                <span class="bureau-field__label">Ecole</span>
+                <input v-model="carouselForm.ecole" class="bureau-field__input" placeholder="Ecole" type="text">
+              </label>
+
+              <label class="bureau-field">
+                <span class="bureau-field__label">Filiere</span>
+                <input v-model="carouselForm.filiere" class="bureau-field__input" placeholder="Filiere" type="text">
+              </label>
+
+              <label class="bureau-field">
+                <span class="bureau-field__label">Niveau</span>
+                <input v-model="carouselForm.niveau" class="bureau-field__input" placeholder="Niveau" type="text">
+              </label>
+
+              <label class="bureau-field">
+                <span class="bureau-field__label">Mission</span>
+                <input v-model="carouselForm.role" class="bureau-field__input" placeholder="Mission" type="text">
+              </label>
+            </div>
+
+            <label class="bureau-field">
+              <span class="bureau-field__label">Image</span>
+              <input accept="image/*" class="bureau-field__input file-input" type="file" @change="onCarouselFileChange">
+            </label>
+
+            <div v-if="carouselPreview" class="overflow-hidden rounded-[1.4rem] border border-white/10 bg-black/20 p-3">
+              <img alt="Apercu de la slide" class="h-56 w-full rounded-[1rem] object-cover" :src="carouselPreview">
+            </div>
+
+            <div class="bureau-modal__actions">
+              <button class="bureau-button bureau-button--secondary" type="button" @click="resetCarouselForm">
+                Reinitialiser
+              </button>
+              <button class="bureau-button bureau-button--primary" type="button" @click="submitCarouselSlide">
+                {{ carouselForm.id ? 'Mettre a jour' : 'Ajouter la slide' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <section
       id="pres_bureau"
       ref="bureauMembersRef"
@@ -320,7 +427,13 @@
         </div>
 
         <div class="interactive-card overflow-hidden rounded-[1.5rem] bg-white p-4 shadow-[0_20px_60px_rgba(0,0,0,0.08)] sm:rounded-[2rem] sm:p-6 md:p-8">
-          <MyCarousel :members="bureauMembers" />
+          <MyCarousel
+            :members="carouselMembers"
+            :show-manage-button="isAdmin"
+            @delete-slide="handleCarouselCardDelete"
+            @edit-slide="handleCarouselCardEdit"
+            @manage="openCarouselManager"
+          />
         </div>
       </div>
     </section>
@@ -390,6 +503,7 @@
   import {
     useRouter,
   } from 'vue-router'
+  import { membres } from '@/data/membres'
   import { useAppStore } from '@/stores/app'
   import MyCarousel from '../../components/Carousel.vue'
 
@@ -414,11 +528,25 @@
   const isMemberModalOpen = ref(false)
   const selectedMember = ref(null)
   const isOpen = ref(null)
+  const isInitializingCarousel = ref(false)
 
   const announcementForm = ref({
     expiration: '',
     message: '',
     title: '',
+  })
+
+  const carouselForm = ref({
+    ecole: '',
+    filiere: '',
+    id: '',
+    imageData: '',
+    imageName: '',
+    imageUrl: '',
+    niveau: '',
+    nom: '',
+    poste: '',
+    role: '',
   })
 
   const eventForm = ref({
@@ -441,6 +569,8 @@
   })
 
   const stats = computed(() => dashboard.value.stats)
+  const isAdmin = computed(() => appStore.user?.role === 'ADMIN')
+  const carouselSlides = computed(() => appStore.carouselSlides)
 
   const headers = [{
                      align: 'start',
@@ -504,10 +634,205 @@
     poste: member.title,
   })))
 
+  const defaultCarouselMembers = computed(() => bureauMembers.value.length > 0 ? bureauMembers.value : membres)
+  const carouselMembers = computed(() => carouselSlides.value.length > 0 ? carouselSlides.value : defaultCarouselMembers.value)
+  const carouselPreview = computed(() => carouselForm.value.imageData || carouselForm.value.imageUrl || '')
+
   let animationContext
 
   function closePopup () {
     isOpen.value = null
+  }
+
+  function resetCarouselForm () {
+    carouselForm.value = {
+      ecole: '',
+      filiere: '',
+      id: '',
+      imageData: '',
+      imageName: '',
+      imageUrl: '',
+      niveau: '',
+      nom: '',
+      poste: '',
+      role: '',
+    }
+  }
+
+  function openCarouselManager () {
+    resetCarouselForm()
+    isOpen.value = 'carousel'
+  }
+
+  function startEditCarouselSlide (slide) {
+    carouselForm.value = {
+      ecole: slide.details?.ecole || '',
+      filiere: slide.details?.filiere || '',
+      id: slide.id,
+      imageData: '',
+      imageName: '',
+      imageUrl: slide.image || '',
+      niveau: slide.details?.niveau || '',
+      nom: slide.nom || '',
+      poste: slide.poste || '',
+      role: slide.details?.role || '',
+    }
+  }
+
+  function readFileAsDataUrl (file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+
+      reader.addEventListener('load', () => resolve(String(reader.result || '')), { once: true })
+      reader.addEventListener('error', () => reject(new Error('Impossible de lire cette image.')), { once: true })
+      reader.readAsDataURL(file)
+    })
+  }
+
+  async function readImageUrlAsDataUrl (imageUrl) {
+    const response = await fetch(imageUrl)
+
+    if (!response.ok) {
+      throw new Error('Impossible de recuperer cette image.')
+    }
+
+    const blob = await response.blob()
+
+    return readFileAsDataUrl(blob)
+  }
+
+  async function ensureEditableCarouselSlides () {
+    if (carouselSlides.value.length > 0) {
+      return carouselSlides.value
+    }
+
+    if (isInitializingCarousel.value) {
+      return carouselSlides.value
+    }
+
+    if (defaultCarouselMembers.value.length === 0) {
+      throw new Error('Aucune image disponible pour initialiser le carousel.')
+    }
+
+    isInitializingCarousel.value = true
+
+    try {
+      for (const member of defaultCarouselMembers.value) {
+        const imageData = await readImageUrlAsDataUrl(member.image)
+
+        await appStore.createCarouselSlide({
+          ecole: member.details?.ecole || '',
+          filiere: member.details?.filiere || '',
+          imageData,
+          imageName: `${(member.nom || 'slide').replace(/\s+/g, '-').toLowerCase()}.jpg`,
+          niveau: member.details?.niveau || '',
+          nom: member.nom || '',
+          poste: member.poste || '',
+          role: member.details?.role || '',
+        })
+      }
+
+      return appStore.carouselSlides
+    } finally {
+      isInitializingCarousel.value = false
+    }
+  }
+
+  function findMatchingCarouselSlide (targetSlide) {
+    return carouselSlides.value.find(slide => slide.nom === targetSlide?.nom && slide.poste === targetSlide?.poste)
+  }
+
+  async function handleCarouselCardEdit (slide) {
+    try {
+      if (!slide?.id) {
+        await ensureEditableCarouselSlides()
+        slide = findMatchingCarouselSlide(slide) || slide
+      }
+
+      startEditCarouselSlide(slide)
+      isOpen.value = 'carousel'
+    } catch (error) {
+      window.alert(error.message || 'Impossible de preparer cette image pour modification.')
+    }
+  }
+
+  async function handleCarouselCardDelete (slide) {
+    try {
+      if (!slide?.id) {
+        await ensureEditableCarouselSlides()
+        slide = findMatchingCarouselSlide(slide)
+      }
+
+      if (!slide?.id) {
+        throw new Error('Impossible de retrouver cette image dans le carousel editable.')
+      }
+
+      await removeCarouselSlide(slide.id)
+    } catch (error) {
+      window.alert(error.message || 'Impossible de supprimer cette image.')
+    }
+  }
+
+  async function onCarouselFileChange (event) {
+    const file = event.target.files?.[0]
+
+    if (!file) {
+      return
+    }
+
+    try {
+      carouselForm.value.imageData = await readFileAsDataUrl(file)
+      carouselForm.value.imageName = file.name
+    } catch (error) {
+      window.alert(error.message || 'Impossible de charger cette image.')
+    }
+  }
+
+  async function submitCarouselSlide () {
+    try {
+      if (!carouselForm.value.nom || !carouselForm.value.poste) {
+        throw new Error('Le nom affiche et le poste sont obligatoires.')
+      }
+
+      if (!carouselForm.value.id && !carouselForm.value.imageData) {
+        throw new Error('Ajoutez une image avant d enregistrer la slide.')
+      }
+
+      const payload = {
+        ecole: carouselForm.value.ecole,
+        filiere: carouselForm.value.filiere,
+        imageData: carouselForm.value.imageData || undefined,
+        imageName: carouselForm.value.imageName || undefined,
+        niveau: carouselForm.value.niveau,
+        nom: carouselForm.value.nom,
+        poste: carouselForm.value.poste,
+        role: carouselForm.value.role,
+      }
+
+      await (carouselForm.value.id
+        ? appStore.updateCarouselSlide(carouselForm.value.id, payload)
+        : appStore.createCarouselSlide(payload))
+
+      resetCarouselForm()
+    } catch (error) {
+      window.alert(error.message || 'Impossible d enregistrer cette slide.')
+    }
+  }
+
+  async function removeCarouselSlide (id) {
+    try {
+      if (!window.confirm('Supprimer cette image du carousel ?')) {
+        return
+      }
+
+      await appStore.deleteCarouselSlide(id)
+
+      if (carouselForm.value.id === id) {
+        resetCarouselForm()
+      }
+    } catch (error) {
+      window.alert(error.message || 'Impossible de supprimer cette slide.')
+    }
   }
 
   async function submitAnnouncement () {
@@ -572,7 +897,10 @@
   }
 
   onMounted(() => {
-    appStore.fetchBureauDashboard().catch(error => {
+    Promise.all([
+      appStore.fetchBureauDashboard(),
+      appStore.fetchCarouselSlides(),
+    ]).catch(error => {
       window.alert(error.message || 'Impossible de charger le tableau de bord bureau.')
     })
 
@@ -794,6 +1122,11 @@
     color: white;
   }
 
+  .file-input {
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+  }
+
   .bureau-stat-card {
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
@@ -947,6 +1280,10 @@
     backdrop-filter: blur(10px);
   }
 
+  .bureau-overlay--fullscreen {
+    padding: 0;
+  }
+
   .overlay {
     position: fixed;
     top: 0;
@@ -975,12 +1312,37 @@
     color: white;
   }
 
+  .bureau-modal--fullscreen {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    width: auto;
+    height: auto;
+    max-height: none;
+    margin: 0;
+    border-radius: 0;
+    padding: 2rem;
+    overflow: hidden;
+  }
+
   .bureau-modal__header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 1rem;
     margin-bottom: 1.5rem;
+  }
+
+  .bureau-modal--fullscreen .bureau-modal__header {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    margin: -2rem -2rem 0;
+    padding: 2rem 2rem 1.5rem;
+    background: linear-gradient(180deg, rgba(9, 16, 27, 0.98), rgba(9, 16, 27, 0.92));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
   }
 
   .bureau-modal__eyebrow {
@@ -996,6 +1358,14 @@
     font-size: clamp(1.7rem, 2.5vw, 2.4rem);
     font-weight: 600;
     line-height: 1.08;
+  }
+
+  .bureau-modal__subtitle {
+    margin-top: 0.85rem;
+    max-width: 44rem;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.96rem;
+    line-height: 1.7;
   }
 
   .bureau-modal__close {
@@ -1014,6 +1384,27 @@
     flex-direction: column;
     gap: 0.75rem;
     margin-top: 1.5rem;
+  }
+
+  .bureau-carousel-modal__content {
+    min-height: 0;
+    height: 100%;
+    padding-top: 1.5rem;
+  }
+
+  .bureau-carousel-modal__panel {
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+  }
+
+  .bureau-carousel-modal__panel--list {
+    padding-bottom: 1rem;
+  }
+
+  .bureau-carousel-modal__panel--form {
+    align-content: start;
+    padding-bottom: 1rem;
   }
 
   .bureau-field {
@@ -1272,6 +1663,23 @@
     .bureau-modal {
       border-radius: 1.5rem;
       padding: 1rem;
+    }
+
+    .bureau-modal--fullscreen {
+      inset: 0;
+      width: auto;
+      height: auto;
+      border-radius: 0;
+      padding: 1rem;
+    }
+
+    .bureau-modal--fullscreen .bureau-modal__header {
+      margin: -1rem -1rem 0;
+      padding: 1rem 1rem 1.1rem;
+    }
+
+    .bureau-carousel-modal__content {
+      padding-top: 1rem;
     }
 
     .bureau-modal__header {

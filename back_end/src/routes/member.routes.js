@@ -1,8 +1,15 @@
-import { ProfessionType } from '@prisma/client'
+import prismaPkg from '@prisma/client'
 import { Router } from 'express'
 import { z } from 'zod'
+import { listEventImagesMap } from '../lib/event-gallery-storage.js'
 import { prisma } from '../lib/prisma.js'
 import { authenticate } from '../middleware/auth.js'
+
+const {
+  bureauevent_status: EventStatus,
+  memberprofile_professionType: ProfessionType,
+  user_role: UserRole,
+} = prismaPkg
 
 const router = Router()
 
@@ -16,18 +23,18 @@ const procurationSchema = z.object({
   proxyCinNumber: z.string().min(1),
   proxyFullName: z.string().min(1),
   requestDate: z.string().datetime().or(z.string().date()),
-  title: z.string().min(1)
+  title: z.string().min(1),
 })
 
 const reclamationSchema = z.object({
   message: z.string().min(5),
-  subject: z.string().min(1)
+  subject: z.string().min(1),
 })
 
 const certificateSchema = z.object({
   fileName: z.string().min(1),
   reference: z.string().optional(),
-  schoolYear: z.string().min(1)
+  schoolYear: z.string().min(1),
 })
 
 const profileSchema = z.object({
@@ -45,7 +52,7 @@ const profileSchema = z.object({
   professionType: z.nativeEnum(ProfessionType).optional(),
   residenceCardNumber: z.string().optional().nullable(),
   school: z.string().optional().nullable(),
-  track: z.string().optional().nullable()
+  track: z.string().optional().nullable(),
 })
 
 router.use(authenticate)
@@ -53,29 +60,59 @@ router.use(authenticate)
 router.get('/dashboard', async (req, res, next) => {
   try {
     const [procurations, reclamations, certificates] = await Promise.all([
-      prisma.procurationRequest.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } }),
+      prisma.procurationrequest.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } }),
       prisma.reclamation.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } }),
-      prisma.certificateSubmission.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } })
+      prisma.certificatesubmission.findMany({ where: { userId: req.user.id }, orderBy: { createdAt: 'desc' } }),
     ])
 
     res.json({
       certificates,
       procurations,
-      profile: req.user.profile,
+      profile: req.user.memberprofile,
       reclamations,
       stats: {
         certificates: certificates.length,
         procurations: procurations.length,
-        reclamations: reclamations.length
-      }
+        reclamations: reclamations.length,
+      },
     })
   } catch (error) {
     next(error)
   }
 })
 
+router.get('/events', async (req, res, next) => {
+  try {
+    const where = req.user.role === UserRole.ADMIN
+      ? {}
+      : { status: { in: [EventStatus.PUBLISHED, EventStatus.ARCHIVED] } }
+    const [events, imagesMap] = await Promise.all([
+      prisma.bureauevent.findMany({
+        where,
+        orderBy: [
+          { eventDate: 'desc' },
+          { createdAt: 'desc' },
+        ],
+      }),
+      listEventImagesMap(),
+    ])
+
+    res.json(events.map(event => ({
+      date: event.eventDate,
+      description: event.description,
+      id: event.id,
+      imageData: imagesMap[event.id] || [],
+      location: event.location,
+      status: event.status,
+      title: event.title,
+    })))
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.get('/me/profile', async (req, res) => {
-  res.json(req.user.profile)
+  res.json(req.user.memberprofile)
 })
 
 router.patch('/me/profile', async (req, res, next) => {
@@ -85,7 +122,7 @@ router.patch('/me/profile', async (req, res, next) => {
       where: { id: req.user.id },
       data: {
         email: payload.email || req.user.email,
-        profile: {
+        memberprofile: {
           update: {
             address: payload.address ?? null,
             arrivalDate: payload.arrivalDate ? new Date(payload.arrivalDate) : null,
@@ -100,14 +137,14 @@ router.patch('/me/profile', async (req, res, next) => {
             professionType: payload.professionType || undefined,
             residenceCardNumber: payload.residenceCardNumber ?? null,
             school: payload.school ?? null,
-            track: payload.track ?? null
-          }
-        }
+            track: payload.track ?? null,
+          },
+        },
       },
-      include: { profile: true }
+      include: { memberprofile: true },
     })
 
-    res.json(updated.profile)
+    res.json(updated.memberprofile)
   } catch (error) {
     next(error)
   }
@@ -115,9 +152,9 @@ router.patch('/me/profile', async (req, res, next) => {
 
 router.get('/procurations', async (req, res, next) => {
   try {
-    const requests = await prisma.procurationRequest.findMany({
+    const requests = await prisma.procurationrequest.findMany({
       where: { userId: req.user.id },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     })
 
     res.json(requests)
@@ -129,12 +166,12 @@ router.get('/procurations', async (req, res, next) => {
 router.post('/procurations', async (req, res, next) => {
   try {
     const payload = procurationSchema.parse(req.body)
-    const created = await prisma.procurationRequest.create({
+    const created = await prisma.procurationrequest.create({
       data: {
         ...payload,
         requestDate: new Date(payload.requestDate),
-        userId: req.user.id
-      }
+        userId: req.user.id,
+      },
     })
 
     res.status(201).json(created)
@@ -147,7 +184,7 @@ router.get('/reclamations', async (req, res, next) => {
   try {
     const reclamations = await prisma.reclamation.findMany({
       where: { userId: req.user.id },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     })
 
     res.json(reclamations)
@@ -162,8 +199,8 @@ router.post('/reclamations', async (req, res, next) => {
     const created = await prisma.reclamation.create({
       data: {
         ...payload,
-        userId: req.user.id
-      }
+        userId: req.user.id,
+      },
     })
 
     res.status(201).json(created)
@@ -174,9 +211,9 @@ router.post('/reclamations', async (req, res, next) => {
 
 router.get('/certificates', async (req, res, next) => {
   try {
-    const certificates = await prisma.certificateSubmission.findMany({
+    const certificates = await prisma.certificatesubmission.findMany({
       where: { userId: req.user.id },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     })
 
     res.json(certificates)
@@ -188,11 +225,11 @@ router.get('/certificates', async (req, res, next) => {
 router.post('/certificates', async (req, res, next) => {
   try {
     const payload = certificateSchema.parse(req.body)
-    const created = await prisma.certificateSubmission.create({
+    const created = await prisma.certificatesubmission.create({
       data: {
         ...payload,
-        userId: req.user.id
-      }
+        userId: req.user.id,
+      },
     })
 
     res.status(201).json(created)

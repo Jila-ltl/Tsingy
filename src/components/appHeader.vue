@@ -30,20 +30,40 @@
           type="button"
           @click="redirectTo(item.url)"
         >
-          <span :class="item.ico" class="text-xl" />
+          <span class="text-xl" :class="item.ico" />
           <span>{{ item.label }}</span>
         </button>
 
-        <button class="login-button ml-2" type="button" @click="login()">
-          Se connecter
-        </button>
+        <div class="account-menu ml-2" @click.stop>
+          <button
+            class="login-button"
+            type="button"
+            @click="handleAccountButtonClick"
+          >
+            {{ isAuthenticated ? shortUserName : 'Se connecter' }}
+            <span
+              v-if="isAuthenticated"
+              class="mdi text-lg"
+              :class="accountMenuOpen ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+            />
+          </button>
+
+          <Transition name="account-menu">
+            <div v-if="accountMenuOpen" class="account-dropdown" @click.stop>
+              <button class="account-dropdown__action" type="button" @click="logout()">
+                <span class="mdi mdi-logout text-lg" />
+                <span>Se deconnecter</span>
+              </button>
+            </div>
+          </Transition>
+        </div>
       </nav>
 
       <button
-        class="menu-toggle inline-flex h-11 w-11 items-center justify-center rounded-full lg:hidden"
-        type="button"
         :aria-expanded="mobileMenuOpen ? 'true' : 'false'"
         :aria-label="mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'"
+        class="menu-toggle inline-flex h-11 w-11 items-center justify-center rounded-full lg:hidden"
+        type="button"
         @click="toggleMobileMenu"
       >
         <span :class="mobileMenuOpen ? 'mdi mdi-close text-2xl' : 'mdi mdi-menu text-2xl'" />
@@ -73,15 +93,31 @@
               @click="redirectTo(item.url)"
             >
               <span class="mobile-link__content">
-                <span :class="item.ico" class="text-2xl" />
+                <span class="text-2xl" :class="item.ico" />
                 <span>{{ item.label }}</span>
               </span>
               <span class="mdi mdi-arrow-right text-lg text-white/40" />
             </button>
 
-            <button class="login-button w-full justify-center" type="button" @click="login()">
-              Se connecter
-            </button>
+            <div class="account-menu w-full" @click.stop>
+              <button class="login-button w-full justify-center" type="button" @click="handleAccountButtonClick">
+                {{ isAuthenticated ? shortUserName : 'Se connecter' }}
+                <span
+                  v-if="isAuthenticated"
+                  class="mdi text-lg"
+                  :class="accountMenuOpen ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                />
+              </button>
+
+              <Transition name="account-menu">
+                <div v-if="accountMenuOpen" class="account-dropdown account-dropdown--mobile" @click.stop>
+                  <button class="account-dropdown__action" type="button" @click="logout()">
+                    <span class="mdi mdi-logout text-lg" />
+                    <span>Se deconnecter</span>
+                  </button>
+                </div>
+              </Transition>
+            </div>
           </nav>
         </div>
       </Transition>
@@ -91,18 +127,22 @@
 
 <script setup>
   import {
+    computed,
     nextTick,
-    onMounted,
     onBeforeUnmount,
+    onMounted,
     ref,
     watch,
   } from 'vue'
+  import { useAppStore } from '@/stores/app'
   import { useRoute, useRouter } from 'vue-router'
 
+  const appStore = useAppStore()
   const router = useRouter()
   const route = useRoute()
   const headerRef = ref(null)
   const headerHeight = ref(72)
+  const accountMenuOpen = ref(false)
   const mobileMenuOpen = ref(false)
 
   const menuList = ref([
@@ -128,8 +168,31 @@
     return route.path === url
   }
 
+  const isAuthenticated = computed(() => appStore.isAuthenticated)
+
+  const shortUserName = computed(() => {
+    const profile = appStore.user?.profile
+    const firstName = profile?.firstName?.trim()
+
+    if (firstName) {
+      return firstName
+    }
+
+    const emailPrefix = appStore.user?.email?.split('@')[0]?.trim()
+
+    if (emailPrefix) {
+      return emailPrefix.slice(0, 12)
+    }
+
+    return 'Compte'
+  })
+
   function closeMobileMenu () {
     mobileMenuOpen.value = false
+  }
+
+  function closeAccountMenu () {
+    accountMenuOpen.value = false
   }
 
   function syncHeaderHeight () {
@@ -149,37 +212,78 @@
   }
 
   function redirectTo (path) {
+    closeAccountMenu()
     closeMobileMenu()
     router.push(path)
   }
 
   function login () {
+    closeAccountMenu()
     closeMobileMenu()
     router.push('/auth/signin')
   }
 
-  watch(mobileMenuOpen, (isOpen) => {
+  function logout () {
+    appStore.logout()
+    closeAccountMenu()
+    closeMobileMenu()
+    router.push('/')
+  }
+
+  function handleAccountButtonClick () {
+    if (!isAuthenticated.value) {
+      login()
+      return
+    }
+
+    accountMenuOpen.value = !accountMenuOpen.value
+  }
+
+  function handleDocumentClick (event) {
+    if (!accountMenuOpen.value) {
+      return
+    }
+
+    if (!headerRef.value?.contains(event.target)) {
+      closeAccountMenu()
+    }
+  }
+
+  watch(mobileMenuOpen, isOpen => {
     document.body.style.overflow = isOpen ? 'hidden' : ''
   })
 
   watch(() => route.fullPath, () => {
+    closeAccountMenu()
     closeMobileMenu()
+  })
+
+  watch(isAuthenticated, authenticated => {
+    if (!authenticated) {
+      closeAccountMenu()
+    }
   })
 
   onMounted(async () => {
     await nextTick()
     syncHeaderHeight()
+    window.addEventListener('click', handleDocumentClick)
     window.addEventListener('resize', handleResize)
   })
 
   onBeforeUnmount(() => {
     document.body.style.overflow = ''
+    window.removeEventListener('click', handleDocumentClick)
     window.removeEventListener('resize', handleResize)
   })
 
 </script>
 
 <style scoped>
+.account-menu {
+  position: relative;
+}
+
 .header-shell {
   position: sticky;
   top: 0;
@@ -252,6 +356,55 @@
   transform: translateY(-2px);
   background: linear-gradient(135deg, #16a34a, #14532d);
   box-shadow: 0 16px 30px rgba(34, 197, 94, 0.22);
+}
+
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  min-width: 13rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  background: rgba(10, 10, 10, 0.96);
+  padding: 0.45rem;
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(14px);
+}
+
+.account-dropdown--mobile {
+  position: static;
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+.account-dropdown__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  border: 0;
+  border-radius: 0.8rem;
+  background: transparent;
+  color: #ffffff;
+  padding: 0.9rem 1rem;
+  text-align: left;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.account-dropdown__action:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.account-menu-enter-active,
+.account-menu-leave-active {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.account-menu-enter-from,
+.account-menu-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
 }
 
 .mobile-overlay {

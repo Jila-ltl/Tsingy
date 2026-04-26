@@ -1,21 +1,26 @@
 <template>
-  <select
-    :id="id"
-    class="custom-input custom-select"
-    :value="modelValue"
-    @change="onChange"
-  >
-    <option disabled value="">
-      {{ placeholder || 'Choisir une option...' }}
-    </option>
-    <option
-      v-for="option in normalizedOptions"
-      :key="option.value"
-      :value="option.value"
+  <div class="select-shell custom-input">
+    <span class="select-shell__value" :class="modelValue ? '' : 'select-shell__value--placeholder'">
+      {{ selectedLabel }}
+    </span>
+    <select
+      :id="id"
+      class="custom-select"
+      :value="modelValue"
+      @change="onChange"
     >
-      {{ option.label }}
-    </option>
-  </select>
+      <option disabled value="">
+        {{ placeholder || 'Choisir une option...' }}
+      </option>
+      <option
+        v-for="option in normalizedOptions"
+        :key="option.value"
+        :value="option.value"
+      >
+        {{ option.label }}
+      </option>
+    </select>
+  </div>
 </template>
 
 <script setup>
@@ -58,12 +63,59 @@
     })
   })
 
+  const selectedLabel = computed(() => {
+    if (!props.modelValue) {
+      return props.placeholder || 'Choisir une option...'
+    }
+
+    const selectedOption = normalizedOptions.value.find(option => option.value === props.modelValue)
+
+    return selectedOption?.label || props.modelValue
+  })
+
   function onChange (event) {
     emit('update:modelValue', event.target.value)
   }
 </script>
 
 <style scoped>
+.select-shell {
+  position: relative;
+  color: inherit;
+}
+
+.select-shell::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  width: 0.8rem;
+  height: 0.5rem;
+  background-color: var(--select-arrow-color, #15803d);
+  pointer-events: none;
+  transform: translateY(-50%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.select-shell__value {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  right: 3rem;
+  z-index: 1;
+  overflow: hidden;
+  color: currentColor;
+  line-height: 1.2;
+  pointer-events: none;
+  text-overflow: ellipsis;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+
+.select-shell__value--placeholder {
+  opacity: 0.72;
+}
+
 .custom-input {
   width: 100%;
   min-height: 48px;
@@ -77,13 +129,25 @@
 }
 
 .custom-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2315803d'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 1.5em;
-  padding-right: 2.5rem;
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: transparent;
+  opacity: 0.01;
   cursor: pointer;
+}
+
+.custom-select::-ms-expand {
+  display: none;
 }
 
 .custom-select option {

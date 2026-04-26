@@ -1,0 +1,82 @@
+[
+  {
+    "ecole": "FSJES",
+    "filiere": "Droit",
+    "niveau": "3ème année",
+    "nom": "Francia Arimelimanjaka",
+    "poste": "Responsable académique",
+    "role": "Affaires académiques",
+    "id": "4bdd8297-0f87-448d-b6c9-6717607d45f9",
+    "image": "/uploads/carousel/1777130675782-61c24493-ab37-4b25-a6b6-e3c3b2e15e15.jpg"
+  },
+  {
+    "ecole": "ENCG",
+    "filiere": "Commerce et Gestion",
+    "niveau": "2ème année",
+    "nom": "Ulrica Chadia Baozaka",
+    "poste": "Responsable communication",
+    "role": "Communication des informations",
+    "id": "9864552b-4752-450d-b0da-54810b13ea86",
+    "image": "/uploads/carousel/1777130379906-661c95a6-4864-4af1-a328-ed2c255c1565.jpg"
+  },
+  {
+    "ecole": "FST",
+    "filiere": "MISA",
+    "niveau": "4ème année",
+    "nom": "Guiot Ranaivomanana",
+    "poste": "Responsable logistique",
+    "role": "Logistique",
+    "id": "63de4d24-b066-429d-81de-2d93361b1283",
+    "image": "/uploads/carousel/1777130379642-06de6aaa-c52f-4b34-ac66-a6734dae1aed.jpg"
+  },
+  {
+    "ecole": "ENSA",
+    "filiere": "Cycle préparatoire",
+    "niveau": "1ère année",
+    "nom": "Guillot Harizaza",
+    "poste": "Chargé sportif",
+    "role": "Gestion des activités sportives",
+    "id": "88ba9622-e780-4a16-b1f1-e8316b33c622",
+    "image": "/uploads/carousel/1777130379416-40fce683-599c-4119-b25c-c103cac85deb.jpg"
+  },
+  {
+    "ecole": "ENSA",
+    "filiere": "Cycle préparatoire",
+    "niveau": "2ème année",
+    "nom": "Juliana Razafindramanana",
+    "poste": "Chargé culturel",
+    "role": "Organisaton des événements",
+    "id": "cc480fe2-af85-46df-a773-ef47728ac622",
+    "image": "/uploads/carousel/1777130376480-a6a182f1-4599-4bee-b54c-526725492879.jpg"
+  },
+  {
+    "ecole": "FSJES",
+    "filiere": "Economie",
+    "niveau": "3ème année",
+    "nom": "Valisoa Razaiarimalala",
+    "poste": "Trésorière",
+    "role": "Gestion finances",
+    "id": "cda6405e-26c2-4828-a08e-aebde53cfef4",
+    "image": "/uploads/carousel/1777130376239-c807643c-4bb2-4d8b-931a-ab9703247a25.jpg"
+  },
+  {
+    "ecole": "FSJES",
+    "filiere": "Droit",
+    "niveau": "3ème année",
+    "nom": "Jade Ismaël",
+    "poste": "Secrétaire générale adjointe",
+    "role": "Support SG",
+    "id": "1f5af5ce-dad3-412d-bafa-586b58210fa7",
+    "image": "/uploads/carousel/1777130376069-9c246669-a3f9-47a2-9738-0f937b701111.jpg"
+  },
+  {
+    "ecole": "ENCG",
+    "filiere": "Audit",
+    "niveau": "4ème année",
+    "nom": "Marie Warenska Jocya Ralison",
+    "poste": "Secrétaire générale (SG)",
+    "role": "Coordination générale",
+    "id": "28a63bbc-a9c3-445d-8d51-5410a2645efb",
+    "image": "/uploads/carousel/1777130375940-baf09714-683e-4938-bf2c-8f35d983d124.jpg"
+  }
+]
